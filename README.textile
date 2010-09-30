@@ -1,0 +1,9 @@
+h1. Hook Framework
+
+h2. Description
+
+This project which aims to provide a consistent framework for subversion event hooks. The project is still in development. Please expect minor bugs.
+
+h2. License
+
+The license is subject to be changed in the near future. Please come back in a few days to check out the final license descision.
