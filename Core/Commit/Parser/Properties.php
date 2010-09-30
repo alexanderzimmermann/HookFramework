@@ -63,13 +63,10 @@ class Properties
 
 		foreach ($aProperties as $iLine => $sLine)
 		{
-			if ((substr($sLine, 0, 5) === 'Name:') || (substr($sLine, 0, 9) === 'Modified:'))
+			if (preg_match('/(Name:|Modified:|Added:|Deleted:)/', $sLine, $aMatch) > 0)
 			{
-				$iPos = 6;
-				if (false !== strpos($sLine, 'Modified'))
-				{
-					$iPos = 10;
-				} // if
+				// Colon position plus 2 for one space sign.
+				$iPos = (strpos($sLine, ':') + 2);
 
 				if (null !== $oProperty)
 				{
