@@ -1,0 +1,3 @@
+U   hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file1.php
+UU  hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file2.php
+UU  hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file3.php

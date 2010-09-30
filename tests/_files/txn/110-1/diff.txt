@@ -1,0 +1,3394 @@
+Added: hookframework/trunk/Core/Commit/CommitBase.php
+===================================================================
+--- hookframework/trunk/Core/Commit/CommitBase.php	                        (rev 0)
++++ hookframework/trunk/Core/Commit/CommitBase.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -0,0 +1,105 @@
++<?php
++/**
++ * Basisklasse fuer die Commit Daten.
++ * @category   Main
++ * @package    Hook
++ * @subpackage Core
++ * @author     Alexander Zimmermann <alex@azimmermann.com>
++ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
++ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
++ * @version    SVN: $Id: $
++ */
++
++/**
++ * Basisklasse fuer die Commit Daten.
++ * @category   Main
++ * @package    Hook
++ * @subpackage Core
++ * @author     Alexander Zimmermann <alex@azimmermann.com>
++ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
++ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
++ * @version    Release: 1.0.0
++ */
++class CommitBase
++{
++	/**
++	 * Transaktion.
++	 * @var string
++	 */
++	protected $sTxn;
++
++	/**
++	 * Revision.
++	 * @var integer
++	 */
++	protected $iRev;
++
++	/**
++	 * Fehlerzeilen
++	 * @var array
++	 */
++	protected $aErrorLines;
++
++	/**
++	 * Konstrutkor.
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function __construct($sTxn, $iRev)
++	{
++		$this->sTxn = $sTxn;
++		$this->iRev = $iRev;
++
++		$this->aErrorLines = array();
++	} // function
++
++	/**
++	 * Transaktionsnummer zurueck geben.
++	 * @return string
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getTransaction()
++	{
++		return $this->sTxn;
++	} // function
++
++	/**
++	 * Revisionsnummer zurueck geben.
++	 * @return integer
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getRevision()
++	{
++		return $this->iRev;
++	} // function
++
++	/**
++	 * Fehler hinzufuegen.
++	 * @param string $sError Fehlermeldung.
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function addError($sError)
++	{
++		$this->aErrorLines[] = $sError;
++	} // function
++
++	/**
++	 * Fehlerzeilen hinzufuegen.
++	 * @param array $aErrorLines Fehlerzeilen.
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function addErrorLines(array $aErrorLines)
++	{
++		$this->aErrorLines = array_merge($this->aErrorLines, $aErrorLines);
++	} // function
++
++	/**
++	 * Fehlerzeilen zurueck geben.
++	 * @return array
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getErrorLines()
++	{
++		$aErrorLines       = $this->aErrorLines;
++		$this->aErrorLines = array();
++
++		return $aErrorLines;
++	} // function
++} // class
+
+
+Property changes on: hookframework/trunk/Core/Commit/CommitBase.php
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+Added: hookframework/trunk/Core/Commit/CommitData.php
+===================================================================
+--- hookframework/trunk/Core/Commit/CommitData.php	                        (rev 0)
++++ hookframework/trunk/Core/Commit/CommitData.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -0,0 +1,186 @@
++<?php
++/**
++ * Daten in der Transaktion.
++ * @category   Main
++ * @package    Hook
++ * @subpackage Core
++ * @author     Alexander Zimmermann <alex@azimmermann.com>
++ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
++ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
++ * @version    SVN: $Id: commit_110-1_common.log 2 2008-12-19 12:32:00Z alexander $
++ * @link       http://www.azimmermann.com/
++ * @since      File available since Release 1.0.0
++ */
++
++
++/** CommitInfo */
++require dirname(__FILE__) . '/CommitInfo.php';
++
++/** CommitObject */
++require dirname(__FILE__) . '/CommitObject.php';
++
++/**
++ * Daten in der Transaktion.
++ * @category   Main
++ * @package    Hook
++ * @subpackage Core
++ * @author     Alexander Zimmermann <alex@azimmermann.com>
++ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
++ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
++ * @version    Release: 1.0.0
++ */
++class CommitData
++{
++	/**
++	 * Commit Infos.
++	 * @var CommitInfo
++	 */
++	private $oCommitInfo;
++
++	/**
++	 * Alle Objekte (Mehrdimensionales Array).
++	 * @var array
++	 */
++	private $aObjects;
++
++	/**
++	 * Konstrutkor.
++	 * @param HookMain $oHook       Hook.
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function __construct()
++	{
++		$this->aObjects['A']['FILES'] = array();
++		$this->aObjects['A']['DIRS']  = array();
++		$this->aObjects['U']['FILES'] = array();
++		$this->aObjects['U']['DIRS']  = array();
++		$this->aObjects['D']['FILES'] = array();
++		$this->aObjects['D']['DIRS']  = array();
++	} // function
++
++	/**
++	 * Objekt hinzufuegen.
++	 *
++	 * Folgende Werte werden uebergeben:
++	 * <ul>
++	 * <li>Aktion (A,U,D)</li>
++	 * <li>Pfad</li>
++	 * <li>Verzeichnis</li>
++	 * </ul>
++	 * @param string  $sTxn          Transaktionsnummer.
++	 * @param integer $iRev          Revisionsnummer.
++	 * @param string  $sObjectAction Aktion (A, U, D).
++	 * @param string  $sObject       Verzeichnis oder Datei.
++	 * @param boolean $bIsDir        Wenn Verzeichnis true.
++	 * @return CommitObject
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function createObject($sTxn, $iRev, $sObjectAction, $sObject, $bIsDir = false)
++	{
++		$oCommitObject = new CommitObject($sTxn, $iRev, $sObjectAction, $bIsDir, $sObject);
++
++		if ($bIsDir === true)
++		{
++			$this->aObjects[$sObjectAction]['DIRS'][] = $oCommitObject;
++		}
++		else
++		{
++			// Dateien nach Extensions.
++			$sExt = $this->determineFileExtension($sObject);
++
++			$this->aObjects[$sObjectAction]['FILES']['ALL'][] = $oCommitObject;
++			$this->aObjects[$sObjectAction]['FILES'][$sExt][] = $oCommitObject;
++		} // if
++
++		return $oCommitObject;
++	} // function
++
++	/**
++	 * Commit Info zurueck geben.
++	 * @return CommitInfo
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getCommitInfo()
++	{
++		return $this->oCommitInfo;
++	} // function
++
++	/**
++	 * Dateien nach Aktion und Extension zurueck geben.
++	 * @param array $aActionTypes U, A, D Aktionen der Datei.
++	 * @param array $aExtensions  Liste mit Dateierweiterungen.
++	 * @return array
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getFiles(array $aActionTypes, array $aExtensions)
++	{
++		$aFiles = array();
++
++		// Wenn die beiden Arrays leer sind, dann gibts auch keine Daten.
++		if ((empty($aActionTypes) === true) && (empty($aExtensions) === true))
++		{
++			return $aFiles;
++		} // if
++
++		// Wenn einer der Arrays leer ist der andere nicht dann auf ALL setzen.
++		if ((empty($aActionTypes) === false) && (empty($aExtensions) === true))
++		{
++			$aActionTypes = array('A', 'U', 'D');
++		} // if
++
++		if ((empty($aActionTypes) === true) && (empty($aExtensions) === false))
++		{
++			$aExtensions = array('ALL');
++		} // if
++
++		// Nach den gewuenschten Objekten suchen.
++		foreach ($aActionTypes as $iIndex => $sAction)
++		{
++			if (isset($this->aObjects[$sAction]) === true)
++			{
++				foreach ($aExtensions as $iIndex => $sExt)
++				{
++					if (isset($this->aObjects[$sAction]['FILES'][$sExt]) === true)
++					{
++						$aAddFiles = $this->aObjects[$sAction]['FILES'][$sExt];
++						$aFiles    = array_merge($aFiles, $aAddFiles);
++					} // if
++				} // foreach
++			} // if
++		} // foreach
++
++		return $aFiles;
++	} // function
++
++	/**
++	 * File Extension ermitteln.
++	 * @param string $sFile Datei fuer die die Erweiterung ermittelt wird.
++	 * @return string
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	private function determineFileExtension($sFile)
++	{
++		// Ersten Punkt von hinten suchen. Wenn kein Punkt gefunden wird,
++		// sollte es eine Datei ohne Erweiterung sein.
++		$iPos = strrpos($sFile, '.');
++
++		if ($iPos !== false)
++		{
++			$iPos++;
++			$sExtension = substr($sFile, $iPos, (strlen($sFile) - $iPos));
++		} // if
++
++		return strtoupper($sExtension);
++	} // function
++
++	/**
++	 * Commit Info Objekt erstellen.
++	 * @param array $aInfos Commit Infos.
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function createCommitInfo(array $aInfos)
++	{
++		$this->oCommitInfo = new CommitInfo(
++									$aInfos['txn'],
++									$aInfos['rev'],
++									$aInfos['user'],
++									$aInfos['datetime'],
++									$aInfos['message']
++								 );
++	} // function
++} // class
+\', No newline at end of file
+
+
+Property changes on: hookframework/trunk/Core/Commit/CommitData.php
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+Added: hookframework/trunk/Core/Commit/CommitInfo.php
+===================================================================
+--- hookframework/trunk/Core/Commit/CommitInfo.php	                        (rev 0)
++++ hookframework/trunk/Core/Commit/CommitInfo.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -0,0 +1,107 @@
++<?php
++/**
++ * Klasse fuer die Informationen die commited wurden.
++ * @category   Main
++ * @package    Hook
++ * @subpackage Core
++ * @author     Alexander Zimmermann <alex@azimmermann.com>
++ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
++ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
++ * @version    SVN: $Id: $
++ */
++
++require_once 'CommitBase.php';
++
++/**
++ * Klasse fuer die Informationen die commited wurden.
++ * @category   Main
++ * @package    Hook
++ * @subpackage Core
++ * @author     Alexander Zimmermann <alex@azimmermann.com>
++ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
++ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
++ * @version    Release: 1.0.0
++ */
++class CommitInfo extends CommitBase
++{
++	/**
++	 * Benutzer
++	 * @var string
++	 */
++	private $sUser;
++
++	/**
++	 * Datum Zeit
++	 * @var string
++	 */
++	private $sDateTime;
++
++	/**
++	 * Textbemerkung des Commits
++	 * @var string
++	 */
++	private $sMessage;
++
++	/**
++	 * Konstrutkor.
++	 * @param string $sTxn      Transaction, wenn Pre.
++	 * @param string $sRev      Revision (falls vorh.).
++	 * @param string $sUser     Benutzername des Commits.
++	 * @param string $sDateTime Datum Uhrzeit des Commits.
++	 * @param string $sMessage  Anmerkung zum Commit.
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function __construct($sTxn, $iRev, $sUser, $sDateTime, $sMessage)
++	{
++		parent::__construct($sTxn, $iRev);
++		$this->sUser     = $sUser;
++		$this->sDateTime = $sDateTime;
++		$this->sMessage  = $sMessage;
++	} // function
++
++	/**
++	 * Transaktionsnummer zurueck geben.
++	 * @return string
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getTransaction()
++	{
++		return $this->sTxn;
++	} // function
++
++	/**
++	 * Revisionsnummer zurueck geben.
++	 * @return integer
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getRevision()
++	{
++		return $this->iRevision;
++	} // function
++
++	/**
++	 * Benutzer zurueck geben.
++	 * @return string
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getUser()
++	{
++		return $this->sUser;
++	} // function
++
++	/**
++	 * Datum Zeit zurueck geben.
++	 * @return string
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getDateTime()
++	{
++		return $this->sDateTime;
++	} // function
++
++	/**
++	 * Textbemerkung zum Commit zurueck geben.
++	 * @return string
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getMessage()
++	{
++		return $this->sMessage;
++	} // function
++} // class
+
+
+Property changes on: hookframework/trunk/Core/Commit/CommitInfo.php
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+Added: hookframework/trunk/Core/Commit/CommitObject.php
+===================================================================
+--- hookframework/trunk/Core/Commit/CommitObject.php	                        (rev 0)
++++ hookframework/trunk/Core/Commit/CommitObject.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -0,0 +1,140 @@
++<?php
++/**
++ * Klasse fuer die Objekte die commited wurden.
++ * @category   Main
++ * @package    Hook
++ * @subpackage Core
++ * @author     Alexander Zimmermann <alex@azimmermann.com>
++ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
++ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
++ * @version    SVN: $Id: $
++ */
++
++require_once 'CommitBase.php';
++
++/**
++ * Klasse fuer die Objekte die commited wurden.
++ *
++ * Der Inhalt der Datei steht nicht in der Klasse, aus Performancegruenden wird
++ * dieser nur geholt wenn die Daten benoetigt werden. Das wird durch die
++ * Listener bestimmt.
++ * @category   Main
++ * @package    Hook
++ * @subpackage Core
++ * @author     Alexander Zimmermann <alex@azimmermann.com>
++ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
++ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
++ * @version    Release: 1.0.0
++ */
++class CommitObject extends CommitBase
++{
++	/**
++	 * Objektaktion (A, U, D).
++	 * @var string
++	 */
++	private $sAction;
++
++	/**
++	 * Verzeichnis oder Datei.
++	 * @var boolean
++	 */
++	private $bIsDir;
++
++	/**
++	 * Objektpfad
++	 * @var string
++	 */
++	private $sObjectPath;
++
++	/**
++	 * Temporärer Pfad zum Objekt.
++	 * @var string
++	 */
++	private $sTmpObjectPath;
++
++	/**
++	 * Diff fuer die Datei.
++	 * @var array
++	 */
++	private $aDiffLines;
++
++	/**
++	 * Konstrutkor.
++	 * @param string $sAction Aktion des Objekts (A, U, D).
++	 * @param string $sObject Pfad des Objects (Verzeichnis oder Pfad + Datei).
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function __construct($sTxn, $iRev, $sAction, $bIsDir, $sObject)
++	{
++		parent::__construct($sTxn, $iRev);
++		$this->sAction     = $sAction;
++		$this->bIsDir      = $bIsDir;
++		$this->sObjectPath = $sObject;
++
++		// Verzeichnispfad umwandeln.
++		if ($bIsDir === false)
++		{
++			$sObject = str_replace('/', '_', $sObject);
++			$sObject = '/tmp/' . $sTxn . '-' . $sObject;
++
++			$this->sTmpObjectPath = $sObject;
++		} // if
++	} // function
++
++	/**
++	 * Setzen des Diffs.
++	 * @param string $sDiff Differenz (Nur bei Dateien)
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function setDiff($aDiff)
++	{
++		$this->aDiffLines = $aDiff;
++	} // function
++
++	/**
++	 * Differenzzeilen zurueck geben.
++	 * @return array
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getDiff()
++	{
++		return $this->aDiffLines;
++	} // function
++
++	/**
++	 * Aktion zurueck geben.
++	 * @return string
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getAction()
++	{
++		return $this->sAction;
++	} // function
++
++	/**
++	 * Ist das Objekt ein Verzeichnis.
++	 * @return boolean
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getIsDir()
++	{
++		return $this->bIsDir;
++	} // function
++
++	/**
++	 * Pfad zu der Datei zurueck geben.
++	 * @return string
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getObjectPath()
++	{
++		return $this->sObjectPath;
++	} // function
++
++	/**
++	 * Temporaeren Pfad zur Datei zurueck geben.
++	 * @return string
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getTmpObjectPath()
++	{
++		return $this->sTmpObjectPath;
++	} // function
++} // class
+
+
+Property changes on: hookframework/trunk/Core/Commit/CommitObject.php
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+Added: hookframework/trunk/Core/Commit/CommitParser.php
+===================================================================
+--- hookframework/trunk/Core/Commit/CommitParser.php	                        (rev 0)
++++ hookframework/trunk/Core/Commit/CommitParser.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -0,0 +1,274 @@
++<?php
++/**
++ * Daten in der Transaktion.
++ * @category   Main
++ * @package    Hook
++ * @subpackage Core
++ * @author     Alexander Zimmermann <alex@azimmermann.com>
++ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
++ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
++ * @version    SVN: $Id: commit_110-1_common.log 2 2008-12-19 12:32:00Z alexander $
++ * @link       http://www.azimmermann.com/
++ * @since      File available since Release 1.0.0
++ */
++
++/** CommitData Objekt */
++require dirname(__FILE__) . '/CommitData.php';
++
++/**
++ * Daten in der Transaktion.
++ * @category   Main
++ * @package    Hook
++ * @subpackage Core
++ * @author     Alexander Zimmermann <alex@azimmermann.com>
++ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
++ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
++ * @version    Release: 1.0.0
++ */
++class CommitParser
++{
++	/**
++	 * Main Hook.
++	 * @var Arguments
++	 */
++	private $oArguments;
++
++	/**
++	 * Svn Objekt
++	 * @var Svn
++	 */
++	private $oSvn;
++
++	/**
++	 * CommitData Objekt.
++	 * @var CommitData
++	 */
++	private $oCommitData;
++
++	/**
++	 * Differenz Zeilen der Dateien.
++	 * @var array
++	 */
++	private $aDiffData;
++
++	/**
++	 * Konstrutkor.
++	 * @param Arguments $oArguments Argumentenobjekt.
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function __construct(Arguments $oArguments, Svn $oSvn)
++	{
++		$this->oArguments = $oArguments;
++		$this->oSvn       = $oSvn;
++
++		$sTxn              = $oArguments->getTransaction();
++		$iRev              = $oArguments->getRevision();
++		$this->oCommitData = new CommitData($sTxn, $iRev);
++
++		if ($this->oArguments->getMainType() === 'start')
++		{
++			$aInfos['txn']      = $sTxn;
++			$aInfos['rev']      = $iRev;
++			$aInfos['user']     = $oArguments->getUser();
++			$aInfos['datetime'] = date('Y-m-d H:i:s', time());
++			$aInfos['message']  = 'No Message in Start Hook';
++			$this->oCommitData->createCommitInfo($aInfos);
++			return;
++		} // if
++
++		$this->getCommitInfo();
++		$this->getCommitDiff();
++		$this->getCommitData();
++	} // function
++
++	/**
++	 * Commit Data Objekt zurueck geben.
++	 * @return CommitData
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getCommitDataObject()
++	{
++		return $this->oCommitData;
++	} // function
++
++	/**
++	 * Dateien aus Commit filtern.
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	private function getCommitData()
++	{
++		$this->parseCommitData($this->oSvn->getCommitChanged());
++	} // function
++
++	/**
++	 * Info aus Commit parsen.
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	private function getCommitInfo()
++	{
++		$this->parseCommitInfo($this->oSvn->getCommitInfo());
++	} // function
++
++	/**
++	 * Differenzen der Dateien aus Commit parsen.
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	private function getCommitDiff()
++	{
++		$this->parseCommitDiff($this->oSvn->getCommitDiff());
++	} // function
++
++	/**
++	 * Parsen des Arrays.
++	 *
++	 * Ermitteln ob Verzeichnis oder Datei.
++	 * Ermitteln ob ein Objekt hinzugefuegt, aktualisiert oder geloescht wurde.
++	 * <ul>
++	 * <li>A</li>
++	 * <li>U</li>
++	 * <li>D</li>
++	 * </ul>
++	 * @param array $aData Veraenderungsdaten des Commits.
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	private function parseCommitData(array $aData)
++	{
++		$iMax = count($aData);
++		for ($iFor = 0; $iFor < $iMax; $iFor++)
++		{
++			/**
++				Folgende Formate koennen vorkommen:
++				U   {File}
++				_U  {File}
++				UU  {File}
++			*/
++
++			$sObject       = $aData[$iFor];
++			$sActionInfo   = substr($sObject, 0, 4);
++			$sObjectAction = trim(str_replace('_', '', $sActionInfo));
++			$sObjectAction = strtoupper(substr($sObjectAction, 0, 1));
++			$sObject       = str_replace($sActionInfo, '', $sObject);
++
++			// Verzeichnis oder Datei.
++			// Soweit das ok ist, wird das / am Ende erkannt.
++			$bIsDir = (substr($sObject, -1) === '/');
++
++			// Objekt hinzufuegen.
++			$oCommitObject = $this->oCommitData->createObject(
++				$this->oArguments->getTransaction(),
++				$this->oArguments->getRevision(),
++				$sObjectAction,
++				$sObject,
++				$bIsDir
++			);
++
++			// Differenzzeilen hinzufuegen, sofern vorhanden.
++			if ($bIsDir === false)
++			{
++				if (isset($this->aDiffData[$sObject]))
++				{
++					$oCommitObject->setDiff($this->aDiffData[$sObject]);
++				} // if
++			} // if
++		} // for
++	} // function
++
++	/**
++	 * Parsen der Infos zum Commit.
++	 * @param array $aData Commit Daten Infos.
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	private function parseCommitInfo(array $aData)
++	{
++		$aInfos = array();
++
++		$aInfos['txn'] = $this->oArguments->getTransaction();
++		$aInfos['rev'] = $this->oArguments->getRevision();
++
++		// Diese Elemente in dieser Reihenfolge.
++		$aPropertys = array(
++					   'user', 'datetime', 'messagelength', 'message'
++					  );
++
++		$iMax = count($aData);
++		for ($iFor = 0; $iFor < $iMax; $iFor++)
++		{
++			$sData = $aData[$iFor];
++			if ($aPropertys[$iFor] === 'message')
++			{
++				$aData[$iFor] = $this->parseMessage($sData);
++			} // if
++
++			$aInfos[$aPropertys[$iFor]] = $aData[$iFor];
++		} // for
++
++		$this->oCommitData->createCommitInfo($aInfos);
++	} // function
++
++	/**
++	 * Parsen des Diffs.
++	 * @param array $aData Diff Daten aus Commit (svnlook diff).
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	private function parseCommitDiff(array $aData)
++	{
++		$aLines = array();
++		$sFile  = '';
++
++		$iMax = count($aData);
++		for ($iFor = 0; $iFor < $iMax; $iFor++)
++		{
++			if ($aData[$iFor] === str_repeat('=', 67))
++			{
++				if ((substr($aData[($iFor + 1)], 0, 3) === '---') &&
++				   (substr($aData[($iFor + 2)], 0, 3) === '+++'))
++				{
++					// Aus den $aLines die letzte Zeile entfernen.
++					array_pop($aLines);
++
++					if ((empty($aLines) === false) && ($sFile !== ''))
++					{
++						$this->aDiffData[$sFile] = $aLines;
++
++						$aLines = array();
++					} // if
++
++					$sFile = preg_replace('/^[^:]+:/i', '', $aData[($iFor - 1)]);
++					$sFile = trim($sFile);
++
++					// Zeilen um 2 weiter shiften.
++					$iFor += 1;
++				} // if
++			} // if
++
++			$aLines[] = $aData[$iFor];
++		} // for
++
++		// Letzter Eintrag.
++		$this->aDiffData[$sFile] = $aLines;
++	} // function
++
++	/**
++	 * Message Parsen.
++	 * @param string $sMessage Commit Text.
++	 * @return string
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	private function parseMessage($sMessage)
++	{
++		$aMatches = array();
++
++		// Austauschen von Sonderzeichen im Format \\\\123.
++		preg_match_all('/\\?\\\\\\([0-9]+)/', $sMessage, $aMatches);
++
++		$iMax = count($aMatches[0]);
++		for ($iFor = 0; $iFor < $iMax; $iFor++)
++		{
++			$sChr     = $aMatches[0][$iFor];
++			$iChr     = (int) $aMatches[1][$iFor];
++			$sMessage = str_replace($sChr, chr($iChr), $sMessage);
++		} // for
++
++		return $sMessage;
++	} // function
++} // class
+
+
+Property changes on: hookframework/trunk/Core/Commit/CommitParser.php
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+Deleted: hookframework/trunk/Core/CommitBase.php
+===================================================================
+--- hookframework/trunk/Core/CommitBase.php	2008-12-16 19:42:16 UTC (rev 110)
++++ hookframework/trunk/Core/CommitBase.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -1,105 +0,0 @@
+-<?php
+-/**
+- * Basisklasse fuer die Commit Daten.
+- * @category   Main
+- * @package    Hook
+- * @subpackage Core
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    SVN: $Id: $
+- */
+-
+-/**
+- * Basisklasse fuer die Commit Daten.
+- * @category   Main
+- * @package    Hook
+- * @subpackage Core
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    Release: 1.0.0
+- */
+-class CommitBase
+-{
+-	/**
+-	 * Transaktion.
+-	 * @var string
+-	 */
+-	protected $sTxn;
+-
+-	/**
+-	 * Revision.
+-	 * @var integer
+-	 */
+-	protected $iRev;
+-
+-	/**
+-	 * Fehlerzeilen
+-	 * @var array
+-	 */
+-	protected $aErrorLines;
+-
+-	/**
+-	 * Konstrutkor.
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function __construct($sTxn, $iRev)
+-	{
+-		$this->sTxn = $sTxn;
+-		$this->iRev = $iRev;
+-
+-		$this->aErrorLines = array();
+-	} // function
+-
+-	/**
+-	 * Transaktionsnummer zurueck geben.
+-	 * @return string
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getTransaction()
+-	{
+-		return $this->sTxn;
+-	} // function
+-
+-	/**
+-	 * Revisionsnummer zurueck geben.
+-	 * @return integer
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getRevision()
+-	{
+-		return $this->iRev;
+-	} // function
+-
+-	/**
+-	 * Fehler hinzufuegen.
+-	 * @param string $sError Fehlermeldung.
+-	 * @return void
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function addError($sError)
+-	{
+-		$this->aErrorLines[] = $sError;
+-	} // function
+-
+-	/**
+-	 * Fehlerzeilen hinzufuegen.
+-	 * @param array $aErrorLines Fehlerzeilen.
+-	 * @return void
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function addErrorLines(array $aErrorLines)
+-	{
+-		$this->aErrorLines = array_merge($this->aErrorLines, $aErrorLines);
+-	} // function
+-
+-	/**
+-	 * Fehlerzeilen zurueck geben.
+-	 * @return array
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getErrorLines()
+-	{
+-		$aErrorLines       = $this->aErrorLines;
+-		$this->aErrorLines = array();
+-
+-		return $aErrorLines;
+-	} // function
+-} // class
+
+Deleted: hookframework/trunk/Core/CommitData.php
+===================================================================
+--- hookframework/trunk/Core/CommitData.php	2008-12-16 19:42:16 UTC (rev 110)
++++ hookframework/trunk/Core/CommitData.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -1,186 +0,0 @@
+-<?php
+-/**
+- * Daten in der Transaktion.
+- * @category   Main
+- * @package    Hook
+- * @subpackage Core
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    SVN: $Id: commit_110-1_common.log 2 2008-12-19 12:32:00Z alexander $
+- * @link       http://www.azimmermann.com/
+- * @since      File available since Release 1.0.0
+- */
+-
+-
+-/** CommitInfo */
+-require dirname(__FILE__) . '/CommitInfo.php';
+-
+-/** CommitObject */
+-require dirname(__FILE__) . '/CommitObject.php';
+-
+-/**
+- * Daten in der Transaktion.
+- * @category   Main
+- * @package    Hook
+- * @subpackage Core
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    Release: 1.0.0
+- */
+-class CommitData
+-{
+-	/**
+-	 * Commit Infos.
+-	 * @var CommitInfo
+-	 */
+-	private $oCommitInfo;
+-
+-	/**
+-	 * Alle Objekte (Mehrdimensionales Array).
+-	 * @var array
+-	 */
+-	private $aObjects;
+-
+-	/**
+-	 * Konstrutkor.
+-	 * @param HookMain $oHook       Hook.
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function __construct()
+-	{
+-		$this->aObjects['A']['FILES'] = array();
+-		$this->aObjects['A']['DIRS']  = array();
+-		$this->aObjects['U']['FILES'] = array();
+-		$this->aObjects['U']['DIRS']  = array();
+-		$this->aObjects['D']['FILES'] = array();
+-		$this->aObjects['D']['DIRS']  = array();
+-	} // function
+-
+-	/**
+-	 * Objekt hinzufuegen.
+-	 *
+-	 * Folgende Werte werden uebergeben:
+-	 * <ul>
+-	 * <li>Aktion (A,U,D)</li>
+-	 * <li>Pfad</li>
+-	 * <li>Verzeichnis</li>
+-	 * </ul>
+-	 * @param string  $sTxn          Transaktionsnummer.
+-	 * @param integer $iRev          Revisionsnummer.
+-	 * @param string  $sObjectAction Aktion (A, U, D).
+-	 * @param string  $sObject       Verzeichnis oder Datei.
+-	 * @param boolean $bIsDir        Wenn Verzeichnis true.
+-	 * @return CommitObject
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function createObject($sTxn, $iRev, $sObjectAction, $sObject, $bIsDir = false)
+-	{
+-		$oCommitObject = new CommitObject($sTxn, $iRev, $sObjectAction, $bIsDir, $sObject);
+-
+-		if ($bIsDir === true)
+-		{
+-			$this->aObjects[$sObjectAction]['DIRS'][] = $oCommitObject;
+-		}
+-		else
+-		{
+-			// Dateien nach Extensions.
+-			$sExt = $this->determineFileExtension($sObject);
+-
+-			$this->aObjects[$sObjectAction]['FILES']['ALL'][] = $oCommitObject;
+-			$this->aObjects[$sObjectAction]['FILES'][$sExt][] = $oCommitObject;
+-		} // if
+-
+-		return $oCommitObject;
+-	} // function
+-
+-	/**
+-	 * Commit Info zurueck geben.
+-	 * @return CommitInfo
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getCommitInfo()
+-	{
+-		return $this->oCommitInfo;
+-	} // function
+-
+-	/**
+-	 * Dateien nach Aktion und Extension zurueck geben.
+-	 * @param array $aActionTypes U, A, D Aktionen der Datei.
+-	 * @param array $aExtensions  Liste mit Dateierweiterungen.
+-	 * @return array
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getFiles(array $aActionTypes, array $aExtensions)
+-	{
+-		$aFiles = array();
+-
+-		// Wenn die beiden Arrays leer sind, dann gibts auch keine Daten.
+-		if ((empty($aActionTypes) === true) && (empty($aExtensions) === true))
+-		{
+-			return $aFiles;
+-		} // if
+-
+-		// Wenn einer der Arrays leer ist der andere nicht dann auf ALL setzen.
+-		if ((empty($aActionTypes) === false) && (empty($aExtensions) === true))
+-		{
+-			$aActionTypes = array('A', 'U', 'D');
+-		} // if
+-
+-		if ((empty($aActionTypes) === true) && (empty($aExtensions) === false))
+-		{
+-			$aExtensions = array('ALL');
+-		} // if
+-
+-		// Nach den gewuenschten Objekten suchen.
+-		foreach ($aActionTypes as $iIndex => $sAction)
+-		{
+-			if (isset($this->aObjects[$sAction]) === true)
+-			{
+-				foreach ($aExtensions as $iIndex => $sExt)
+-				{
+-					if (isset($this->aObjects[$sAction]['FILES'][$sExt]) === true)
+-					{
+-						$aAddFiles = $this->aObjects[$sAction]['FILES'][$sExt];
+-						$aFiles    = array_merge($aFiles, $aAddFiles);
+-					} // if
+-				} // foreach
+-			} // if
+-		} // foreach
+-
+-		return $aFiles;
+-	} // function
+-
+-	/**
+-	 * File Extension ermitteln.
+-	 * @param string $sFile Datei fuer die die Erweiterung ermittelt wird.
+-	 * @return string
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	private function determineFileExtension($sFile)
+-	{
+-		// Ersten Punkt von hinten suchen. Wenn kein Punkt gefunden wird,
+-		// sollte es eine Datei ohne Erweiterung sein.
+-		$iPos = strrpos($sFile, '.');
+-
+-		if ($iPos !== false)
+-		{
+-			$iPos++;
+-			$sExtension = substr($sFile, $iPos, (strlen($sFile) - $iPos));
+-		} // if
+-
+-		return strtoupper($sExtension);
+-	} // function
+-
+-	/**
+-	 * Commit Info Objekt erstellen.
+-	 * @param array $aInfos Commit Infos.
+-	 * @return void
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function createCommitInfo(array $aInfos)
+-	{
+-		$this->oCommitInfo = new CommitInfo(
+-									$aInfos['txn'],
+-									$aInfos['rev'],
+-									$aInfos['user'],
+-									$aInfos['datetime'],
+-									$aInfos['message']
+-								 );
+-	} // function
+-} // class
+\', No newline at end of file
+
+Deleted: hookframework/trunk/Core/CommitInfo.php
+===================================================================
+--- hookframework/trunk/Core/CommitInfo.php	2008-12-16 19:42:16 UTC (rev 110)
++++ hookframework/trunk/Core/CommitInfo.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -1,107 +0,0 @@
+-<?php
+-/**
+- * Klasse fuer die Informationen die commited wurden.
+- * @category   Main
+- * @package    Hook
+- * @subpackage Core
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    SVN: $Id: $
+- */
+-
+-require_once 'CommitBase.php';
+-
+-/**
+- * Klasse fuer die Informationen die commited wurden.
+- * @category   Main
+- * @package    Hook
+- * @subpackage Core
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    Release: 1.0.0
+- */
+-class CommitInfo extends CommitBase
+-{
+-	/**
+-	 * Benutzer
+-	 * @var string
+-	 */
+-	private $sUser;
+-
+-	/**
+-	 * Datum Zeit
+-	 * @var string
+-	 */
+-	private $sDateTime;
+-
+-	/**
+-	 * Textbemerkung des Commits
+-	 * @var string
+-	 */
+-	private $sMessage;
+-
+-	/**
+-	 * Konstrutkor.
+-	 * @param string $sTxn      Transaction, wenn Pre.
+-	 * @param string $sRev      Revision (falls vorh.).
+-	 * @param string $sUser     Benutzername des Commits.
+-	 * @param string $sDateTime Datum Uhrzeit des Commits.
+-	 * @param string $sMessage  Anmerkung zum Commit.
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function __construct($sTxn, $iRev, $sUser, $sDateTime, $sMessage)
+-	{
+-		parent::__construct($sTxn, $iRev);
+-		$this->sUser     = $sUser;
+-		$this->sDateTime = $sDateTime;
+-		$this->sMessage  = $sMessage;
+-	} // function
+-
+-	/**
+-	 * Transaktionsnummer zurueck geben.
+-	 * @return string
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getTransaction()
+-	{
+-		return $this->sTxn;
+-	} // function
+-
+-	/**
+-	 * Revisionsnummer zurueck geben.
+-	 * @return integer
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getRevision()
+-	{
+-		return $this->iRevision;
+-	} // function
+-
+-	/**
+-	 * Benutzer zurueck geben.
+-	 * @return string
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getUser()
+-	{
+-		return $this->sUser;
+-	} // function
+-
+-	/**
+-	 * Datum Zeit zurueck geben.
+-	 * @return string
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getDateTime()
+-	{
+-		return $this->sDateTime;
+-	} // function
+-
+-	/**
+-	 * Textbemerkung zum Commit zurueck geben.
+-	 * @return string
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getMessage()
+-	{
+-		return $this->sMessage;
+-	} // function
+-} // class
+
+Deleted: hookframework/trunk/Core/CommitObject.php
+===================================================================
+--- hookframework/trunk/Core/CommitObject.php	2008-12-16 19:42:16 UTC (rev 110)
++++ hookframework/trunk/Core/CommitObject.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -1,140 +0,0 @@
+-<?php
+-/**
+- * Klasse fuer die Objekte die commited wurden.
+- * @category   Main
+- * @package    Hook
+- * @subpackage Core
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    SVN: $Id: $
+- */
+-
+-require_once 'CommitBase.php';
+-
+-/**
+- * Klasse fuer die Objekte die commited wurden.
+- *
+- * Der Inhalt der Datei steht nicht in der Klasse, aus Performancegruenden wird
+- * dieser nur geholt wenn die Daten benoetigt werden. Das wird durch die
+- * Listener bestimmt.
+- * @category   Main
+- * @package    Hook
+- * @subpackage Core
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    Release: 1.0.0
+- */
+-class CommitObject extends CommitBase
+-{
+-	/**
+-	 * Objektaktion (A, U, D).
+-	 * @var string
+-	 */
+-	private $sAction;
+-
+-	/**
+-	 * Verzeichnis oder Datei.
+-	 * @var boolean
+-	 */
+-	private $bIsDir;
+-
+-	/**
+-	 * Objektpfad
+-	 * @var string
+-	 */
+-	private $sObjectPath;
+-
+-	/**
+-	 * Temporärer Pfad zum Objekt.
+-	 * @var string
+-	 */
+-	private $sTmpObjectPath;
+-
+-	/**
+-	 * Diff fuer die Datei.
+-	 * @var array
+-	 */
+-	private $aDiffLines;
+-
+-	/**
+-	 * Konstrutkor.
+-	 * @param string $sAction Aktion des Objekts (A, U, D).
+-	 * @param string $sObject Pfad des Objects (Verzeichnis oder Pfad + Datei).
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function __construct($sTxn, $iRev, $sAction, $bIsDir, $sObject)
+-	{
+-		parent::__construct($sTxn, $iRev);
+-		$this->sAction     = $sAction;
+-		$this->bIsDir      = $bIsDir;
+-		$this->sObjectPath = $sObject;
+-
+-		// Verzeichnispfad umwandeln.
+-		if ($bIsDir === false)
+-		{
+-			$sObject = str_replace('/', '_', $sObject);
+-			$sObject = '/tmp/' . $sTxn . '-' . $sObject;
+-
+-			$this->sTmpObjectPath = $sObject;
+-		} // if
+-	} // function
+-
+-	/**
+-	 * Setzen des Diffs.
+-	 * @param string $sDiff Differenz (Nur bei Dateien)
+-	 * @return void
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function setDiff($aDiff)
+-	{
+-		$this->aDiffLines = $aDiff;
+-	} // function
+-
+-	/**
+-	 * Differenzzeilen zurueck geben.
+-	 * @return array
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getDiff()
+-	{
+-		return $this->aDiffLines;
+-	} // function
+-
+-	/**
+-	 * Aktion zurueck geben.
+-	 * @return string
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getAction()
+-	{
+-		return $this->sAction;
+-	} // function
+-
+-	/**
+-	 * Ist das Objekt ein Verzeichnis.
+-	 * @return boolean
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getIsDir()
+-	{
+-		return $this->bIsDir;
+-	} // function
+-
+-	/**
+-	 * Pfad zu der Datei zurueck geben.
+-	 * @return string
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getObjectPath()
+-	{
+-		return $this->sObjectPath;
+-	} // function
+-
+-	/**
+-	 * Temporaeren Pfad zur Datei zurueck geben.
+-	 * @return string
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getTmpObjectPath()
+-	{
+-		return $this->sTmpObjectPath;
+-	} // function
+-} // class
+
+Deleted: hookframework/trunk/Core/CommitParser.php
+===================================================================
+--- hookframework/trunk/Core/CommitParser.php	2008-12-16 19:42:16 UTC (rev 110)
++++ hookframework/trunk/Core/CommitParser.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -1,263 +0,0 @@
+-<?php
+-/**
+- * Daten in der Transaktion.
+- * @category   Main
+- * @package    Hook
+- * @subpackage Core
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    SVN: $Id: commit_110-1_common.log 2 2008-12-19 12:32:00Z alexander $
+- * @link       http://www.azimmermann.com/
+- * @since      File available since Release 1.0.0
+- */
+-
+-/** CommitData Objekt */
+-require dirname(__FILE__) . '/CommitData.php';
+-
+-/**
+- * Daten in der Transaktion.
+- * @category   Main
+- * @package    Hook
+- * @subpackage Core
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    Release: 1.0.0
+- */
+-class CommitParser
+-{
+-	/**
+-	 * Main Hook.
+-	 * @var Arguments
+-	 */
+-	private $oArguments;
+-
+-	/**
+-	 * Svn Objekt
+-	 * @var Svn
+-	 */
+-	private $oSvn;
+-
+-	/**
+-	 * CommitData Objekt.
+-	 * @var CommitData
+-	 */
+-	private $oCommitData;
+-
+-	/**
+-	 * Differenz Zeilen der Dateien.
+-	 * @var array
+-	 */
+-	private $aDiffData;
+-
+-	/**
+-	 * Konstrutkor.
+-	 * @param Arguments $oArguments Argumentenobjekt.
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function __construct(Arguments $oArguments, Svn $oSvn)
+-	{
+-		$this->oArguments = $oArguments;
+-		$this->oSvn       = $oSvn;
+-
+-		$sTxn              = $oArguments->getTransaction();
+-		$iRev              = $oArguments->getRevision();
+-		$this->oCommitData = new CommitData($sTxn, $iRev);
+-
+-		$this->getCommitInfo();
+-		$this->getCommitDiff();
+-		$this->getCommitData();
+-	} // function
+-
+-	/**
+-	 * Commit Data Objekt zurueck geben.
+-	 * @return CommitData
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getCommitDataObject()
+-	{
+-		return $this->oCommitData;
+-	} // function
+-
+-	/**
+-	 * Dateien aus Commit filtern.
+-	 * @return void
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	private function getCommitData()
+-	{
+-		$this->parseCommitData($this->oSvn->getCommitChanged());
+-	} // function
+-
+-	/**
+-	 * Info aus Commit parsen.
+-	 * @return void
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	private function getCommitInfo()
+-	{
+-		$this->parseCommitInfo($this->oSvn->getCommitInfo());
+-	} // function
+-
+-	/**
+-	 * Differenzen der Dateien aus Commit parsen.
+-	 * @return void
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	private function getCommitDiff()
+-	{
+-		$this->parseCommitDiff($this->oSvn->getCommitDiff());
+-	} // function
+-
+-	/**
+-	 * Parsen des Arrays.
+-	 *
+-	 * Ermitteln ob Verzeichnis oder Datei.
+-	 * Ermitteln ob ein Objekt hinzugefuegt, aktualisiert oder geloescht wurde.
+-	 * <ul>
+-	 * <li>A</li>
+-	 * <li>U</li>
+-	 * <li>D</li>
+-	 * </ul>
+-	 * @param array $aData Veraenderungsdaten des Commits.
+-	 * @return void
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	private function parseCommitData(array $aData)
+-	{
+-		$iMax = count($aData);
+-		for ($iFor = 0; $iFor < $iMax; $iFor++)
+-		{
+-			/**
+-				Folgende Formate koennen vorkommen:
+-				U   {File}
+-				_U  {File}
+-				UU  {File}
+-			*/
+-
+-			$sObject       = $aData[$iFor];
+-			$sActionInfo   = substr($sObject, 0, 4);
+-			$sObjectAction = trim(str_replace('_', '', $sActionInfo));
+-			$sObjectAction = strtoupper(substr($sObjectAction, 0, 1));
+-			$sObject       = str_replace($sActionInfo, '', $sObject);
+-
+-			// Verzeichnis oder Datei.
+-			// Soweit das ok ist, wird das / am Ende erkannt.
+-			$bIsDir = (substr($sObject, -1) === '/');
+-
+-			// Objekt hinzufuegen.
+-			$oCommitObject = $this->oCommitData->createObject(
+-				$this->oArguments->getTransaction(),
+-				$this->oArguments->getRevision(),
+-				$sObjectAction,
+-				$sObject,
+-				$bIsDir
+-			);
+-
+-			// Differenzzeilen hinzufuegen, sofern vorhanden.
+-			if ($bIsDir === false)
+-			{
+-				if (isset($this->aDiffData[$sObject]))
+-				{
+-					$oCommitObject->setDiff($this->aDiffData[$sObject]);
+-				} // if
+-			} // if
+-		} // for
+-	} // function
+-
+-	/**
+-	 * Parsen der Infos zum Commit.
+-	 * @param array $aData Commit Daten Infos.
+-	 * @return void
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	private function parseCommitInfo(array $aData)
+-	{
+-		$aInfos = array();
+-
+-		$aInfos['txn'] = $this->oArguments->getTransaction();
+-		$aInfos['rev'] = $this->oArguments->getRevision();
+-
+-		// Diese Elemente in dieser Reihenfolge.
+-		$aPropertys = array(
+-					   'user', 'datetime', 'messagelength', 'message'
+-					  );
+-
+-		$iMax = count($aData);
+-		for ($iFor = 0; $iFor < $iMax; $iFor++)
+-		{
+-			$sData = $aData[$iFor];
+-			if ($aPropertys[$iFor] === 'message')
+-			{
+-				$aData[$iFor] = $this->parseMessage($sData);
+-			} // if
+-
+-			$aInfos[$aPropertys[$iFor]] = $aData[$iFor];
+-		} // for
+-
+-		$this->oCommitData->createCommitInfo($aInfos);
+-	} // function
+-
+-	/**
+-	 * Parsen des Diffs.
+-	 * @param array $aData Diff Daten aus Commit (svnlook diff).
+-	 * @return void
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	private function parseCommitDiff(array $aData)
+-	{
+-		$aLines = array();
+-		$sFile  = '';
+-
+-		$iMax = count($aData);
+-		for ($iFor = 0; $iFor < $iMax; $iFor++)
+-		{
+-			if ($aData[$iFor] === str_repeat('=', 67))
+-			{
+-				if ((substr($aData[($iFor + 1)], 0, 3) === '---') &&
+-				   (substr($aData[($iFor + 2)], 0, 3) === '+++'))
+-				{
+-					// Aus den $aLines die letzte Zeile entfernen.
+-					array_pop($aLines);
+-
+-					if ((empty($aLines) === false) && ($sFile !== ''))
+-					{
+-						$this->aDiffData[$sFile] = $aLines;
+-
+-						$aLines = array();
+-					} // if
+-
+-					$sFile = preg_replace('/^[^:]+:/i', '', $aData[($iFor - 1)]);
+-					$sFile = trim($sFile);
+-
+-					// Zeilen um 2 weiter shiften.
+-					$iFor += 1;
+-				} // if
+-			} // if
+-
+-			$aLines[] = $aData[$iFor];
+-		} // for
+-
+-		// Letzter Eintrag.
+-		$this->aDiffData[$sFile] = $aLines;
+-	} // function
+-
+-	/**
+-	 * Message Parsen.
+-	 * @param string $sMessage Commit Text.
+-	 * @return string
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	private function parseMessage($sMessage)
+-	{
+-		$aMatches = array();
+-
+-		// Austauschen von Sonderzeichen im Format \\\\123.
+-		preg_match_all('/\\?\\\\\\([0-9]+)/', $sMessage, $aMatches);
+-
+-		$iMax = count($aMatches[0]);
+-		for ($iFor = 0; $iFor < $iMax; $iFor++)
+-		{
+-			$sChr     = $aMatches[0][$iFor];
+-			$iChr     = (int) $aMatches[1][$iFor];
+-			$sMessage = str_replace($sChr, chr($iChr), $sMessage);
+-		} // for
+-
+-		return $sMessage;
+-	} // function
+-} // class
+
+Modified: hookframework/trunk/Core/Error.php
+===================================================================
+--- hookframework/trunk/Core/Error.php	2008-12-16 19:42:16 UTC (rev 110)
++++ hookframework/trunk/Core/Error.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -95,7 +95,7 @@
+ 			} // if
+
+ 			$this->aInfoLines[] = $this->sListener;
+-			$this->aInfoLines[] = str_repeat('=', 40);
++			$this->aInfoLines[] = str_repeat('=', 80);
+ 			$this->aInfoLines = array_merge($this->aInfoLines, $aLines);
+
+ 			$this->bError = true;
+@@ -121,7 +121,7 @@
+ 			} // if
+
+ 			$this->aLines[$sFile][] = $this->sListener;
+-			$this->aLines[$sFile][] = str_repeat('=', 40);
++			$this->aLines[$sFile][] = str_repeat('=', 80);
+ 			$this->aLines[$sFile] = array_merge($this->aLines[$sFile], $aLines);
+
+ 			$this->bError = true;
+@@ -159,23 +159,42 @@
+ 	 */
+ 	public function getMessages()
+ 	{
+-		if (empty($this->aLines) === true)
++		if ((empty($this->aLines) === true) &&
++			(empty($this->aInfoLines) === true))
+ 		{
+ 			return '';
+ 		} // if
+
++		$sMessage  = "\\n\\n" . str_repeat('~', 80) . "\\n";
++
+ 		// Zuerst die Info Listener Zeilen.
+-		$sMessage = implode("\\n", $this->aInfoLines);
++		if (empty($this->aInfoLines) === false)
++		{
++			$sMessage .= implode("\\n", $this->aInfoLines);
++		} // if
+
+ 		// Listener fuer die Dateien.
+-		foreach ($this->aLines as $sFile => $aFileLines)
++		if (empty($this->aLines) === false)
+ 		{
+-			$sMessage .= $sFile . "\\n";
+-			$sMessage .= str_repeat('-', 80) . "\\n";
+-			$sMessage .= implode("\\n", $aFileLines);
+-			$sMessage .= "\\n\\n\\n";
+-		} // foreach
++			$bPrintLine = false;
++			foreach ($this->aLines as $sFile => $aFileLines)
++			{
++				if ($bPrintLine === true)
++				{
++					$sMessage .= "\\n\\n";
++				} // if
+
++				$sMessage .= $sFile . "\\n";
++				$sMessage .= str_repeat('-', 80) . "\\n";
++				$sMessage .= implode("\\n", $aFileLines);
++
++				$bPrintLine = true;
++			} // foreach
++		} // if
++
++		$sMessage .= "\\n\\n";
++		$sMessage .= str_repeat('~', 80) . "\\n";
++
+ 		$this->aLines = array();
+ 		$this->bError = false;
+
+
+Modified: hookframework/trunk/Core/Hook.php
+===================================================================
+--- hookframework/trunk/Core/Hook.php	2008-12-16 19:42:16 UTC (rev 110)
++++ hookframework/trunk/Core/Hook.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -8,19 +8,14 @@
+  * @version    SVN: $Id: commit_110-1_common.log 2 2008-12-19 12:32:00Z alexander $
+ * @link       http://www.azimmermann.com/
+ * @since      File available since Release 1.0.0
+  */
+
++/** Logger einfuegen */
++require_once dirname(__FILE__) . '/Log.php';
+
+-define('HF_INFO', 1);
+-
+-define('HF_DEBUG', 2);
+-
+-define('HF_VARDUMP', 3);
+-
+-
+ /** Commit Parser einfuegen. */
+-require_once dirname(__FILE__) . '/CommitParser.php';
++require_once dirname(__FILE__) . '/Commit/CommitParser.php';
+
+ // Listener Parser einfuegen.
+-require_once dirname(__FILE__) . '/ListenerParser.php';
++require_once dirname(__FILE__) . '/Listener/ListenerParser.php';
+
+ // Argumente der Kommandozeile pruefen
+ require_once dirname(__FILE__) . '/Arguments.php';
+@@ -72,6 +67,12 @@
+ 	private $oError;
+
+ 	/**
++	 * Log Objekt.
++	 * @var Log
++	 */
++	private $oLog;
++
++	/**
+ 	 * Liste mit den Listener Objekten fuer Info und Object.
+ 	 * @var array
+ 	 */
+@@ -108,12 +109,6 @@
+ 	private $sMessages;
+
+ 	/**
+-	 * Log- Modus.
+-	 * @var integer
+-	 */
+-	private $iLogMode;
+-
+-	/**
+ 	 * Konstrutkor.
+ 	 *
+ 	 * Es werden 4 Parameter erwartet.
+@@ -140,8 +135,15 @@
+ 	 */
+ 	public function __construct(array $aArguments)
+ 	{
++		$this->parseIniFile();
++
++		// Log initialisieren, wird auch fuer die anderen Objekte verwendet.
++		$this->oLog = Log::getInstance();
++		$this->oLog->setLogFile($this->aCfg['logfile']);
++		$this->oLog->setLogMode($this->aCfg['logmode']);
++		$this->oLog->log(Log::HF_VARDUMP, 'Argumente', $aArguments);
++
+ 		$this->bStart         = false;
+-		$this->iLogMode       = 3;
+ 		$this->aErrors        = array();
+ 		$this->aWarnings      = array();
+ 		$this->aWrittenFiles  = array();
+@@ -150,29 +152,17 @@
+ 		$this->oArguments     = new Arguments($aArguments);
+ 		$this->oError         = new Error();
+
+-		$this->log(HF_VARDUMP, 'Argumente', $aArguments);
+
+ 	} // function
+
+ 	/**
+-	 * Setzen des Log Level Modus.
+-	 * @param integer $iLogMode Log Modus.
+-	 * @return void
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function setLogMode($iLogMode = 0)
+-	{
+-		$this->iLogMode = $iLogMode;
+-	} // function
+-
+-	/**
+ 	 * Parsen INI- Datei.
+ 	 * @return void
+ 	 * @author Alexander Zimmermann <alex@azimmermann.com>
+ 	 */
+ 	private function parseIniFile()
+ 	{
+-		$this->aCfg = parse_ini_file('config.ini');
++		$this->aCfg = parse_ini_file(dirname(__FILE__) . '/../config.ini');
+ 	} // function
+
+ 	/**
+@@ -182,14 +172,12 @@
+ 	 */
+ 	private function init()
+ 	{
+-		$this->log(HF_INFO, 'Init');
++		$this->oLog->log(Log::HF_INFO, 'Init');
+
+-		$this->parseIniFile();
+-
+ 		if ($this->oArguments->argumentsOk() === false)
+ 		{
+ 			$this->bError = true;
+-			$this->log(HF_INFO, 'Arguments Error');
++			$this->oLog->log(Log::HF_INFO, 'Arguments Error');
+ 			$this->showUsage();
+ 			return false;
+ 		} // if
+@@ -201,7 +189,8 @@
+ 		$this->aListener = $oListenerParser->getListener();
+ 		if (empty($this->aListener) === true)
+ 		{
+-			$this->log(HF_DEBUG, 'Keine Listener: Abbruch Verarbeitung');
++			$sMessage = 'Keine Listener: Abbruch Verarbeitung';
++			$this->oLog->log(Log::HF_DEBUG, $sMessage);
+
+ 			// Abbrechen, aber kein Fehler, wenn kein Listener vorhanden ist.
+ 			return false;
+@@ -210,7 +199,7 @@
+ 		$this->oSvn = new Svn($this->aCfg['binpath']);
+ 		$this->oSvn->init($this->oArguments);
+
+-		$this->log(HF_INFO, 'done');
++		$this->oLog->log(Log::HF_INFO, 'done');
+
+ 		return true;
+ 	} // function
+@@ -222,6 +211,8 @@
+ 	 */
+ 	private function showUsage()
+ 	{
++		// TODO: Usage Syntax in Abhaengigkeit von pre, post, start Parameter.
++		// Wenn dieser nicht gesetzt ist, nur Beispiel anreissen.
+ 		echo "\\n";
+ 		echo 'Aufruf mit folgenden Parametern und Reihenfolge: ' . "\\n";
+ 		echo "\\n";
+@@ -244,13 +235,16 @@
+ 	{
+ 		if ($this->oError->getError() === true)
+ 		{
+-			$sErrors = $this->oError->getMessages();
+-			// fwrite(STDERR, $sErrors);
+-			$this->log(HF_INFO, 'errors: ' . "\\n", $sErrors);
++			$sErrors .= $this->oError->getMessages();
++			fwrite(STDERR, $sErrors);
++			$this->oLog->log(Log::HF_INFO, 'errors', $sErrors);
+
++			$this->oLog->log(Log::HF_INFO, 'exit 1');
+ 			return 1;
+ 		} // if
+
++		$this->oLog->log(Log::HF_INFO, 'exit 0');
++
+ 		return 0;
+ 	} // function
+
+@@ -276,15 +270,15 @@
+ 			} // if
+ 		} // if
+
+-		$this->log(HF_INFO, 'run');
++		$this->oLog->log(Log::HF_INFO, 'run');
+
+ 		// Parsen des Commits.
+-		$this->log(HF_INFO, 'parse commit');
++		$this->oLog->log(Log::HF_INFO, 'parse commit');
+ 		$oCommitParser     = new CommitParser($this->oArguments, $this->oSvn);
+ 		$this->oCommitData = $oCommitParser->getCommitDataObject();
+
+ 		// Listener durchlaufen.
+-		$this->log(HF_INFO, 'run listener');
++		$this->oLog->log(Log::HF_INFO, 'run listener');
+ 		$this->runListenerInfo();
+ 		$this->runListenerObject();
+
+@@ -309,8 +303,6 @@
+ 		$iMax = count($this->aListener['info']);
+ 		for ($iFor = 0; $iFor < $iMax; $iFor++)
+ 		{
+-
+-
+ 			$this->aListenerFiles = array();
+ 			$this->processInfoListener($this->aListener['info'][$iFor]);
+ 		} // for
+@@ -326,7 +318,7 @@
+ 		// Keine Dateien dann den Listener einmal aufrufen.
+ 		$sLog  = 'process info listener ';
+ 		$sLog .= $oListener->getListenerName();
+-		$this->log(HF_INFO, $sLog);
++		$this->oLog->log(Log::HF_INFO, $sLog);
+
+ 		$oCommitInfo   = $this->oCommitData->getCommitInfo();
+
+@@ -353,7 +345,7 @@
+ 		{
+ 			$sLog  = 'process object listener ';
+ 			$sLog .= $this->aListener['object'][$iFor]->getListenerName();
+-			$this->log(HF_DEBUG, $sLog);
++			$this->oLog->log(Log::HF_DEBUG, $sLog);
+
+ 			$this->aListenerFiles = array();
+ 			$this->processObjectListener($this->aListener['object'][$iFor]);
+@@ -398,7 +390,7 @@
+ 		$sTmpFile = $oObject->getTmpObjectPath();
+
+ 		$sLog = 'process file "' . $sFile . '"';
+-		$this->log(HF_INFO, $sLog);
++		$this->oLog->log(Log::HF_INFO, $sLog);
+
+ 		$sContent = $this->oSvn->getContent($sFile, $sTmpFile);
+
+@@ -432,29 +424,10 @@
+ 		for ($iFor = 0; $iFor < $iMax; $iFor++)
+ 		{
+ 			unlink($this->aWrittenFiles[$iFor]);
+-			$this->log(HF_DEBUG, 'delete: ' . $this->aWrittenFiles[$iFor]);
++
++			$sMessage = 'delete: ' . $this->aWrittenFiles[$iFor];
++			$this->oLog->log(Log::HF_DEBUG, $sMessage);
+ 		} // for
+ 	} // function
+-
+-	/**
+-	 * Kleines feines Log fuer den Hook.
+-	 * @return void
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function log($iLogMode, $sMessage, $mVar = '')
+-	{
+-		if ($this->iLogMode < $iLogMode)
+-		{
+-			return;
+-		} // if
+-
+-		$sVarDump = '';
+-		if ($mVar !== '')
+-		{
+-			$sVarDump = var_export($mVar, true);
+-		} // if
+-
+-		error_log($sMessage . $sVarDump);
+-	} // function
+ } // class
+
+
+Added: hookframework/trunk/Core/Listener/ListenerInfo.php
+===================================================================
+--- hookframework/trunk/Core/Listener/ListenerInfo.php	                        (rev 0)
++++ hookframework/trunk/Core/Listener/ListenerInfo.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -0,0 +1,75 @@
++<?php
++/**
++ * Interface für Info Listener.
++ * @category   Main
++ * @package    Hook
++ * @subpackage Core
++ * @author     Alexander Zimmermann <alex@azimmermann.com>
++ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
++ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
++ * @version    SVN: $Id: commit_110-1_common.log 2 2008-12-19 12:32:00Z alexander $
++ * @link       http://www.azimmermann.com/
++ * @since      File available since Release 1.0.0
++ */
++
++/**
++ * Interface für Info Listener.
++ * @category   Main
++ * @package    Hook
++ * @subpackage Core
++ * @author     Alexander Zimmermann <alex@azimmermann.com>
++ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
++ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
++ * @version    Release: 1.0.0
++ */
++interface ListenerInfo
++{
++	/**
++	 * Listener Name zurueck geben.
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getListenerName();
++
++	/**
++	 * Registrieren auf die Aktion.
++	 *
++	 * Beispiel
++	 * <pre>
++	 * return 'commit';
++	 * </pre>
++	 *
++	 * Werte fuer <i>action:</i>
++	 * <ul>
++	 * <li><b>Bei post</b></li>
++	 * <li>commit</li>
++	 * <li>lock</li>
++	 * <li>revprop-change</li>
++	 * <li>unlock</li>
++	 * <li><b>Bei pre</b></li>
++	 * <li>commit</li>
++	 * <li>lock</li>
++	 * <li>revprop-change</li>
++	 * <li>unlock</li>
++	 * <li><b>Bei start</b></li>
++	 * <li>start-commit</li>
++	 * </ul>
++	 *
++	 * Werte fuer <i>fileaction:</i>
++	 * <ul
++	 * <li>A Hinzugefuegt</li>
++	 * <li>U Aktualisierte</li>
++	 * <li>D Geloescht</li>
++	 * </ul>
++	 *
++	 * Werte fuer <i>extensions:</i>
++	 * PHP, C, TXT, CSS, usw.
++	 *
++	 * Werte fuer
++	 * @return string
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function register();
++
++	/**
++	 * Ausfuehren der Aktion.
++	 * @param CommitInfo $oInfo Info des Commits.
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function processAction(CommitInfo $oInfo);
++} // interface
+
+
+Property changes on: hookframework/trunk/Core/Listener/ListenerInfo.php
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+Added: hookframework/trunk/Core/Listener/ListenerInfoAbstract.php
+===================================================================
+--- hookframework/trunk/Core/Listener/ListenerInfoAbstract.php	                        (rev 0)
++++ hookframework/trunk/Core/Listener/ListenerInfoAbstract.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -0,0 +1,38 @@
++<?php
++/**
++ * Abstrakte Klasse fuer Object Listener.
++ * @category   Main
++ * @package    Hook
++ * @subpackage Core
++ * @author     Alexander Zimmermann <alex@azimmermann.com>
++ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
++ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
++ * @version    SVN: $Id: $
++ */
++
++require_once dirname(__FILE__) . '/ListenerInfo.php';
++
++/**
++ * Abstrakte Klasse fuer Object Listener.
++ * @category   Main
++ * @package    Hook
++ * @subpackage Core
++ * @author     Alexander Zimmermann <alex@azimmermann.com>
++ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
++ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
++ * @version    Release: 1.0.0
++ */
++abstract class ListenerInfoAbstract implements ListenerInfo
++{
++	/**
++	 * Listener Name.
++	 * @var string
++	 */
++	protected $sListener = 'Default Listener Name';
++
++	/**
++	 * Listenern Name zurueck liefern.
++	 * @return string
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getListenerName()
++	{
++		return $this->sListener;
++	} // function
++} // class
+
+
+Property changes on: hookframework/trunk/Core/Listener/ListenerInfoAbstract.php
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+Added: hookframework/trunk/Core/Listener/ListenerObject.php
+===================================================================
+--- hookframework/trunk/Core/Listener/ListenerObject.php	                        (rev 0)
++++ hookframework/trunk/Core/Listener/ListenerObject.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -0,0 +1,83 @@
++<?php
++/**
++ * Interface für Object Listener.
++ * @category   Main
++ * @package    Hook
++ * @subpackage Core
++ * @author     Alexander Zimmermann <alex@azimmermann.com>
++ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
++ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
++ * @version    SVN: $Id: commit_110-1_common.log 2 2008-12-19 12:32:00Z alexander $
++ * @link       http://www.azimmermann.com/
++ * @since      File available since Release 1.0.0
++ */
++
++/**
++ * Interface für Object Listener.
++ * @category   Main
++ * @package    Hook
++ * @subpackage Core
++ * @author     Alexander Zimmermann <alex@azimmermann.com>
++ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
++ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
++ * @version    Release: 1.0.0
++ */
++interface ListenerObject
++{
++	/**
++	 * Listener Name zurueck geben.
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getListenerName();
++
++	/**
++	 * Registrieren auf die Aktion und Dateien (Extension).
++	 *
++	 * Beispiel
++	 * <pre>
++	 * return array(
++	 * 		   'action'     => 'commit\
++	 * 		   'fileaction' => array(
++	 * 							'A', 'U'
++	 * 						   ),
++	 * 		   'extensions' => array(
++	 * 							'PHP'
++	 * 						   )
++	 * 		  );
++	 * </pre>
++	 *
++	 * Werte fuer <i>action:</i>
++	 * <ul>
++	 * <li><b>Bei post</b></li>
++	 * <li>commit</li>
++	 * <li>lock</li>
++	 * <li>revprop-change</li>
++	 * <li>unlock</li>
++	 * <li><b>Bei pre</b></li>
++	 * <li>commit</li>
++	 * <li>lock</li>
++	 * <li>revprop-change</li>
++	 * <li>unlock</li>
++	 * <li><b>Bei start</b></li>
++	 * <li>start-commit</li>
++	 * </ul>
++	 *
++	 * Werte fuer <i>fileaction:</i>
++	 * <ul
++	 * <li>A Hinzugefuegt</li>
++	 * <li>U Aktualisierte</li>
++	 * <li>D Geloescht</li>
++	 * </ul>
++	 *
++	 * Werte fuer <i>extensions:</i>
++	 * PHP, C, TXT, CSS, usw.
++	 *
++	 * Werte fuer
++	 * @return string
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function register();
++
++	/**
++	 * Ausfuehren der Aktion.
++	 * @param CommitObject $oObject Verz. / Datei-Objekt.
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function processAction(CommitObject $oObject);
++} // interface
+
+
+Property changes on: hookframework/trunk/Core/Listener/ListenerObject.php
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+Added: hookframework/trunk/Core/Listener/ListenerObjectAbstract.php
+===================================================================
+--- hookframework/trunk/Core/Listener/ListenerObjectAbstract.php	                        (rev 0)
++++ hookframework/trunk/Core/Listener/ListenerObjectAbstract.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -0,0 +1,38 @@
++<?php
++/**
++ * Abstrakte Klasse fuer Object Listener.
++ * @category   Main
++ * @package    Hook
++ * @subpackage Core
++ * @author     Alexander Zimmermann <alex@azimmermann.com>
++ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
++ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
++ * @version    SVN: $Id: $
++ */
++
++require_once dirname(__FILE__) . '/ListenerObject.php';
++
++/**
++ * Abstrakte Klasse fuer Object Listener.
++ * @category   Main
++ * @package    Hook
++ * @subpackage Core
++ * @author     Alexander Zimmermann <alex@azimmermann.com>
++ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
++ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
++ * @version    Release: 1.0.0
++ */
++abstract class ListenerObjectAbstract implements ListenerObject
++{
++	/**
++	 * Listener Name.
++	 * @var string
++	 */
++	protected $sListener = 'Default Listener Name';
++
++	/**
++	 * Listenern Name zurueck liefern.
++	 * @return string
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getListenerName()
++	{
++		return $this->sListener;
++	} // function
++} // class
+
+
+Property changes on: hookframework/trunk/Core/Listener/ListenerObjectAbstract.php
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+Added: hookframework/trunk/Core/Listener/ListenerParser.php
+===================================================================
+--- hookframework/trunk/Core/Listener/ListenerParser.php	                        (rev 0)
++++ hookframework/trunk/Core/Listener/ListenerParser.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -0,0 +1,340 @@
++<?php
++/**
++ * Parsen der verschiedenen Typlistener.
++ * @category   Main
++ * @package    Hook
++ * @subpackage Main
++ * @author     Alexander Zimmermann <alex@azimmermann.com>
++ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
++ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
++ * @version    SVN: $Id: commit_110-1_common.log 2 2008-12-19 12:32:00Z alexander $
++ * @link       http://www.azimmermann.com/
++ * @since      File available since Release 1.0.0
++ */
++
++/** Interface einfuegen damit die Listener das nicht alle brauchen. */
++require_once dirname(__FILE__) . '/ListenerInfo.php';
++
++/** Interface einfuegen damit die Listener das nicht alle brauchen. */
++require_once dirname(__FILE__) . '/ListenerObject.php';
++
++// Eigentlich sollte der Kommentar mit /** */ sein wegen documentor.
++// Abstrakte Klasse einfuegen damit die Listener das nicht alle brauchen.
++require_once dirname(__FILE__) . '/ListenerInfoAbstract.php';
++
++// Eigentlich sollte der Kommentar mit /** */ sein wegen documentor.
++// Abstrakte Klasse einfuegen damit die Listener das nicht alle brauchen.
++require_once dirname(__FILE__) . '/ListenerObjectAbstract.php';
++
++/**
++ * Parsen der verschiedenen Typlistener.
++ *
++ * Es gibt 3 Arten von Transaktionen. Eine fuer den Start, eine nach dem die
++ * Transaktion gestartet wurde aber noch commited (pre). Und eine nachdem die
++ * Transaktion und Verarbeitung abgeschlossen wurde (post).
++ * <ul>
++ * <li>Start</li>
++ * <li>Pre</li>
++ * <li>Post</li>
++ * </ul>
++ * @category   Main
++ * @package    Hook
++ * @subpackage Main
++ * @author     Alexander Zimmermann <alex@azimmermann.com>
++ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
++ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
++ * @version    Release: 1.0.0
++ */
++class ListenerParser
++{
++	/**
++	 * Main Hook.
++	 * @var Arguments
++	 */
++	private $oArguments;
++
++	/**
++	 * Liste der Listener Dateien.
++	 * @var array
++	 */
++	private $aListenerFiles;
++
++	/**
++	 * Liste der Listener Objekte fuer Dateiobjekte.
++	 * @var array
++	 */
++	private $aListenerObject;
++
++	/**
++	 * Liste der Listener Objekte fuer Info.
++	 * @var array
++	 */
++	private $aListenerInfo;
++
++	/**
++	 * Fehler warum Listener nicht korrekt war.
++	 * @var string
++	 */
++	private $sError;
++
++	/**
++	 * Konstrutkor.
++	 * @param Arguments $oArguments Argumentenobjekt.
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function __construct(Arguments $oArguments)
++	{
++		$this->oArguments  = $oArguments;
++		$this->aListener = array();
++
++		$this->readDirectory($oArguments->getMainType());
++		$this->checkListener();
++		$this->registerListenerInfo();
++		$this->registerListenerObject();
++	} // function
++
++	/**
++	 * Listener Objekte zurueck geben.
++	 * @return array
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getListener()
++	{
++		$aListener = array();
++
++		if (empty($this->aListenerInfo) === false)
++		{
++			$aListener['info'] = $this->aListenerInfo;
++		} // if
++
++		if (empty($this->aListenerInfo) === false)
++		{
++			$aListener['object'] = $this->aListenerObject;
++		} // if
++
++		return $aListener;
++	} // function
++
++	/**
++	 * Listener Dateien zurueck geben.
++	 * @return array
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getListenerFiles()
++	{
++		return $this->aListenerFiles;
++	} // function
++
++	/**
++	 * Auslesen der Dateien aus dem jeweiligen Verzeichnis.
++	 * @param string $sType Typ der aktuellen Transaktion.
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	private function readDirectory($sType)
++	{
++		$sType     = ucfirst($sType);
++		$sDir      = dirname(__FILE__) . '/../../Listener/';
++		$aListener = glob($sDir . $sType . '/*.php');
++
++		$oLog = log::getInstance();
++		$oLog->log(Log::HF_VARDUMP, 'files', $aListener);
++		$this->aListenerFiles = $aListener;
++	} // function
++
++	/**
++	 * Register Methoden fuer die Info Listener aufrufen.
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	private function registerListenerInfo()
++	{
++		$iMax = count($this->aListenerInfo);
++		for ($iFor = 0; $iFor < $iMax; $iFor++)
++		{
++			$this->registerListenersInfo($this->aListenerInfo[$iFor]);
++		} // for
++	} // function
++
++	/**
++	 * Register Methoden fuer die Info Listener aufrufen.
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	private function registerListenerObject()
++	{
++		$iMax = count($this->aListenerObject);
++		for ($iFor = 0; $iFor < $iMax; $iFor++)
++		{
++			$this->registerListenersObject($this->aListenerObject[$iFor]);
++		} // for
++	} // function
++
++	/**
++	 * Register Werte fuer Info Listener abrufen und pruefen.
++	 * @param ListenerObjectAbstract $oListener Name des Listener Objekts.
++	 * @return Listener
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	private function registerListenersInfo(ListenerInfoAbstract $oListener)
++	{
++		$sRegister = $oListener->register();
++
++		// Richtige Typen?
++		if (is_string($sRegister) === false)
++		{
++			$this->sError .= $sListener .' Register not a String for Info Type';
++			return false;
++		} // if
++
++		// Typen leer?
++		if ($sRegister === '')
++		{
++			$this->sError .= $sListener .' Error Register Array Empty';
++			return false;
++		} // if
++
++		// Richtige Werte?
++		$aSvnActions = $this->oArguments->getSubActions();
++
++		if (in_array($sRegister, $aSvnActions) === false)
++		{
++			$this->sError .= $sListener .' Register Action ';
++			$this->sError .= $sRegister . ' not available!';
++			return false;
++		} // if
++
++		return true;
++	} // function
++
++	/**
++	 * Register Werte fuer Objekt Listener abrufen und pruefen.
++	 * @param ListenerObjectAbstract $oListener Name des Listener Objekts.
++	 * @return Listener
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	private function registerListenersObject(ListenerObjectAbstract $oListener)
++	{
++		$aRegister = $oListener->register();
++
++		// Alle Werte vorhanden?
++		if ((isset($aRegister['action']) === false) ||
++		(isset($aRegister['extensions']) === false) ||
++		(isset($aRegister['fileaction']) === false))
++		{
++			$this->sError .= $sListener .' Error Register Key Elements';
++			return false;
++		} // if
++
++		// Richtige Typen?
++		if ((is_string($aRegister['action']) === false) ||
++		(is_array($aRegister['extensions']) === false) ||
++		(is_array($aRegister['fileaction']) === false))
++		{
++			$this->sError .= $sListener .' Error Register Array Types';
++			return false;
++		} // if
++
++		// Typen leer?
++		if (($aRegister['action'] === '') &&
++			(empty($aRegister['extension']) === true) &&
++			(empty($aRegister['fileaction']) === true))
++		{
++				$this->sError .= $sListener .' Error Register Array Empty';
++				return false;
++		} // if
++
++		// Richtige Werte?
++		$sAction     = $aRegister['action'];
++		$aSvnActions = $this->oArguments->getSubActions();
++
++		if (in_array($sAction, $aSvnActions) === false)
++		{
++			$this->sError .= $sListener .' Register Action ';
++			$this->sError .= $sAction . ' not available!';
++			return false;
++		} // if
++
++		return true;
++	} // function
++
++	/**
++	 * Pruefen ob die Listener verwendet werden koennen.
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	private function checkListener()
++	{
++		$aListener = array();
++
++		$iMax = count($this->aListenerFiles);
++		for ($iFor = 0; $iFor < $iMax; $iFor++)
++		{
++			if (file_exists($this->aListenerFiles[$iFor]) === true)
++			{
++				// Einfuegen der Listenerdatei.
++				include_once $this->aListenerFiles[$iFor];
++
++				// Listenername aus den Dateinamen extrahieren.
++				$sListener = basename($this->aListenerFiles[$iFor]);
++				$sListener = str_replace('.php', '', $sListener);
++
++				// Listener erzeugen und Kategorisieren.
++				try
++				{
++					if ($this->checkListenerObject($sListener) === false)
++					{
++						unset($this->aListenerFiles[$iFor]);
++					}
++					else
++					{
++						$aListener[] = $sListener;
++					} // if
++				}
++				catch (Exception $oException)
++				{
++					echo $oException->getMessage();
++				} // try
++			} // if
++		} // for
++
++		// Die noch verbliebenen korrekten Listener setzen.
++		$this->aListenerFiles = $aListener;
++	} // function
++
++	/**
++	 * Pruefen des eingefuegten Listeners.
++	 * @param string $sListener Name des Listenere-Objekts.
++	 * @return boolean
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	private function checkListenerObject($sListener)
++	{
++		// Existiert die Klasse?
++		if (class_exists($sListener) === false)
++		{
++			$this->sError .= $sListener . ' class and filename dont match!';
++			return false;
++		} // if
++
++		// Implmentiert der Listener das richtige Interface und Abstrakt Klasse?
++		$aImplements = class_implements($sListener);
++		$aParents    = class_parents($sListener);
++
++		if ((isset($aImplements['ListenerInfo']) === true) &&
++			(isset($aParents['ListenerInfoAbstract']) === true))
++		{
++			// TODO: In einem try catch Block abfangen bei Fehlern.
++			$this->aListenerInfo[] = new $sListener;
++			return true;
++		} // if
++
++		if ((isset($aImplements['ListenerObject']) === true) &&
++			(isset($aParents['ListenerObjectAbstract']) === true))
++		{
++			// TODO: In einem try catch Block abfangen bei Fehlern.
++			$this->aListenerObject[] = new $sListener;
++			return true;
++		} // if
++
++		$sError  = $sListener . ' does not implement or extend correct ';
++		$sError .= 'interface or abstract class.!';
++		$this->sError .= $sError;
++
++		return false;
++	} // function
++} // class
+
+
+Property changes on: hookframework/trunk/Core/Listener/ListenerParser.php
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+Deleted: hookframework/trunk/Core/ListenerInfo.php
+===================================================================
+--- hookframework/trunk/Core/ListenerInfo.php	2008-12-16 19:42:16 UTC (rev 110)
++++ hookframework/trunk/Core/ListenerInfo.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -1,75 +0,0 @@
+-<?php
+-/**
+- * Interface für Info Listener.
+- * @category   Main
+- * @package    Hook
+- * @subpackage Core
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    SVN: $Id: commit_110-1_common.log 2 2008-12-19 12:32:00Z alexander $
+- * @link       http://www.azimmermann.com/
+- * @since      File available since Release 1.0.0
+- */
+-
+-/**
+- * Interface für Info Listener.
+- * @category   Main
+- * @package    Hook
+- * @subpackage Core
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    Release: 1.0.0
+- */
+-interface ListenerInfo
+-{
+-	/**
+-	 * Listener Name zurueck geben.
+-	 * @return void
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getListenerName();
+-
+-	/**
+-	 * Registrieren auf die Aktion.
+-	 *
+-	 * Beispiel
+-	 * <pre>
+-	 * return 'commit';
+-	 * </pre>
+-	 *
+-	 * Werte fuer <i>action:</i>
+-	 * <ul>
+-	 * <li><b>Bei post</b></li>
+-	 * <li>commit</li>
+-	 * <li>lock</li>
+-	 * <li>revprop-change</li>
+-	 * <li>unlock</li>
+-	 * <li><b>Bei pre</b></li>
+-	 * <li>commit</li>
+-	 * <li>lock</li>
+-	 * <li>revprop-change</li>
+-	 * <li>unlock</li>
+-	 * <li><b>Bei start</b></li>
+-	 * <li>start-commit</li>
+-	 * </ul>
+-	 *
+-	 * Werte fuer <i>fileaction:</i>
+-	 * <ul
+-	 * <li>A Hinzugefuegt</li>
+-	 * <li>U Aktualisierte</li>
+-	 * <li>D Geloescht</li>
+-	 * </ul>
+-	 *
+-	 * Werte fuer <i>extensions:</i>
+-	 * PHP, C, TXT, CSS, usw.
+-	 *
+-	 * Werte fuer
+-	 * @return string
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function register();
+-
+-	/**
+-	 * Ausfuehren der Aktion.
+-	 * @param CommitInfo $oInfo Info des Commits.
+-	 * @return void
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function processAction(CommitInfo $oInfo);
+-} // interface
+
+Deleted: hookframework/trunk/Core/ListenerInfoAbstract.php
+===================================================================
+--- hookframework/trunk/Core/ListenerInfoAbstract.php	2008-12-16 19:42:16 UTC (rev 110)
++++ hookframework/trunk/Core/ListenerInfoAbstract.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -1,38 +0,0 @@
+-<?php
+-/**
+- * Abstrakte Klasse fuer Object Listener.
+- * @category   Main
+- * @package    Hook
+- * @subpackage Core
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    SVN: $Id: $
+- */
+-
+-require_once dirname(__FILE__) . '/ListenerInfo.php';
+-
+-/**
+- * Abstrakte Klasse fuer Object Listener.
+- * @category   Main
+- * @package    Hook
+- * @subpackage Core
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    Release: 1.0.0
+- */
+-abstract class ListenerInfoAbstract implements ListenerInfo
+-{
+-	/**
+-	 * Listener Name.
+-	 * @var string
+-	 */
+-	protected $sListener = 'Default Listener Name';
+-
+-	/**
+-	 * Listenern Name zurueck liefern.
+-	 * @return string
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getListenerName()
+-	{
+-		return $this->sListener;
+-	} // function
+-} // class
+
+Deleted: hookframework/trunk/Core/ListenerObject.php
+===================================================================
+--- hookframework/trunk/Core/ListenerObject.php	2008-12-16 19:42:16 UTC (rev 110)
++++ hookframework/trunk/Core/ListenerObject.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -1,83 +0,0 @@
+-<?php
+-/**
+- * Interface für Object Listener.
+- * @category   Main
+- * @package    Hook
+- * @subpackage Core
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    SVN: $Id: commit_110-1_common.log 2 2008-12-19 12:32:00Z alexander $
+- * @link       http://www.azimmermann.com/
+- * @since      File available since Release 1.0.0
+- */
+-
+-/**
+- * Interface für Object Listener.
+- * @category   Main
+- * @package    Hook
+- * @subpackage Core
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    Release: 1.0.0
+- */
+-interface ListenerObject
+-{
+-	/**
+-	 * Listener Name zurueck geben.
+-	 * @return void
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getListenerName();
+-
+-	/**
+-	 * Registrieren auf die Aktion und Dateien (Extension).
+-	 *
+-	 * Beispiel
+-	 * <pre>
+-	 * return array(
+-	 * 		   'action'     => 'commit\
+-	 * 		   'fileaction' => array(
+-	 * 							'A', 'U'
+-	 * 						   ),
+-	 * 		   'extensions' => array(
+-	 * 							'PHP'
+-	 * 						   )
+-	 * 		  );
+-	 * </pre>
+-	 *
+-	 * Werte fuer <i>action:</i>
+-	 * <ul>
+-	 * <li><b>Bei post</b></li>
+-	 * <li>commit</li>
+-	 * <li>lock</li>
+-	 * <li>revprop-change</li>
+-	 * <li>unlock</li>
+-	 * <li><b>Bei pre</b></li>
+-	 * <li>commit</li>
+-	 * <li>lock</li>
+-	 * <li>revprop-change</li>
+-	 * <li>unlock</li>
+-	 * <li><b>Bei start</b></li>
+-	 * <li>start-commit</li>
+-	 * </ul>
+-	 *
+-	 * Werte fuer <i>fileaction:</i>
+-	 * <ul
+-	 * <li>A Hinzugefuegt</li>
+-	 * <li>U Aktualisierte</li>
+-	 * <li>D Geloescht</li>
+-	 * </ul>
+-	 *
+-	 * Werte fuer <i>extensions:</i>
+-	 * PHP, C, TXT, CSS, usw.
+-	 *
+-	 * Werte fuer
+-	 * @return string
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function register();
+-
+-	/**
+-	 * Ausfuehren der Aktion.
+-	 * @param CommitObject $oObject Verz. / Datei-Objekt.
+-	 * @return void
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function processAction(CommitObject $oObject);
+-} // interface
+
+Deleted: hookframework/trunk/Core/ListenerObjectAbstract.php
+===================================================================
+--- hookframework/trunk/Core/ListenerObjectAbstract.php	2008-12-16 19:42:16 UTC (rev 110)
++++ hookframework/trunk/Core/ListenerObjectAbstract.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -1,38 +0,0 @@
+-<?php
+-/**
+- * Abstrakte Klasse fuer Object Listener.
+- * @category   Main
+- * @package    Hook
+- * @subpackage Core
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    SVN: $Id: $
+- */
+-
+-require_once dirname(__FILE__) . '/ListenerObject.php';
+-
+-/**
+- * Abstrakte Klasse fuer Object Listener.
+- * @category   Main
+- * @package    Hook
+- * @subpackage Core
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    Release: 1.0.0
+- */
+-abstract class ListenerObjectAbstract implements ListenerObject
+-{
+-	/**
+-	 * Listener Name.
+-	 * @var string
+-	 */
+-	protected $sListener = 'Default Listener Name';
+-
+-	/**
+-	 * Listenern Name zurueck liefern.
+-	 * @return string
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getListenerName()
+-	{
+-		return $this->sListener;
+-	} // function
+-} // class
+
+Deleted: hookframework/trunk/Core/ListenerParser.php
+===================================================================
+--- hookframework/trunk/Core/ListenerParser.php	2008-12-16 19:42:16 UTC (rev 110)
++++ hookframework/trunk/Core/ListenerParser.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -1,339 +0,0 @@
+-<?php
+-/**
+- * Parsen der verschiedenen Typlistener.
+- * @category   Main
+- * @package    Hook
+- * @subpackage Main
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    SVN: $Id: commit_110-1_common.log 2 2008-12-19 12:32:00Z alexander $
+- * @link       http://www.azimmermann.com/
+- * @since      File available since Release 1.0.0
+- */
+-
+-/** Interface einfuegen damit die Listener das nicht alle brauchen. */
+-require_once dirname(__FILE__) . '/ListenerInfo.php';
+-
+-/** Interface einfuegen damit die Listener das nicht alle brauchen. */
+-require_once dirname(__FILE__) . '/ListenerObject.php';
+-
+-// Eigentlich sollte der Kommentar mit /** */ sein wegen documentor.
+-// Abstrakte Klasse einfuegen damit die Listener das nicht alle brauchen.
+-require_once dirname(__FILE__) . '/ListenerInfoAbstract.php';
+-
+-// Eigentlich sollte der Kommentar mit /** */ sein wegen documentor.
+-// Abstrakte Klasse einfuegen damit die Listener das nicht alle brauchen.
+-require_once dirname(__FILE__) . '/ListenerObjectAbstract.php';
+-
+-/**
+- * Parsen der verschiedenen Typlistener.
+- *
+- * Es gibt 3 Arten von Transaktionen. Eine fuer den Start, eine nach dem die
+- * Transaktion gestartet wurde aber noch commited (pre). Und eine nachdem die
+- * Transaktion und Verarbeitung abgeschlossen wurde (post).
+- * <ul>
+- * <li>Start</li>
+- * <li>Pre</li>
+- * <li>Post</li>
+- * </ul>
+- * @category   Main
+- * @package    Hook
+- * @subpackage Main
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    Release: 1.0.0
+- */
+-class ListenerParser
+-{
+-	/**
+-	 * Main Hook.
+-	 * @var Arguments
+-	 */
+-	private $oArguments;
+-
+-	/**
+-	 * Liste der Listener Dateien.
+-	 * @var array
+-	 */
+-	private $aListenerFiles;
+-
+-	/**
+-	 * Liste der Listener Objekte fuer Dateiobjekte.
+-	 * @var array
+-	 */
+-	private $aListenerObject;
+-
+-	/**
+-	 * Liste der Listener Objekte fuer Info.
+-	 * @var array
+-	 */
+-	private $aListenerInfo;
+-
+-	/**
+-	 * Fehler warum Listener nicht korrekt war.
+-	 * @var string
+-	 */
+-	private $sError;
+-
+-	/**
+-	 * Konstrutkor.
+-	 * @param Arguments $oArguments Argumentenobjekt.
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function __construct(Arguments $oArguments)
+-	{
+-		$this->oArguments  = $oArguments;
+-		$this->aListener = array();
+-
+-		$this->readDirectory($oArguments->getMainType());
+-		$this->checkListener();
+-		$this->registerListenerInfo();
+-		$this->registerListenerObject();
+-	} // function
+-
+-	/**
+-	 * Listener Objekte zurueck geben.
+-	 * @return array
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getListener()
+-	{
+-		$aListener = array();
+-
+-		if (empty($this->aListenerInfo) === false)
+-		{
+-			$aListener['info'] = $this->aListenerInfo;
+-		} // if
+-
+-		if (empty($this->aListenerInfo) === false)
+-		{
+-			$aListener['object'] = $this->aListenerObject;
+-		} // if
+-
+-		return $aListener;
+-	} // function
+-
+-	/**
+-	 * Listener Dateien zurueck geben.
+-	 * @return array
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	public function getListenerFiles()
+-	{
+-		return $this->aListenerFiles;
+-	} // function
+-
+-	/**
+-	 * Auslesen der Dateien aus dem jeweiligen Verzeichnis.
+-	 * @param string $sType Typ der aktuellen Transaktion.
+-	 * @return void
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	private function readDirectory($sType)
+-	{
+-		$sType     = ucfirst($sType);
+-		$sDir      = dirname(__FILE__) . '/../Listener/';
+-		$aListener = glob($sDir . $sType . '/*.php');
+-
+-		error_log('files: ' . var_export($aListener, true));
+-		$this->aListenerFiles = $aListener;
+-	} // function
+-
+-	/**
+-	 * Register Methoden fuer die Info Listener aufrufen.
+-	 * @return void
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	private function registerListenerInfo()
+-	{
+-		$iMax = count($this->aListenerInfo);
+-		for ($iFor = 0; $iFor < $iMax; $iFor++)
+-		{
+-			$this->registerListenersInfo($this->aListenerInfo[$iFor]);
+-		} // for
+-	} // function
+-
+-	/**
+-	 * Register Methoden fuer die Info Listener aufrufen.
+-	 * @return void
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	private function registerListenerObject()
+-	{
+-		$iMax = count($this->aListenerObject);
+-		for ($iFor = 0; $iFor < $iMax; $iFor++)
+-		{
+-			$this->registerListenersObject($this->aListenerObject[$iFor]);
+-		} // for
+-	} // function
+-
+-	/**
+-	 * Register Werte fuer Info Listener abrufen und pruefen.
+-	 * @param ListenerObjectAbstract $oListener Name des Listener Objekts.
+-	 * @return Listener
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	private function registerListenersInfo(ListenerInfoAbstract $oListener)
+-	{
+-		$sRegister = $oListener->register();
+-
+-		// Richtige Typen?
+-		if (is_string($sRegister) === false)
+-		{
+-			$this->sError .= $sListener .' Register not a String for Info Type';
+-			return false;
+-		} // if
+-
+-		// Typen leer?
+-		if ($sRegister === '')
+-		{
+-			$this->sError .= $sListener .' Error Register Array Empty';
+-			return false;
+-		} // if
+-
+-		// Richtige Werte?
+-		$aSvnActions = $this->oArguments->getSubActions();
+-
+-		if (in_array($sRegister, $aSvnActions) === false)
+-		{
+-			$this->sError .= $sListener .' Register Action ';
+-			$this->sError .= $sRegister . ' not available!';
+-			return false;
+-		} // if
+-
+-		return true;
+-	} // function
+-
+-	/**
+-	 * Register Werte fuer Objekt Listener abrufen und pruefen.
+-	 * @param ListenerObjectAbstract $oListener Name des Listener Objekts.
+-	 * @return Listener
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	private function registerListenersObject(ListenerObjectAbstract $oListener)
+-	{
+-		$aRegister = $oListener->register();
+-
+-		// Alle Werte vorhanden?
+-		if ((isset($aRegister['action']) === false) ||
+-		(isset($aRegister['extensions']) === false) ||
+-		(isset($aRegister['fileaction']) === false))
+-		{
+-			$this->sError .= $sListener .' Error Register Key Elements';
+-			return false;
+-		} // if
+-
+-		// Richtige Typen?
+-		if ((is_string($aRegister['action']) === false) ||
+-		(is_array($aRegister['extensions']) === false) ||
+-		(is_array($aRegister['fileaction']) === false))
+-		{
+-			$this->sError .= $sListener .' Error Register Array Types';
+-			return false;
+-		} // if
+-
+-		// Typen leer?
+-		if (($aRegister['action'] === '') &&
+-			(empty($aRegister['extension']) === true) &&
+-			(empty($aRegister['fileaction']) === true))
+-		{
+-				$this->sError .= $sListener .' Error Register Array Empty';
+-				return false;
+-		} // if
+-
+-		// Richtige Werte?
+-		$sAction     = $aRegister['action'];
+-		$aSvnActions = $this->oArguments->getSubActions();
+-
+-		if (in_array($sAction, $aSvnActions) === false)
+-		{
+-			$this->sError .= $sListener .' Register Action ';
+-			$this->sError .= $sAction . ' not available!';
+-			return false;
+-		} // if
+-
+-		return true;
+-	} // function
+-
+-	/**
+-	 * Pruefen ob die Listener verwendet werden koennen.
+-	 * @return void
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	private function checkListener()
+-	{
+-		$aListener = array();
+-
+-		$iMax = count($this->aListenerFiles);
+-		for ($iFor = 0; $iFor < $iMax; $iFor++)
+-		{
+-			if (file_exists($this->aListenerFiles[$iFor]) === true)
+-			{
+-				// Einfuegen der Listenerdatei.
+-				include_once $this->aListenerFiles[$iFor];
+-
+-				// Listenername aus den Dateinamen extrahieren.
+-				$sListener = basename($this->aListenerFiles[$iFor]);
+-				$sListener = str_replace('.php', '', $sListener);
+-
+-				// Listener erzeugen und Kategorisieren.
+-				try
+-				{
+-					if ($this->checkListenerObject($sListener) === false)
+-					{
+-						unset($this->aListenerFiles[$iFor]);
+-					}
+-					else
+-					{
+-						$aListener[] = $sListener;
+-					} // if
+-				}
+-				catch (Exception $oException)
+-				{
+-					echo $oException->getMessage();
+-				} // try
+-			} // if
+-		} // for
+-
+-		// Die noch verbliebenen korrekten Listener setzen.
+-		$this->aListenerFiles = $aListener;
+-	} // function
+-
+-	/**
+-	 * Pruefen des eingefuegten Listeners.
+-	 * @param string $sListener Name des Listenere-Objekts.
+-	 * @return boolean
+-	 * @author Alexander Zimmermann <alex@azimmermann.com>
+-	 */
+-	private function checkListenerObject($sListener)
+-	{
+-		// Existiert die Klasse?
+-		if (class_exists($sListener) === false)
+-		{
+-			$this->sError .= $sListener . ' class and filename dont match!';
+-			return false;
+-		} // if
+-
+-		// Implmentiert der Listener das richtige Interface und Abstrakt Klasse?
+-		$aImplements = class_implements($sListener);
+-		$aParents    = class_parents($sListener);
+-
+-		if ((isset($aImplements['ListenerInfo']) === true) &&
+-			(isset($aParents['ListenerInfoAbstract']) === true))
+-		{
+-			// TODO: In einem try catch Block abfangen bei Fehlern.
+-			$this->aListenerInfo[] = new $sListener;
+-			return true;
+-		} // if
+-
+-		if ((isset($aImplements['ListenerObject']) === true) &&
+-			(isset($aParents['ListenerObjectAbstract']) === true))
+-		{
+-			// TODO: In einem try catch Block abfangen bei Fehlern.
+-			$this->aListenerObject[] = new $sListener;
+-			return true;
+-		} // if
+-
+-		$sError  = $sListener . ' does not implement or extend correct ';
+-		$sError .= 'interface or abstract class.!';
+-		$this->sError .= $sError;
+-
+-		return false;
+-	} // function
+-} // class
+
+Modified: hookframework/trunk/Core/Svn.php
+===================================================================
+--- hookframework/trunk/Core/Svn.php	2008-12-16 19:42:16 UTC (rev 110)
++++ hookframework/trunk/Core/Svn.php	2008-12-16 19:56:21 UTC (txn 110-1)
+@@ -72,9 +72,14 @@
+ 	 * @author Alexander Zimmermann <alex@azimmermann.com>
+ 	 */
+ 	private function execSvnCmd($sCommand)
+-	{error_log('command: ' . $sCommand);
++	{
++		$oLog = Log::getInstance();
++		$oLog->log(Log::HF_VARDUMP, 'command', $sCommand);
++
+ 		exec($sCommand, $aData);
+
++		$oLog->log(Log::HF_VARDUMP, 'result lines', $aData);
++
+ 		return $aData;
+ 	} // function
+

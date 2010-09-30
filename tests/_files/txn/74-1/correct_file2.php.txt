@@ -1,0 +1,48 @@
+<?php
+/**
+ * HookFramework
+ *
+ * Some Text, cause this should be PEAR Style Guide.
+ *
+ * @category  Testing
+ * @package   Tmp
+ * @author    Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright 2002-2010 Alexander Zimmermann <alex@azimmermann.com>
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @link      http://www.azimmermann.com/
+ * @since     Class available since Release 1.1.0
+ */
+
+/**
+ * Diff implementation.
+ *
+ * @category  Testing
+ * @package   Tmp
+ * @author    Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright 2002-2010 Alexander Zimmermann <alex@azimmermann.com>
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   Release: 1.0.0
+ * @link      http://www.azimmermann.com/
+ * @since     Class available since Release 1.1.0
+ */
+class MyClass2
+{
+	/**
+	 * Konstrutkor.
+	 *
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function __construct()
+	{
+	} // function
+
+	/**
+	 * Initialisieren.
+	 *
+	 * @return void
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function init()
+	{
+	} // function
+} // class

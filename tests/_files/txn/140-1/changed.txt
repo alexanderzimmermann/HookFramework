@@ -1,0 +1,6 @@
+A   hookframework/trunk/.buildpath
+A   hookframework/trunk/.project
+A   hookframework/trunk/Core/Usage.php
+_U  hookframework/trunk/logs/
+D   hookframework/trunk/logs/common.log
+U   hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file1.php

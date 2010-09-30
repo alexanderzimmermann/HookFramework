@@ -1,0 +1,192 @@
+<?php
+/**
+ * Daten in der Transaktion.
+ * @category   Main
+ * @package    Hook
+ * @subpackage Core
+ * @author     Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    SVN: $Id: 110-1-hookframework_trunk_Core_Commit_CommitData.php 117 2008-12-16 21:32:54Z alexander $
+ * @link       http://www.azimmermann.com/
+ * @since      File available since Release 1.0.0
+ */
+
+
+/** CommitInfo */
+require dirname(__FILE__) . '/CommitInfo.php';
+
+/** CommitObject */
+require dirname(__FILE__) . '/CommitObject.php';
+
+/**
+ * Daten in der Transaktion.
+ * @category   Main
+ * @package    Hook
+ * @subpackage Core
+ * @author     Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    Release: 1.0.0
+ */
+class CommitData
+{
+	/**
+	 * Commit Infos.
+	 * @var CommitInfo
+	 */
+	private $oCommitInfo;
+
+	/**
+	 * Alle Objekte (Mehrdimensionales Array).
+	 * @var array
+	 */
+	private $aObjects;
+
+	/**
+	 * Konstrutkor.
+	 * @param HookMain $oHook       Hook.
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function __construct()
+	{
+		$this->aObjects['A']['FILES'] = array();
+		$this->aObjects['A']['DIRS']  = array();
+		$this->aObjects['U']['FILES'] = array();
+		$this->aObjects['U']['DIRS']  = array();
+		$this->aObjects['D']['FILES'] = array();
+		$this->aObjects['D']['DIRS']  = array();
+	} // function
+
+	/**
+	 * Objekt hinzufuegen.
+	 *
+	 * Folgende Werte werden uebergeben:
+	 * <ul>
+	 * <li>Aktion (A,U,D)</li>
+	 * <li>Pfad</li>
+	 * <li>Verzeichnis</li>
+	 * </ul>
+	 * @param string  $sTxn          Transaktionsnummer.
+	 * @param integer $iRev          Revisionsnummer.
+	 * @param string  $sObjectAction Aktion (A, U, D).
+	 * @param string  $sObject       Verzeichnis oder Datei.
+	 * @param boolean $bIsDir        Wenn Verzeichnis true.
+	 * @return CommitObject
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function createObject($sTxn, $iRev, $sObjectAction, $sObject, $bIsDir = false)
+	{
+		$oCommitObject = new CommitObject($sTxn, $iRev, $sObjectAction, $bIsDir, $sObject);
+
+		if ($bIsDir === true)
+		{
+			$this->aObjects[$sObjectAction]['DIRS'][] = $oCommitObject;
+		}
+		else
+		{
+			// Dateien nach Extensions.
+			$sExt = $this->determineFileExtension($sObject);
+
+			$this->aObjects[$sObjectAction]['FILES']['ALL'][] = $oCommitObject;
+			$this->aObjects[$sObjectAction]['FILES'][$sExt][] = $oCommitObject;
+		} // if
+
+		return $oCommitObject;
+	} // function
+
+	/**
+	 * Commit Info zurueck geben.
+	 * @return CommitInfo
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function getCommitInfo()
+	{
+		return $this->oCommitInfo;
+	} // function
+
+	/**
+	 * Dateien nach Aktion und Extension zurueck geben.
+	 * @param array $aActionTypes U, A, D Aktionen der Datei.
+	 * @param array $aExtensions  Liste mit Dateierweiterungen.
+	 * @return array
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function getFiles(array $aActionTypes, array $aExtensions)
+	{
+		$aFiles = array();
+
+		// Wenn die beiden Arrays leer sind, dann gibts auch keine Daten.
+		if ((empty($aActionTypes) === true) && (empty($aExtensions) === true))
+		{
+			return $aFiles;
+		} // if
+
+		// Wenn einer der Arrays leer ist der andere nicht dann auf ALL setzen.
+		if ((empty($aActionTypes) === false) && (empty($aExtensions) === true))
+		{
+			$aActionTypes = array('A', 'U', 'D');
+		} // if
+
+		if ((empty($aActionTypes) === true) && (empty($aExtensions) === false))
+		{
+			$aExtensions = array('ALL');
+		} // if
+
+		// Nach den gewuenschten Objekten suchen.
+		foreach ($aActionTypes as $iIndex => $sAction)
+		{
+			if (isset($this->aObjects[$sAction]) === true)
+			{
+				foreach ($aExtensions as $iIndex => $sExt)
+				{
+					if (isset($this->aObjects[$sAction]['FILES'][$sExt]) === true)
+					{
+						$aAddFiles = $this->aObjects[$sAction]['FILES'][$sExt];
+						$aFiles    = array_merge($aFiles, $aAddFiles);
+					} // if
+				} // foreach
+			} // if
+		} // foreach
+
+		return $aFiles;
+	} // function
+
+	/**
+	 * File Extension ermitteln.
+	 * @param string $sFile Datei fuer die die Erweiterung ermittelt wird.
+	 * @return string
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	private function determineFileExtension($sFile)
+	{
+		// Ersten Punkt von hinten suchen. Wenn kein Punkt gefunden wird,
+		// sollte es eine Datei ohne Erweiterung sein.
+		$iPos = strrpos($sFile, '.');
+
+		if ($iPos !== false)
+		{
+			$iPos++;
+			$sExtension = substr($sFile, $iPos, (strlen($sFile) - $iPos));
+		} // if
+
+		return strtoupper($sExtension);
+	} // function
+
+	/**
+	 * Commit Info Objekt erstellen.
+	 * @param array $aInfos Commit Infos.
+	 * @return void
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function createCommitInfo(array $aInfos)
+	{
+		$this->oCommitInfo = new CommitInfo(
+									$aInfos['txn'],
+									$aInfos['rev'],
+									$aInfos['user'],
+									$aInfos['datetime'],
+									$aInfos['message']
+								 );
+	} // function
+} // class

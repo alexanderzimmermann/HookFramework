@@ -1,0 +1,12 @@
+Property changes on: trunk/application/core/conf
+___________________________________________________________________
+Name: svn:ignore
+   - config.ini
+exceptions.inc.php
+modules.inc.php
+
+   + config.ini
+exceptions.inc.php
+modules.inc.php
+controllers.inc.php
+
