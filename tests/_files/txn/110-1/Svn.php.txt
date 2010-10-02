@@ -1,0 +1,155 @@
+<?php
+/**
+ * SVN- Klasse zum ausfuehren der SVN-Befehle.
+ * @category   Main
+ * @package    Hook
+ * @subpackage Core
+ * @author     Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    SVN: $Id: 110-1-hookframework_trunk_Core_Svn.php 117 2008-12-16 21:32:54Z alexander $
+ * @link       http://www.azimmermann.com/
+ * @since      File available since Release 1.0.0
+ */
+
+/**
+ * SVN- Klasse zum ausfuehren der SVN-Befehle.
+ * @category   Main
+ * @package    Hook
+ * @subpackage Core
+ * @author     Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    Release: 1.0.0
+ */
+class Svn
+{
+	/**
+	 * Pfad zu den SVN- Bin's.
+	 * @var string
+	 */
+	public $sSvnPath = '/usr/bin/';
+
+	/**
+	 * SVN Kommand (inkl. Pfad).
+	 * @var stringt
+	 */
+	public $sSvnCmd;
+
+	/**
+	 * Repository.
+	 * @var string
+	 */
+	public $sRepos;
+
+	/**
+	 * Transaction Nummer.
+	 * @var string
+	 */
+	public $sTxn;
+
+	/**
+	 * Konstruktor.
+	 * @param string $sSvnPath Pfad zur ausfuehrbaren Datei svnlook.
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function __construct($sSvnPath)
+	{
+		$this->sSvnPath = $sSvnPath;
+	} // function
+
+	/**
+	 * Initialisieren.
+	 * @param array $aArguments Kommandozeilenargumente.
+	 * @return void|boolean
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function init(Arguments $oArguments)
+	{
+		$this->sRepos  = $oArguments->getRepository();
+		$this->sTxn    = $oArguments->getTransaction();
+		$this->sSvnCmd = $this->sSvnPath . 'svnlook';
+	} // function
+
+	/**
+	 * SVN Kommando ausfuehren.
+	 * @param string $sCommand SVN Kommando.
+	 * @return array
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	private function execSvnCmd($sCommand)
+	{
+		$oLog = Log::getInstance();
+		$oLog->log(Log::HF_VARDUMP, 'command', $sCommand);
+
+		exec($sCommand, $aData);
+
+		$oLog->log(Log::HF_VARDUMP, 'result lines', $aData);
+
+		return $aData;
+	} // function
+
+	/**
+	 * Daten aus Commit die geaender wurden.
+	 * @return array
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function getCommitChanged()
+	{
+		$sCommand  = $this->sSvnCmd;
+		$sCommand .= ' changed ';
+		$sCommand .= '-t ' . $this->sTxn;
+		$sCommand .= ' ' . $this->sRepos;
+
+		return $this->execSvnCmd($sCommand);
+	} // function
+
+	/**
+	 * Infos zu dem Commit holen.
+	 * @return array
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function getCommitInfo()
+	{
+		$sCommand  = $this->sSvnCmd;
+		$sCommand .= ' info';
+		$sCommand .= ' -t ' . $this->sTxn;
+		$sCommand .= ' ' . $this->sRepos;
+
+		return $this->execSvnCmd($sCommand);
+	} // function
+
+	/**
+	 * Unterschiede des Commits (Diff).
+	 * @return array
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function getCommitDiff()
+	{
+		$sCommand  = $this->sSvnCmd;
+		$sCommand .= ' diff';
+		$sCommand .= ' -t ' . $this->sTxn;
+		$sCommand .= ' ' . $this->sRepos;
+
+		return $this->execSvnCmd($sCommand);
+	} // function
+
+	/**
+	 * Schreiben des Contents aus der uebermittelten Datei.
+	 * @param string $sFile    Datei aus TXN.
+	 * @param string $sTmpFile Temporare Datei auf der Platte.
+	 * @return array
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function getContent($sFile, $sTmpFile)
+	{
+		$sCommand  = $this->sSvnCmd;
+		$sCommand .= ' cat';
+		$sCommand .= ' -t ' . $this->sTxn;
+		$sCommand .= ' ' . $this->sRepos;
+		$sCommand .= ' ' . $sFile;
+		$sCommand .= ' > ' . $sTmpFile;
+
+		return $this->execSvnCmd($sCommand);
+	} // function
+} // class

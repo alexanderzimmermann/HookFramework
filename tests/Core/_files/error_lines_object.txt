@@ -1,0 +1,15 @@
+--------------------------------------------------------------------------------
+FOUND 8 ERROR(S) AFFECTING 8 LINE(S)
+--------------------------------------------------------------------------------
+  4 | ERROR | Category name "category" is not valid; consider "Category" instead
+  5 | ERROR | Package name "package" is not valid; consider "Package" instead
+  6 | ERROR | Subpackage name "subpackage" is not valid; consider "Subpackage"
+    |       | instead
+ 13 | ERROR | Category name "category" is not valid; consider "Category" instead
+ 14 | ERROR | Package name "package" is not valid; consider "Package" instead
+ 15 | ERROR | Subpackage name "subpackage" is not valid; consider "Subpackage"
+    |       | instead
+ 23 | ERROR | Function return type is void, but function contains return
+    |       | statement
+ 28 | ERROR | Kein Grossbuchstabe nach Variablentypdeklaration
+--------------------------------------------------------------------------------

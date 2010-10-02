@@ -1,0 +1,77 @@
+Modified: hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file1.php
+===================================================================
+--- hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file1.php	2008-12-20 18:58:26 UTC (rev 74)
++++ hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file1.php	2008-12-20 19:20:58 UTC (txn 74-1)
+@@ -25,4 +25,13 @@
+ 	public function __construct()
+ 	{
+ 	} // function
++
++	/**
++	 * Initialisieren.
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function init()
++	{
++	} // function
+ } // class
+
+Modified: hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file2.php
+===================================================================
+--- hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file2.php	2008-12-20 18:58:26 UTC (rev 74)
++++ hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file2.php	2008-12-20 19:20:58 UTC (txn 74-1)
+@@ -25,4 +25,13 @@
+ 	public function __construct()
+ 	{
+ 	} // function
++
++	/**
++	 * Initialisieren.
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function init()
++	{
++	} // function
+ } // class
+
+
+Property changes on: hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file2.php
+___________________________________________________________________
+Name: svn:executable
+   - *
+Name: svn:keywords
+   + Id
+
+Modified: hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file3.php
+===================================================================
+--- hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file3.php	2008-12-20 18:58:26 UTC (rev 74)
++++ hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file3.php	2008-12-20 19:20:58 UTC (txn 74-1)
+@@ -25,4 +25,13 @@
+ 	public function __construct()
+ 	{
+ 	} // function
++
++	/**
++	 * Initialisieren.
++	 * @return void
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function init()
++	{
++	} // function
+ } // class
+
+
+Property changes on: hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file3.php
+___________________________________________________________________
+Name: svn:executable
+   - *
+Name: text
+   - Your value
+with 2 lines.
+   + My value
+with 2 lines.
+Name: svn:keywords
+   + Id

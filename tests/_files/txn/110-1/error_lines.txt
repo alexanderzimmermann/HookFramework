@@ -1,0 +1,202 @@
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Commit Bemerkung
+================================================================================
+Bitte einen Kommentar angeben und den Kommentar bitte wie folgt einleiten:
++ Wenn etwas neues hinzugefuegt wird.
+- Wenn etwas entfernt wird.
+* Bei Aenduerungen der Datei.
+
+Commit Bemerkung Strict
+================================================================================
+Bitte einen Kommentar angeben und den  Kommentar bitte wie folgt einleiten:
++ Wenn etwas neues hinzugefuegt wird.
+- Wenn etwas entfernt wird.
+* Bei Aenduerungen der Datei.
+hookframework/trunk/Core/Commit/CommitBase.php
+--------------------------------------------------------------------------------
+Style Guide
+================================================================================
+FOUND 3 ERROR(S) AND 0 WARNING(S) AFFECTING 2 LINE(S)
+--------------------------------------------------------------------------------
+ 34 | ERROR | Variable comment short description must end with a full stop
+ 39 | ERROR | Doc comment for "$sTxn" missing
+ 39 | ERROR | Doc comment for "$iRev" missing
+--------------------------------------------------------------------------------
+
+
+hookframework/trunk/Core/Commit/CommitData.php
+--------------------------------------------------------------------------------
+Style Guide
+================================================================================
+FOUND 5 ERROR(S) AND 3 WARNING(S) AFFECTING 7 LINE(S)
+--------------------------------------------------------------------------------
+   9 | ERROR   | There must be exactly one blank line after the file comment
+  15 | ERROR   | Single line block comment not allowed; use inline ("// text")
+     |         | comment instead
+  42 | ERROR   | Superfluous doc comment at position 1
+  42 | ERROR   | Expected 1 space after the longest variable name
+  72 | WARNING | Line exceeds 80 characters; contains 89 characters
+  74 | WARNING | Line exceeds 80 characters; contains 91 characters
+ 122 | ERROR   | Array with multiple values cannot be declared on a single line
+ 137 | WARNING | Line exceeds 80 characters; contains 82 characters
+--------------------------------------------------------------------------------
+
+
+hookframework/trunk/Core/Commit/CommitInfo.php
+--------------------------------------------------------------------------------
+Style Guide
+================================================================================
+FOUND 4 ERROR(S) AND 0 WARNING(S) AFFECTING 4 LINE(S)
+--------------------------------------------------------------------------------
+ 24 | ERROR | Variable comment short description must end with a full stop
+ 30 | ERROR | Variable comment short description must end with a full stop
+ 36 | ERROR | Variable comment short description must end with a full stop
+ 44 | ERROR | Doc comment var "$sRev" does not match actual variable name
+    |       | "$iRev" at position 2
+--------------------------------------------------------------------------------
+
+
+hookframework/trunk/Core/Commit/CommitObject.php
+--------------------------------------------------------------------------------
+Style Guide
+================================================================================
+FOUND 8 ERROR(S) AND 0 WARNING(S) AFFECTING 4 LINE(S)
+--------------------------------------------------------------------------------
+ 40 | ERROR | Variable comment short description must end with a full stop
+ 59 | ERROR | Doc comment var "$sAction" does not match actual variable name
+    |       | "$sTxn" at position 1
+ 60 | ERROR | Doc comment var "$sObject" does not match actual variable name
+    |       | "$iRev" at position 2
+ 60 | ERROR | Doc comment for "$sAction" missing
+ 60 | ERROR | Doc comment for "$bIsDir" missing
+ 60 | ERROR | Doc comment for "$sObject" missing
+ 82 | ERROR | Doc comment var "$sDiff" does not match actual variable name
+    |       | "$aDiff" at position 1
+ 82 | ERROR | Param comment must end with a full stop
+--------------------------------------------------------------------------------
+
+
+hookframework/trunk/Core/Commit/CommitParser.php
+--------------------------------------------------------------------------------
+Style Guide
+================================================================================
+FOUND 6 ERROR(S) AND 1 WARNING(S) AFFECTING 7 LINE(S)
+--------------------------------------------------------------------------------
+  31 | ERROR   | Variable comment short description must end with a full stop
+  50 | ERROR   | Doc comment for "$oSvn" missing
+ 155 | ERROR   | Space after opening parenthesis of function call prohibited
+ 161 | ERROR   | Space before closing parenthesis of function call prohibited
+ 166 | ERROR   | Implicit true comparisons prohibited; use === TRUE instead
+ 236 | WARNING | Line exceeds 80 characters; contains 81 characters
+ 240 | ERROR   | Increment operators should be used where possible; found "$iFor
+     |         | += 1;" but expected "$iFor++"
+--------------------------------------------------------------------------------
+
+
+hookframework/trunk/Core/Listener/ListenerParser.php
+--------------------------------------------------------------------------------
+Style Guide
+================================================================================
+FOUND 13 ERROR(S) AND 1 WARNING(S) AFFECTING 14 LINE(S)
+--------------------------------------------------------------------------------
+  14 | ERROR   | Single line block comment not allowed; use inline ("// text")
+     |         | comment instead
+  81 | ERROR   | Equals sign not aligned with surrounding assignments; expected
+     |         | 1 space but found 2 spaces
+  82 | ERROR   | Equals sign not aligned with surrounding assignments; expected
+     |         | 2 spaces but found 1 space
+ 173 | ERROR   | Expected type hint "ListenerObjectAbstract"; found
+     |         | "ListenerInfoAbstract" for $oListener at position 1
+ 180 | ERROR   | Verbindungs Operator muss vorne und hinten Leerzeichen haben.
+     |         | War "...tener .\' Register not a String for Info Type\'";
+     |         | erwartet "...tener . \' Register not a String for Info Type\'"
+ 187 | ERROR   | Verbindungs Operator muss vorne und hinten Leerzeichen haben.
+     |         | War "...tener .\' Error Register Array Empty\'"; erwartet
+     |         | "...tener . \' Error Register Array Empty\'"
+ 196 | ERROR   | Verbindungs Operator muss vorne und hinten Leerzeichen haben.
+     |         | War "...tener .\' Register Action \'"; erwartet "...tener . \'
+     |         | Register Action \'"
+ 219 | ERROR   | Verbindungs Operator muss vorne und hinten Leerzeichen haben.
+     |         | War "...tener .\' Error Register Key Elements\'"; erwartet
+     |         | "...tener . \' Error Register Key Elements\'"
+ 228 | ERROR   | Verbindungs Operator muss vorne und hinten Leerzeichen haben.
+     |         | War "...tener .\' Error Register Array Types\'"; erwartet
+     |         | "...tener . \' Error Register Array Types\'"
+ 237 | ERROR   | Verbindungs Operator muss vorne und hinten Leerzeichen haben.
+     |         | War "...tener .\' Error Register Array Empty\'"; erwartet
+     |         | "...tener . \' Error Register Array Empty\'"
+ 247 | ERROR   | Verbindungs Operator muss vorne und hinten Leerzeichen haben.
+     |         | War "...tener .\' Register Action \'"; erwartet "...tener . \'
+     |         | Register Action \'"
+ 291 | WARNING | This comment is 50% valid code; is this commented out code?
+ 334 | ERROR   | Equals sign not aligned with surrounding assignments; expected
+     |         | 8 spaces but found 2 spaces
+ 335 | ERROR   | Equals sign not aligned with surrounding assignments; expected
+     |         | 7 spaces but found 1 space
+--------------------------------------------------------------------------------
+
+
+hookframework/trunk/Core/Error.php
+--------------------------------------------------------------------------------
+Style Guide
+================================================================================
+FOUND 9 ERROR(S) AND 0 WARNING(S) AFFECTING 9 LINE(S)
+--------------------------------------------------------------------------------
+  40 | ERROR | Variable comment short description must end with a full stop
+  46 | ERROR | Variable comment short description must end with a full stop
+  52 | ERROR | Variable comment short description must end with a full stop
+  70 | ERROR | Doc comment for "$sName" missing
+  88 | ERROR | Equals sign not aligned correctly; expected 1 space but found 3
+     |       | spaces
+  99 | ERROR | Equals sign not aligned with surrounding assignments; expected 3
+     |       | spaces but found 1 space
+ 125 | ERROR | Equals sign not aligned with surrounding assignments; expected 3
+     |       | spaces but found 1 space
+ 168 | ERROR | Equals sign not aligned correctly; expected 1 space but found 2
+     |       | spaces
+ 206 | ERROR | Function return type is void, but function contains return
+     |       | statement
+--------------------------------------------------------------------------------
+
+
+hookframework/trunk/Core/Hook.php
+--------------------------------------------------------------------------------
+Style Guide
+================================================================================
+FOUND 10 ERROR(S) AND 0 WARNING(S) AFFECTING 10 LINE(S)
+--------------------------------------------------------------------------------
+  14 | ERROR | Single line block comment not allowed; use inline ("// text")
+     |       | comment instead
+  20 | ERROR | Inline comments must end in full-stops, exclamation marks, or
+     |       | question marks
+  40 | ERROR | Variable comment short description must end with a full stop
+ 154 | ERROR | Functions must not contain multiple empty lines in a row; found 2
+     |       | empty lines
+ 156 | ERROR | Keine Leerzeile vor dem Funktionsende
+ 261 | ERROR | Implicit true comparisons prohibited; use === TRUE instead
+ 311 | ERROR | Doc comment for "$oListener" missing
+ 323 | ERROR | Equals sign not aligned correctly; expected 1 space but found 3
+     |       | spaces
+ 361 | ERROR | Expected type hint "Listener"; found "ListenerObjectAbstract" for
+     |       | $oListener at position 1
+ 387 | ERROR | Type hint "CommitObject" missing for $oObject at positionx 1
+--------------------------------------------------------------------------------
+
+
+hookframework/trunk/Core/Svn.php
+--------------------------------------------------------------------------------
+Style Guide
+================================================================================
+FOUND 3 ERROR(S) AND 0 WARNING(S) AFFECTING 3 LINE(S)
+--------------------------------------------------------------------------------
+ 57 | ERROR | Doc comment var "$aArguments" does not match actual variable name
+    |       | "$oArguments" at position 1
+ 58 | ERROR | Function return type is not void, but function has no return
+    |       | statement
+ 61 | ERROR | Expected type hint "array"; found "Arguments" for $aArguments at
+    |       | position 1
+--------------------------------------------------------------------------------
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

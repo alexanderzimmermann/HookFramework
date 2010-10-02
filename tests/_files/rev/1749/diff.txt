@@ -1,0 +1,16 @@
+Deleted: trunk/application/core/conf/controllers.inc.php
+===================================================================
+--- trunk/application/core/conf/controllers.inc.php	2008-12-29 16:23:15 UTC (rev 1748)
++++ trunk/application/core/conf/controllers.inc.php	2008-12-29 16:26:17 UTC (rev 1749)
+@@ -1,10 +0,0 @@
+-<?php
+-$aAvailableControllers = array();
+-$aAvailableControllers[\'admin\'] = array(\'blockmanager\\'blocktype\\'bookmark\\'checker\\'dashboard\\'database\\'error\\'exception\\'index\\'itemtype\\'language\\'modul\\'onlinehelp\\'pipe\\'scaffold\\'search\\'testform\\'timesync\\'treemanager\\'user\\'webcontrol\\'whoison\');
+-$aAvailableControllers[\'core\'] = array(\'auth\\'error\');
+-$aAvailableControllers[\'public\'] = array(\'index\');
+-$aAvailableControllers[\'media\'] = array(\'index\');
+-$aAvailableControllers[\'page\'] = array(\'dashboard\\'index\\'properties\');
+-$aAvailableControllers[\'workflow\'] = array(\'index\');
+-$aAvailableControllers[\'tables\'] = array(\'database\\'index\');
+-?>
+\\ No newline at end of file

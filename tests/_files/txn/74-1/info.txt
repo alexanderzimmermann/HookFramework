@@ -1,0 +1,4 @@
+alexander
+2008-12-20 20:20:58 +0100 (Sat, 20 Dec 2008)
+67
+* Testcommit mit 3 Dateien und zwei ge?\\195?\\164nderten Properties.

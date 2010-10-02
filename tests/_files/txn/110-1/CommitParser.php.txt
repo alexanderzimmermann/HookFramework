@@ -1,0 +1,280 @@
+<?php
+/**
+ * Daten in der Transaktion.
+ * @category   Main
+ * @package    Hook
+ * @subpackage Core
+ * @author     Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    SVN: $Id: 110-1-hookframework_trunk_Core_Commit_CommitParser.php 117 2008-12-16 21:32:54Z alexander $
+ * @link       http://www.azimmermann.com/
+ * @since      File available since Release 1.0.0
+ */
+
+/** CommitData Objekt */
+require dirname(__FILE__) . '/CommitData.php';
+
+/**
+ * Daten in der Transaktion.
+ * @category   Main
+ * @package    Hook
+ * @subpackage Core
+ * @author     Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2009 Alexander Zimmermann <alex@azimmermann.com>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    Release: 1.0.0
+ */
+class CommitParser
+{
+	/**
+	 * Main Hook.
+	 * @var Arguments
+	 */
+	private $oArguments;
+
+	/**
+	 * Svn Objekt
+	 * @var Svn
+	 */
+	private $oSvn;
+
+	/**
+	 * CommitData Objekt.
+	 * @var CommitData
+	 */
+	private $oCommitData;
+
+	/**
+	 * Differenz Zeilen der Dateien.
+	 * @var array
+	 */
+	private $aDiffData;
+
+	/**
+	 * Konstrutkor.
+	 * @param Arguments $oArguments Argumentenobjekt.
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function __construct(Arguments $oArguments, Svn $oSvn)
+	{
+		$this->oArguments = $oArguments;
+		$this->oSvn       = $oSvn;
+
+		$sTxn              = $oArguments->getTransaction();
+		$iRev              = $oArguments->getRevision();
+		$this->oCommitData = new CommitData($sTxn, $iRev);
+
+		if ($this->oArguments->getMainType() === 'start')
+		{
+			$aInfos['txn']      = $sTxn;
+			$aInfos['rev']      = $iRev;
+			$aInfos['user']     = $oArguments->getUser();
+			$aInfos['datetime'] = date('Y-m-d H:i:s', time());
+			$aInfos['message']  = 'No Message in Start Hook';
+			$this->oCommitData->createCommitInfo($aInfos);
+			return;
+		} // if
+
+		$this->getCommitInfo();
+		$this->getCommitDiff();
+		$this->getCommitData();
+	} // function
+
+	/**
+	 * Commit Data Objekt zurueck geben.
+	 * @return CommitData
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function getCommitDataObject()
+	{
+		return $this->oCommitData;
+	} // function
+
+	/**
+	 * Dateien aus Commit filtern.
+	 * @return void
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	private function getCommitData()
+	{
+		$this->parseCommitData($this->oSvn->getCommitChanged());
+	} // function
+
+	/**
+	 * Info aus Commit parsen.
+	 * @return void
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	private function getCommitInfo()
+	{
+		$this->parseCommitInfo($this->oSvn->getCommitInfo());
+	} // function
+
+	/**
+	 * Differenzen der Dateien aus Commit parsen.
+	 * @return void
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	private function getCommitDiff()
+	{
+		$this->parseCommitDiff($this->oSvn->getCommitDiff());
+	} // function
+
+	/**
+	 * Parsen des Arrays.
+	 *
+	 * Ermitteln ob Verzeichnis oder Datei.
+	 * Ermitteln ob ein Objekt hinzugefuegt, aktualisiert oder geloescht wurde.
+	 * <ul>
+	 * <li>A</li>
+	 * <li>U</li>
+	 * <li>D</li>
+	 * </ul>
+	 * @param array $aData Veraenderungsdaten des Commits.
+	 * @return void
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	private function parseCommitData(array $aData)
+	{
+		$iMax = count($aData);
+		for ($iFor = 0; $iFor < $iMax; $iFor++)
+		{
+			/**
+				Folgende Formate koennen vorkommen:
+				U   {File}
+				_U  {File}
+				UU  {File}
+			*/
+
+			$sObject       = $aData[$iFor];
+			$sActionInfo   = substr($sObject, 0, 4);
+			$sObjectAction = trim(str_replace('_', '', $sActionInfo));
+			$sObjectAction = strtoupper(substr($sObjectAction, 0, 1));
+			$sObject       = str_replace($sActionInfo, '', $sObject);
+
+			// Verzeichnis oder Datei.
+			// Soweit das ok ist, wird das / am Ende erkannt.
+			$bIsDir = (substr($sObject, -1) === '/');
+
+			// Objekt hinzufuegen.
+			$oCommitObject = $this->oCommitData->createObject(
+				$this->oArguments->getTransaction(),
+				$this->oArguments->getRevision(),
+				$sObjectAction,
+				$sObject,
+				$bIsDir
+			);
+
+			// Differenzzeilen hinzufuegen, sofern vorhanden.
+			if ($bIsDir === false)
+			{
+				if (isset($this->aDiffData[$sObject]))
+				{
+					$oCommitObject->setDiff($this->aDiffData[$sObject]);
+				} // if
+			} // if
+		} // for
+	} // function
+
+	/**
+	 * Parsen der Infos zum Commit.
+	 * @param array $aData Commit Daten Infos.
+	 * @return void
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	private function parseCommitInfo(array $aData)
+	{
+		$aInfos = array();
+
+		$aInfos['txn'] = $this->oArguments->getTransaction();
+		$aInfos['rev'] = $this->oArguments->getRevision();
+
+		// Diese Elemente in dieser Reihenfolge.
+		$aPropertys = array(
+					   'user', 'datetime', 'messagelength', 'message'
+					  );
+
+		$iMax = count($aData);
+		for ($iFor = 0; $iFor < $iMax; $iFor++)
+		{
+			$sData = $aData[$iFor];
+			if ($aPropertys[$iFor] === 'message')
+			{
+				$aData[$iFor] = $this->parseMessage($sData);
+			} // if
+
+			$aInfos[$aPropertys[$iFor]] = $aData[$iFor];
+		} // for
+
+		$this->oCommitData->createCommitInfo($aInfos);
+	} // function
+
+	/**
+	 * Parsen des Diffs.
+	 * @param array $aData Diff Daten aus Commit (svnlook diff).
+	 * @return void
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	private function parseCommitDiff(array $aData)
+	{
+		$aLines = array();
+		$sFile  = '';
+
+		$iMax = count($aData);
+		for ($iFor = 0; $iFor < $iMax; $iFor++)
+		{
+			if ($aData[$iFor] === str_repeat('=', 67))
+			{
+				if ((substr($aData[($iFor + 1)], 0, 3) === '---') &&
+				   (substr($aData[($iFor + 2)], 0, 3) === '+++'))
+				{
+					// Aus den $aLines die letzte Zeile entfernen.
+					array_pop($aLines);
+
+					if ((empty($aLines) === false) && ($sFile !== ''))
+					{
+						$this->aDiffData[$sFile] = $aLines;
+
+						$aLines = array();
+					} // if
+
+					$sFile = preg_replace('/^[^:]+:/i', '', $aData[($iFor - 1)]);
+					$sFile = trim($sFile);
+
+					// Zeilen um 2 weiter shiften.
+					$iFor += 1;
+				} // if
+			} // if
+
+			$aLines[] = $aData[$iFor];
+		} // for
+
+		// Letzter Eintrag.
+		$this->aDiffData[$sFile] = $aLines;
+	} // function
+
+	/**
+	 * Message Parsen.
+	 * @param string $sMessage Commit Text.
+	 * @return string
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	private function parseMessage($sMessage)
+	{
+		$aMatches = array();
+
+		// Austauschen von Sonderzeichen im Format \\123.
+		preg_match_all('/\?\\\([0-9]+)/', $sMessage, $aMatches);
+
+		$iMax = count($aMatches[0]);
+		for ($iFor = 0; $iFor < $iMax; $iFor++)
+		{
+			$sChr     = $aMatches[0][$iFor];
+			$iChr     = (int) $aMatches[1][$iFor];
+			$sMessage = str_replace($sChr, chr($iChr), $sMessage);
+		} // for
+
+		return $sMessage;
+	} // function
+} // class
