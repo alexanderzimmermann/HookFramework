@@ -60,7 +60,7 @@ class Properties
 		$sValue    = '';
 		$bSwitch   = null;
 		$oProperty = null;
-
+		
 		foreach ($aProperties as $iLine => $sLine)
 		{
 			if (preg_match('/(Name:|Modified:|Added:|Deleted:)/', $sLine, $aMatch) > 0)

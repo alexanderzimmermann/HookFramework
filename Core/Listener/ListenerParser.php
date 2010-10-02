@@ -26,6 +26,9 @@ require_once 'Core/Listener/ListenerInfoAbstract.php';
 // Abstrakte Klasse einfuegen damit die Listener das nicht alle brauchen.
 require_once 'Core/Listener/ListenerObjectAbstract.php';
 
+// Require the Filter for the DirectoryIterator
+require_once 'Core/Listener/ListenerFilterPHPIterator.php';
+
 // Logger einfuegen.
 require_once 'Core/Log.php';
 
@@ -132,10 +135,18 @@ class ListenerParser
 	private function readDirectory($sType)
 	{
 		// TODO: SPL Directory Iterator verwenden.
+                $aListener = array();
 		$sType     = ucfirst($sType);
 		$sDir      = dirname(__FILE__) . '/../../Listener/';
-		$aListener = glob($sDir . $sType . '/*.php');
-
+                $oIterator = new DirectoryIterator($sDir . $sType);
+                $oFilter   = new ListenerFilterPHPIterator($oIterator);
+                
+                foreach ($oFilter as $oEntry)
+                {
+                    
+                    $aListener[] = $oEntry->getPathname();
+                }
+                    
 		$oLog = log::getInstance();
 		$oLog->writeLog(Log::HF_VARDUMP, 'files', $aListener);
 		$this->aListenerFiles = $aListener;

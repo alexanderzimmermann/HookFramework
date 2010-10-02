@@ -145,9 +145,8 @@ class DiffParser
 		{
 			// First Line is always the -- oder ==.
 			array_shift($aLines);
-
 			// Last line is the info of the next file.
-			if ('' !== $aLines[(count($aLines) - 1)])
+			if ('   ' !== substr($aLines[(count($aLines) - 1)], 0,3))
 			{
 				array_pop($aLines);
 			} // if

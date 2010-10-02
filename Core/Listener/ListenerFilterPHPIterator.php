@@ -30,10 +30,12 @@ class ListenerFilterPHPIterator extends FilterIterator
     /**
      * Just accept files that ends with \.php[3-5]?
      * 
-     * @param SplFileObject $oFile The filename to inspect.
+     * @return boolean
      */
-    public function accept(SplFileObject $oFile) 
+    public function accept() 
     {
-        return (boolean) preg_match('#\.php[3-5]?$#i', $oFile->getFilename());
+        return (preg_match(
+                '/\.php[3-5]?$/', 
+                $this->getInnerIterator()->current()->getFilename()) == 1);
     } // function
 } // class
