@@ -1,6 +1,6 @@
 <?php
 /**
- * Test Helper Datei fuer das Hook Framework.
+ * Test helper file for the HookFramework.
  * @category   Tests
  * @package    Main
  * @subpackage Help
@@ -12,8 +12,8 @@
  * @since      File available since Release 1.0.0
  */
 
-// Benötigte Unit- Test- Dateien.
-require_once 'PHPUnit/Framework.php';
+// Required unit test files.
+require_once 'PHPUnit/Autoload.php';
 require_once 'PHPUnit/Framework/IncompleteTestError.php';
 require_once 'PHPUnit/Framework/TestCase.php';
 require_once 'PHPUnit/Framework/TestSuite.php';
@@ -35,7 +35,7 @@ $sRoot      = dirname(dirname(__FILE__)) . '/';
 $sRootTests = $sRoot . 'tests/';
 
 /*
-	Prepend the Zend Framework library/ and tests/ directories to the
+	Prepend the Framework Core/ and tests/ directories to the
 	include_path. This allows the tests to run out of the box and helps prevent
 	loading other copies of the framework code and tests that would supersede
 	this copy.
@@ -49,7 +49,7 @@ $aPath = array(
 set_include_path(implode(PATH_SEPARATOR, $aPath));
 
 /**
-	Log Instanz creieren.
+	Create Log instance.
 */
 
 require_once 'Core/Log.php';
@@ -60,8 +60,9 @@ $oLog = Log::getInstance();
 $oLog->setLogFile($aCfg['logfile']);
 
 
-// Filter fuer Xdebug.
-PHPUnit_Util_Filter::addDirectoryToFilter($sRoot . '/tests');
+// Filter for Xdebug.
+$oCoverage = PHP_CodeCoverage_Filter::getInstance();
+$oCoverage->addDirectoryToBlacklist($sRoot . '/tests', '.php');
 
 // Unset global variables that are no longer needed.
 unset($sRoot);
