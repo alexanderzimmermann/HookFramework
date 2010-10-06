@@ -69,6 +69,11 @@ class StyleTest extends PHPUnit_Framework_TestCase
 		$aOutput = array();
 		exec('phpcs --standard=PEAR ' . __FILE__, $aOutput);
 
+		if (true === empty($aOutput))
+		{
+			$this->markTestSkipped('phpcs not installed!');
+		} // if
+
 		if (count($aOutput) === 1)
 		{
 			$sMsg = 'ERROR: the "PEAR" coding standard is not installed.';
@@ -123,6 +128,7 @@ class StyleTest extends PHPUnit_Framework_TestCase
 	 * Testen des Style Listener mit einer perfekten Datei.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 * @depends testListenerStyleWithErrorFile
 	 */
 	public function testListenerStyleWithCorrectFile()
 	{
