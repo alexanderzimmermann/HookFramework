@@ -81,8 +81,8 @@ class HookTest extends PHPUnit_Framework_TestCase
 		$sExpected .= 'Beispiel: ';
 		$sExpected .= '/var/svn/hk/Hook $REPOS $TXN pre-commit' . "\n";
 
-		$this->assertEquals(1, $iExit);
-		$this->assertEquals($sExpected, $sContent);
+		$this->assertEquals(1, $iExit, 'Exit code false.');
+		$this->assertEquals($sExpected, $sContent, 'Message not as expected.');
 	} // function
 
 	/**
