@@ -51,20 +51,26 @@ class Filter
 	private $aDirectories;
 
 	/**
-	 * Gefilterte Dateien.
+	 * Files to filter.
 	 * @var array
 	 */
 	private $aFiles;
 
 	/**
-	 * Ausnahmen fuer Dateien.
+	 * Directories that are allowed in forbidden areas.
+	 * @var array
+	 */
+	private $aWhiteDirs;
+
+	/**
+	 * Files that are allowed in forbidden areas.
 	 * @var array
 	 */
 	private $aWhiteFiles;
 
 	/**
-	 * Konstruktor.
-	 * @param array $aObjects Commit Objekte.
+	 * Constructor.
+	 * @param array $aObjects Commit Objects.
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function __construct(array $aObjects)
@@ -74,8 +80,8 @@ class Filter
 	} // function
 
 	/**
-	 * Die Objekte mit dem Filter des Listener abgleichen und filtern.
-	 * @param ObjectFilter $oObjectFilter Objekt Filter.
+	 * Compare commit objects paths with the filter of the listener.
+	 * @param ObjectFilter $oObjectFilter Object filter.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -83,25 +89,28 @@ class Filter
 	{
 		$this->aDirectories = $oObjectFilter->getFilteredDirectories();
 		$this->aFiles       = $oObjectFilter->getFilteredFiles();
+		$this->aWhiteDirs   = $oObjectFilter->getWhiteListDirectories();
 		$this->aWhiteFiles  = $oObjectFilter->getWhiteListFiles();
 
 		// If all is emtpy then return all.
-		if ((empty($this->aDirectories) === true) &&
-			(empty($this->aFiles) === true) &&
-			(empty($this->aWhiteFiles) === true))
+		if ((true === empty($this->aDirectories)) &&
+			(true === empty($this->aFiles)) &&
+			(true === empty($this->aWhiteFiles)) &&
+			(true === empty($this->aWhiteDirs)))
 		{
 			return $this->aObjects;
 		} // if
 
-		// Pfade extrahieren.
+		// Extract paths.
 		$this->getPaths();
 
-		// Filter abarbeiten.
-		$this->handleWhiteList();
+		// Process the filters.
+		$this->handleWhiteListFiles();
+		$this->handleWhiteListDirectories();
 		$this->handleDirectories();
 		$this->handleFiles();
 
-		// White List + die gefilterten Objekte.
+		// White List + the filtered objects.
 		$this->aNewObjects = array_merge($this->aNewObjects, $this->aObjects);
 		$this->aNewObjects = array_values($this->aNewObjects);
 
@@ -109,7 +118,7 @@ class Filter
 	} // function
 
 	/**
-	 * Aus den Objekte die Pfade zum Filtern ziehen.
+	 * Take the paths from the objects to filter them.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -124,13 +133,13 @@ class Filter
 	} // function
 
 	/**
-	 * Alle White List Objekte in das neue Array uebertragen.
+	 * Copy all white list objects into the new array.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	private function handleWhiteList()
+	private function handleWhiteListFiles()
 	{
-		if (empty($this->aWhiteFiles) === true)
+		if (true === empty($this->aWhiteFiles))
 		{
 			return;
 		} // if
@@ -145,13 +154,44 @@ class Filter
 	} // function
 
 	/**
+	 * Copy itmes in a white listed directory into the new array.
+	 * @return void
+	 * @author Alexander Zimmermann <alexander.zimmermann@twt.de>
+	 */
+	private function handleWhiteListDirectories()
+	{
+		if (true === empty($this->aWhiteDirs))
+		{
+			return;
+		} // if
+
+		$iMax = count($this->aWhiteDirs);
+		for ($iFor = 0; $iFor < $iMax; $iFor++)
+		{
+			$sDir = $this->aWhiteDirs[$iFor];
+			$sDir = str_replace('/', '\/', $sDir);
+
+			foreach ($this->aPaths as $iIndex => $sPath)
+			{
+				$sResult = preg_replace('/^' . $sDir . '/', '', $sPath);
+
+				// If there is a difference, the file is in the directoy.
+				if ($sResult !== $sPath)
+				{
+					$this->aNewObjects[] = $this->aObjects[$iIndex];
+				} // if
+			} // foreach
+		} // for
+	} // function
+
+	/**
 	 * Delete every file that lies within a "forbidden" directory.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	private function handleDirectories()
 	{
-		if (empty($this->aDirectories) === true)
+		if (true === empty($this->aDirectories))
 		{
 			return;
 		} // if
@@ -166,7 +206,7 @@ class Filter
 			{
 				$sResult = preg_replace('/^' . $sDir . '/', '', $sPath);
 
-				// Wenn ein Unterschied besteht, dann liegt die Datei im Dir.
+				// If there is a difference, the file is in the directoy.
 				if ($sResult !== $sPath)
 				{
 					unset($this->aPaths[$iIndex]);
@@ -177,20 +217,20 @@ class Filter
 	} // function
 
 	/**
-	 * Die Einzeldateien loeschen.
+	 * Delete single files.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	private function handleFiles()
 	{
-		if (empty($this->aFiles) === true)
+		if (true === empty($this->aFiles))
 		{
 			return;
 		} // if
 
 		foreach ($this->aPaths as $iIndex => $sPath)
 		{
-			if (in_array($sPath, $this->aFiles) === true)
+			if (true === in_array($sPath, $this->aFiles))
 			{
 				unset($this->aPaths[$iIndex]);
 				unset($this->aObjects[$iIndex]);

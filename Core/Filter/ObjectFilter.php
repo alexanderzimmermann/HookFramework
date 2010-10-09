@@ -1,6 +1,6 @@
 <?php
 /**
- * Filter Klasse fuer die Dateien fuer die Listener zu filtern.
+ * Filter class that stores directories and files a listener should not process.
  * @category   Core
  * @package    Filter
  * @subpackage Main
@@ -13,7 +13,7 @@
  */
 
 /**
- * Filter Klasse fuer die Dateien fuer die Listener zu filtern.
+ * Filter class that stores directories and files a listener should not process.
  * @category   Core
  * @package    Filter
  * @subpackage Main
@@ -27,26 +27,32 @@
 class ObjectFilter
 {
 	/**
-	 * Verzeichnisse die gefiltert werden sollen.
+	 * Directories to filter.
 	 * @var array
 	 */
 	private $aDirectories = array();
 
 	/**
-	 * Dateien die gefiltert werden sollen.
+	 * Files to filter.
 	 * @var array
 	 */
 	private $aFiles = array();
 
 	/**
-	 * Dateien die in eine Ausnahem im Verzeichnis bilden.
+	 * Directories that are exceptions in a directory that is filtered.
+	 * @var array
+	 */
+	private $aWhitelistedDirectories = array();
+
+	/**
+	 * Files that are exceptions in a directoy.
 	 * @var array
 	 */
 	private $aWhitelistedFiles = array();
 
 	/**
-	 * Pruefen ob es sich um eine Datei handelt.
-	 * @param string $sFile Datei die geprueft werden muss.
+	 * Check if it is a file.
+	 * @param string $sFile Filename that is checked.
 	 * @return boolean
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -61,8 +67,8 @@ class ObjectFilter
 	} // function
 
 	/**
-	 * Ein Verzeichnis filtern.
-	 * @param string $sDirectory Zu filterndes Verzeichnis.
+	 * Filter a directory that should not be handled.
+	 * @param string $sDirectory Directory name.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -80,7 +86,7 @@ class ObjectFilter
 	} // function
 
 	/**
-	 * Eine Datei zum Filter hinzufuegen.
+	 * Add a file to be filtered and should not processed.
 	 * @param string $sFile Dateiname der gefiltert wird (inkl. Dir).
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -97,14 +103,14 @@ class ObjectFilter
 	} // function
 
 	/**
-	 * Eine Datei zur Whitelist hinzufuegen.
-	 * @param string $sFile Dateiname fuer die Ausnahme.
+	 * Adds a file to the allowed files.
+	 * @param string $sFile Filename for the exception.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function addFileToWhitelist($sFile)
 	{
-		// Dateifilter geht vor WhiteList.
+		// Filefilter overwrites whitelist.
 		if (in_array($sFile, $this->aFiles) === false)
 		{
 			if (in_array($sFile, $this->aWhitelistedFiles) === false)
@@ -118,7 +124,30 @@ class ObjectFilter
 	} // function
 
 	/**
-	 * Liste der gefilterten Verzeichnisse zurueck geben.
+	 * Removes the directory from the filter (recursively).
+	 * @param string $sDirectory Directory name for the exception.
+	 * @return void
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function addDirectoryToWhitelist($sDirectory)
+	{
+		if (substr($sDirectory, -1) !== '/')
+		{
+			$sDirectory .= '/';
+		} // if
+
+		// Directoryfilter overwrites whitelist.
+		if (false === in_array($sDirectory, $this->aDirectories))
+		{
+			if (false === in_array($sDirectory, $this->aWhitelistedDirectories))
+			{
+				$this->aWhitelistedDirectories[] = $sDirectory;
+			} // if
+		} // if
+	} // function
+
+	/**
+	 * Returns list of filtered directories.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -128,7 +157,7 @@ class ObjectFilter
 	} // function
 
 	/**
-	 * Liste der gefilterten Dateien zurueck geben.
+	 * Returns list of filtered files.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -138,7 +167,18 @@ class ObjectFilter
 	} // function
 
 	/**
-	 * Liste der erlaubten Dateien zurueck geben.
+	 * Returns list of allowed directories.
+	 * @return array
+	 * @since  1.0.0
+	 * @author Alexander Zimmermann <alexander.zimmermann@twt.de>
+	 */
+	public function getWhiteListDirectories()
+	{
+		return $this->aWhitelistedDirectories;
+	} // function
+
+	/**
+	 * Returns liste of allowed files.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */

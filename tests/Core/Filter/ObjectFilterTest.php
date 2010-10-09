@@ -31,13 +31,13 @@ require_once 'Core/Filter/ObjectFilter.php';
 class ObjectFilterTest extends PHPUnit_Framework_TestCase
 {
 	/**
-	 * Testobjekt.
+	 * Testobject.
 	 * @var ObjectFilter
 	 */
 	private $oObjectFilter;
 
 	/**
-	 * SetUp Operationen.
+	 * SetUp operation.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@zimmemann.com>
 	 */
@@ -47,7 +47,7 @@ class ObjectFilterTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Dataprovider fuer AddDirectoryToFilter Test.
+	 * Dataprovider for AddDirectoryToFilter test.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@zimmemann.com>
 	 */
@@ -83,9 +83,9 @@ class ObjectFilterTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen Verzeichnis zum Filter hinzufuegen.
-	 * @param array   $aData     Testdatenset.
-	 * @param integer $iExpected Erwartete Anzahl Eintraege.
+	 * Test for the directory filter function.
+	 * @param array   $aData     Testdataset.
+	 * @param integer $iExpected Expected entries count.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@zimmemann.com>
 	 * @dataProvider getDirectories
@@ -103,7 +103,7 @@ class ObjectFilterTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Dataprovider fuer AddFileToFilter Test.
+	 * Dataprovider for AddFileToFilter test.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@zimmemann.com>
 	 */
@@ -131,9 +131,9 @@ class ObjectFilterTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen der Pre Argumente beim Commit.
-	 * @param array   $aData     Testdatenset.
-	 * @param integer $iExpected Erwartete Anzahl Eintraege.
+	 * Test for the file filter function.
+	 * @param array   $aData     Testdataset.
+	 * @param integer $iExpected Expected entries count.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 * @dataProvider getFiles
@@ -151,7 +151,63 @@ class ObjectFilterTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Dataprovider fuer AddFileToFilter Test.
+	 * Dataprovider for addDirectoryToWhitelist test.
+	 * @return array
+	 * @author Alexander Zimmermann <alex@zimmemann.com>
+	 */
+	public static function getWhiteListDirectories()
+	{
+		return array(
+				array(
+				 array(
+				  '/path/to/a/directory',
+				  '/another/path/to/a/directory',
+				  '/another/path/to/a/directory',
+				  '/the/same/above/should/not/be/added'
+				 ),
+				 3
+				),
+				array(
+				 array(
+				  '/path/to/a/directory',
+				  '/another/path/to/a/directory',
+				  '/another/path/to/a/directory/',
+				  '/the/same/above/should/not/be/added/'
+				 ),
+				 3
+				),
+				array(
+				 array(
+				  '/path/to/a/directory',
+				  '/the/same/above/should/not/be/added'
+				 ),
+				 2
+				)
+			   );
+	} // function
+
+	/**
+	 * Test for the directory white list function.
+	 * @param array   $aData     Testdataset.
+	 * @param integer $iExpected Expected entries count.
+	 * @return void
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 * @dataProvider getWhiteListDirectories
+	 */
+	public function testAddDirectoryToWhitelist(array $aData, $iExpected)
+	{
+		$iMax = count($aData);
+		for ($iFor = 0; $iFor < $iMax; $iFor++)
+		{
+			$this->oObjectFilter->addDirectoryToWhitelist($aData[$iFor]);
+		} // for
+
+		$iActual = count($this->oObjectFilter->getWhiteListDirectories());
+		$this->assertEquals($iExpected, $iActual);
+	} // function
+
+	/**
+	 * Dataprovider for AddFileToFilter test.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@zimmemann.com>
 	 */
@@ -193,9 +249,9 @@ class ObjectFilterTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen der Pre Argumente beim Commit.
-	 * @param array   $aData     Testdatenset.
-	 * @param integer $iExpected Erwartete Anzahl Eintraege.
+	 * Test for the file white list function.
+	 * @param array   $aData     Testdataset.
+	 * @param integer $iExpected Expected entries count.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 * @dataProvider getWhiteListFiles

@@ -128,6 +128,9 @@ class DiffParser
 			$aLines[] = $sLine;
 		} // foreach
 
+		// For the last block always put a blank line.
+		$aLines[] = '';
+
 		$this->handle($iOffset, $aLines, array($bLines, $bProperties));
 	} // function
 
@@ -143,7 +146,7 @@ class DiffParser
 	{
 		if ((false !== $iOffset) && (false === empty($aLines)))
 		{
-			// First Line is always the -- oder ==.
+			// First Line is always the -- or == line.
 			array_shift($aLines);
 
 			// Last line is the info of the next file.
