@@ -1,4 +1,4 @@
-h1. Hook Framework
+h1. Hook Framework for Subversion
 
 h2. Description
 
