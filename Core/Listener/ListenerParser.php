@@ -5,14 +5,14 @@
  * @package    Listener
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2010 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
-/** Interface einfuegen damit die Listener das nicht alle brauchen. */
+// Interface einfuegen damit die Listener das nicht alle brauchen.
 require_once 'Core/Listener/ListenerInfo.php';
 
 // Interface einfuegen damit die Listener das nicht alle brauchen.
@@ -44,7 +44,7 @@ require_once 'Core/Log.php';
  * @package    Listener
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2010 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.0
  * @link       http://www.azimmermann.com/
@@ -57,6 +57,12 @@ class ListenerParser
 	 * @var Arguments
 	 */
 	private $oArguments;
+
+	/**
+	 * Path to the listener.
+	 * @var string
+	 */
+	private $sPath;
 
 	/**
 	 * Liste der Listener Dateien.
@@ -94,15 +100,34 @@ class ListenerParser
 
 		$this->aListenerInfo   = array();
 		$this->aListenerObject = array();
+	} // function
 
-		$this->readDirectory($oArguments->getMainType());
+	/**
+	 * Set path where the listener are stored.
+	 * @param string $sPath Path where all listener are stored.
+	 * @return void
+	 * @author Alexander Zimmermann <alexander.zimmermann@twt.de>
+	 */
+	public function setPath($sPath)
+	{
+		$this->sPath = $sPath;
+	} // function
+
+	/**
+	 * Init the Listener Parser.
+	 * @return void
+	 * @author Alexander Zimmermann <alexander.zimmermann@twt.de>
+	 */
+	public function init()
+	{
+		$this->readDirectory($this->oArguments->getMainType());
 		$this->checkListener();
 		$this->registerListenerInfo();
 		$this->registerListenerObject();
 	} // function
 
 	/**
-	 * Listener Objekte zurueck geben.
+	 * Return listener objects.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -124,17 +149,16 @@ class ListenerParser
 	} // function
 
 	/**
-	 * Auslesen der Dateien aus dem jeweiligen Verzeichnis.
+	 * Read the files for the actual maion hook action in directory.
 	 * @param string $sType Typ der aktuellen Transaktion.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	private function readDirectory($sType)
 	{
-		// TODO: SPL Directory Iterator verwenden.
+		// TODO: Use SPL directory iterator.
 		$sType     = ucfirst($sType);
-		$sDir      = dirname(__FILE__) . '/../../Listener/';
-		$aListener = glob($sDir . $sType . '/*.php');
+		$aListener = glob($this->sPath . $sType . '/*.php');
 
 		$oLog = log::getInstance();
 		$oLog->writeLog(Log::HF_VARDUMP, 'files', $aListener);
@@ -330,7 +354,7 @@ class ListenerParser
 		// Existiert die Klasse?
 		if (class_exists($sListener) === false)
 		{
-			$this->sError .= $sListener . ' class and filename dont match!';
+			$this->sError .= $sListener . ' class and filename dont match!' . "\n";
 			return false;
 		} // if
 
@@ -355,7 +379,7 @@ class ListenerParser
 		} // if
 
 		$sError  = $sListener . ' does not implement or extend correct ';
-		$sError .= 'interface or abstract class.!';
+		$sError .= 'interface or abstract class.!' . "\n";
 
 		$this->sError .= $sError;
 

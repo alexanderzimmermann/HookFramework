@@ -5,7 +5,7 @@
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2010 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
@@ -24,6 +24,9 @@ require_once 'Core/Listener/ListenerParser.php';
 // Argumente der Kommandozeile pruefen.
 require_once 'Core/Arguments.php';
 
+// Argumente der Kommandozeile pruefen.
+require_once 'Core/Repository.php';
+
 // Svn Objekt.
 require_once 'Core/Svn.php';
 
@@ -36,7 +39,7 @@ require_once 'Core/Error.php';
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2010 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.0
  * @link       http://www.azimmermann.com/
@@ -45,37 +48,43 @@ require_once 'Core/Error.php';
 class HookMain
 {
 	/**
-	 * Ini-Einstellungen.
+	 * Ini file settings.
 	 * @var array
 	 */
 	protected $aCfg;
 
 	/**
-	 * Arguments Objekt.
+	 * Arguments Object.
 	 * @var Arguments
 	 */
 	private $oArguments;
 
 	/**
-	 * CommitData Objekt.
+	 * CommitData Object.
 	 * @var CommitData
 	 */
 	private $oCommitData;
 
 	/**
-	 * Svn-Objekt.
+	 * Svn-Object.
 	 * @var Svn
 	 */
 	private $oSvn;
 
 	/**
-	 * Error-Objekt.
+	 * Repository object.
+	 * @var Repository
+	 */
+	private $oRepository;
+
+	/**
+	 * Error-Object.
 	 * @var Error
 	 */
 	protected $oError;
 
 	/**
-	 * Log Objekt.
+	 * Log Object.
 	 * @var Log
 	 */
 	protected $oLog;
@@ -174,7 +183,7 @@ class HookMain
 	} // function
 
 	/**
-	 * Initialisieren des Hooks.
+	 * Initialize hook.
 	 * @return integer
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -190,20 +199,35 @@ class HookMain
 			return false;
 		} // if
 
-		// Parsen der Listener.
-		$oListenerParser = new ListenerParser($this->oArguments);
+		// Create the repository handler.
+		$sReposDir = null;
+		if (true === isset($this->aCfg['repositories']))
+		{
+			$sReposDir = $this->aCfg['repositories'];
+		} // if
 
-		// Kein Listener vorhanden? Raus! (Performance).
-		$this->aListener = $oListenerParser->getListener();
+		$this->oRepository = new Repository($this->oArguments);
+		$this->oRepository->setPath($sReposDir);
+		$this->oRepository->init();
+
+		// Change log file if a separate exists for the repository.
+		if (true === $this->oRepository->hasLogfile())
+		{
+			$this->oLog->setLogFile($this->oRepository->getLogfile());
+		} // if
+
+		// No listener available? Then abort here (performance).
+		$this->aListener = $this->oRepository->getListener();
 		if (empty($this->aListener) === true)
 		{
-			$sMessage = 'Keine Listener: Abbruch Verarbeitung';
+			$sMessage = 'No listener: Abort';
 			$this->oLog->writeLog(Log::HF_DEBUG, $sMessage);
 
-			// Abbrechen, aber kein Fehler, wenn kein Listener vorhanden ist.
+			// Abort but no error for hook when no listener is available.
 			return false;
 		} // if
 
+		// Create svn object.
 		$this->oSvn = new Svn($this->aCfg['binpath']);
 		$this->oSvn->init($this->oArguments);
 
