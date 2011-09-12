@@ -115,13 +115,21 @@ class Style extends ListenerObjectAbstract
 		$sPattern = '/([0-9]+) ERROR/i';
 		preg_match($sPattern, $sSummaryLine, $aMatches);
 
-		$iErrors = (int) $aMatches[1];
+		$iErrors = 0;
+		if (true === isset($aMatches[1]))
+		{
+			$iErrors = (int) $aMatches[1];
+		} // if
 
 		$aMatches = array();
 		$sPattern = '/([0-9]+) WARNING/i';
 		preg_match($sPattern, $sSummaryLine, $aMatches);
 
-		$iWarnings = (int) $aMatches[1];
+		$iWarnings = 0;
+		if (true === isset($aMatches[1]))
+		{
+			$iWarnings = (int) $aMatches[1];
+		} // if
 
 		$iResult = 0;
 		if ($iErrors > 0)
