@@ -360,6 +360,18 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
+	 * Test with no arguments provided.
+	 * @return void
+	 * @author Alexander Zimmermann <alexander.zimmermann@twt.de>
+	 */
+	public function testNoArguemnts()
+	{
+		$oArguemnts = new Arguments(array());
+
+		$this->assertFalse($oArguemnts->argumentsOk());
+	} // function
+
+	/**
 	 * Test ob Werte richtig zurueck gegeben werden.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -375,12 +387,13 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 
 		$oArguments = new Arguments($aData);
 
-		$this->assertTrue($oArguments->argumentsOk());
-		$this->assertEquals($this->sSvn, $oArguments->getRepository());
-		$this->assertEquals('testuser12', $oArguments->getUser());
-		$this->assertEquals('start-commit', $oArguments->getMainHook());
-		$this->assertEquals('start', $oArguments->getMainType());
-		$this->assertEquals('commit', $oArguments->getSubType());
+		$this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
+		$this->assertEquals($this->sSvn, $oArguments->getRepository(), 'Repository false');
+		$this->assertEquals('svn', $oArguments->getRepositoryName(), 'ReposName false');
+		$this->assertEquals('testuser12', $oArguments->getUser(), 'User false');
+		$this->assertEquals('start-commit', $oArguments->getMainHook(), 'MainHook false');
+		$this->assertEquals('start', $oArguments->getMainType(), 'MainType false');
+		$this->assertEquals('commit', $oArguments->getSubType(), 'SubType false');
 	} // function
 
 	/**
@@ -399,13 +412,13 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 
 		$oArguments = new Arguments($aData);
 
-		$this->assertTrue($oArguments->argumentsOk());
-		$this->assertEquals($this->sSvn, $oArguments->getRepository());
-		$this->assertEquals('666-1', $oArguments->getTransaction());
-		$this->assertEquals('pre-commit', $oArguments->getMainHook());
-		$this->assertEquals('pre', $oArguments->getMainType());
-		$this->assertEquals('pre', $oArguments->getMainType());
-		$this->assertEquals('commit', $oArguments->getSubType());
+		$this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
+		$this->assertEquals($this->sSvn, $oArguments->getRepository(), 'Repository false');
+		$this->assertEquals('svn', $oArguments->getRepositoryName(), 'ReposName false');
+		$this->assertEquals('666-1', $oArguments->getTransaction(), 'Transcatino false');
+		$this->assertEquals('pre-commit', $oArguments->getMainHook(), 'MainHook false');
+		$this->assertEquals('pre', $oArguments->getMainType(), 'MainType false');
+		$this->assertEquals('commit', $oArguments->getSubType(), 'Subtype false');
 	} // function
 
 	/**
@@ -424,12 +437,13 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 
 		$oArguments = new Arguments($aData);
 
-		$this->assertTrue($oArguments->argumentsOk());
-		$this->assertEquals($this->sSvn, $oArguments->getRepository());
-		$this->assertEquals(666, $oArguments->getRevision());
-		$this->assertEquals('post-commit', $oArguments->getMainHook());
-		$this->assertEquals('post', $oArguments->getMainType());
-		$this->assertEquals('commit', $oArguments->getSubType());
+		$this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
+		$this->assertEquals($this->sSvn, $oArguments->getRepository(), 'Repository false');
+		$this->assertEquals('svn', $oArguments->getRepositoryName(), 'ReposName false');
+		$this->assertEquals(666, $oArguments->getRevision(), 'Revision false');
+		$this->assertEquals('post-commit', $oArguments->getMainHook(), 'MainHook false');
+		$this->assertEquals('post', $oArguments->getMainType(), 'MainType false');
+		$this->assertEquals('commit', $oArguments->getSubType(), 'SubType false');
 	} // function
 
 	/**
@@ -450,12 +464,13 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 		$oArguments = new Arguments($aData);
 
 		$sHook = '/hookframework/trunk/Core/Hook.php';
-		$this->assertTrue($oArguments->argumentsOk());
-		$this->assertEquals($this->sSvn, $oArguments->getRepository());
-		$this->assertEquals($sHook, $oArguments->getFile());
-		$this->assertEquals('pre-lock', $oArguments->getMainHook());
-		$this->assertEquals('pre', $oArguments->getMainType());
-		$this->assertEquals('lock', $oArguments->getSubType());
+		$this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
+		$this->assertEquals($this->sSvn, $oArguments->getRepository(), 'Repository false');
+		$this->assertEquals('svn', $oArguments->getRepositoryName(), 'ReposName false');
+		$this->assertEquals($sHook, $oArguments->getFile(), 'File false');
+		$this->assertEquals('pre-lock', $oArguments->getMainHook(), 'Main Hook false');
+		$this->assertEquals('pre', $oArguments->getMainType(), 'MainType false');
+		$this->assertEquals('lock', $oArguments->getSubType(), 'SubType false');
 	} // function
 
 	/**
@@ -477,14 +492,15 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 
 		$oArguments = new Arguments($aData);
 
-		$this->assertTrue($oArguments->argumentsOk());
-		$this->assertEquals($this->sSvn, $oArguments->getRepository());
-		$this->assertEQuals(2009, $oArguments->getRevision());
-		$this->assertEquals('pre-revprop-change', $oArguments->getMainHook());
-		$this->assertEquals('pre', $oArguments->getMainType());
-		$this->assertEquals('revprop-change', $oArguments->getSubType());
-		$this->assertEquals('ignore', $oArguments->getPropertyName());
-		$this->assertEquals('A', $oArguments->getAction());
+		$this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
+		$this->assertEquals($this->sSvn, $oArguments->getRepository(), 'Repos path false');
+		$this->assertEquals('svn', $oArguments->getRepositoryName(), 'ReposName false');
+		$this->assertEQuals(2009, $oArguments->getRevision(), 'Revision false');
+		$this->assertEquals('pre-revprop-change', $oArguments->getMainHook(), 'Main Hook false');
+		$this->assertEquals('pre', $oArguments->getMainType(), 'Main Type false');
+		$this->assertEquals('revprop-change', $oArguments->getSubType(), 'Sub Type false');
+		$this->assertEquals('ignore', $oArguments->getPropertyName(), 'Property Name false');
+		$this->assertEquals('A', $oArguments->getAction(), 'Action false');
 	} // function
 
 	/**
@@ -530,8 +546,8 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 
 		$oArguments = new Arguments($aData);
 
-		$this->assertTrue($oArguments->argumentsOk());
-		$this->assertEquals($aExpect, $oArguments->getSubActions());
+		$this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
+		$this->assertEquals($aExpect, $oArguments->getSubActions(), 'Subaction false');
 	} // function
 
 	/**
@@ -554,8 +570,8 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 
 		$oArguments = new Arguments($aData);
 
-		$this->assertTrue($oArguments->argumentsOk());
-		$this->assertEquals($aExpect, $oArguments->getSubActions());
+		$this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
+		$this->assertEquals($aExpect, $oArguments->getSubActions(), 'Subaction false');
 	} // function
 
 	/**
@@ -576,7 +592,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 
 		$oArguments = new Arguments($aData);
 
-		$this->assertTrue($oArguments->argumentsOk());
-		$this->assertEquals($aExpect, $oArguments->getSubActions());
+		$this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
+		$this->assertEquals($aExpect, $oArguments->getSubActions(), 'Subaction false');
 	} // function
 } // class
