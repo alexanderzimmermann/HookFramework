@@ -121,6 +121,12 @@ class Arguments
 	private $sRepository;
 
 	/**
+	 * Repository Name.
+	 * @var string
+	 */
+	private $sRepositoryName;
+
+	/**
 	 * Benutzer.
 	 * @var string
 	 */
@@ -230,6 +236,16 @@ class Arguments
 	} // function
 
 	/**
+	 * Return the repository name.
+	 * @return string
+	 * @author Alexander Zimmermann <alexander.zimmermann@twt.de>
+	 */
+	public function getRepositoryName()
+	{
+		return $this->sRepositoryName;
+	} // function
+
+	/**
 	 * Benutzer zurueck geben.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -330,6 +346,11 @@ class Arguments
 	 */
 	private function checkMainHook()
 	{
+		if (true === empty($this->aArguments))
+		{
+			return false;
+		} // if
+
 		$sMain = $this->aArguments[($this->iArguments - 1)];
 
 		if (in_array($sMain, $this->aHooks) === false)
@@ -459,7 +480,8 @@ class Arguments
 	{
 		if (file_exists($sRepository . '/format') === true)
 		{
-			$this->sRepository = $sRepository;
+			$this->sRepository     = $sRepository;
+			$this->sRepositoryName = basename($sRepository);
 			return true;
 		} // if
 
