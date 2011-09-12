@@ -26,3 +26,12 @@ Repositories
     │   ├── StyleGuide.php
     │   └── Syntax.php
     └── Start
+
+Hints
+-----
+The root directory "Repositories" here, is just an example. You can store your
+listener whereever you want.
+
+If, in our example the directory "Project-Repository-1", does not exist and or
+the main hook directory (Pre, Post) does not exists, the default build-in
+listener will be used.
