@@ -5,7 +5,7 @@
  * @package    Listener
  * @subpackage Pre
  * @author     Alexander Zimmermann <alex@zimmemann.com>
- * @copyright  2008-2010 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:AllTests.php 74 2008-11-29 21:19:30Z alexander $
  * @link       http://www.azimmermann.com/
@@ -29,9 +29,9 @@ require_once 'Listener/Pre/SyntaxTest.php';
  * @package    Listener
  * @subpackage Pre
  * @author     Alexander Zimmermann <alex@zimmemann.com>
- * @copyright  2008-2010 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.0
+ * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */

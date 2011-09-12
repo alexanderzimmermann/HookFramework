@@ -5,7 +5,7 @@
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2010 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
@@ -43,9 +43,9 @@ require_once 'Core/Commit/CommitDataHelperExtensions.php';
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2010 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.0
+ * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -95,10 +95,10 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 
 		$oObject = $this->oCommitData->createObject($aParams);
 
-		$this->assertEquals('CommitObject', get_class($oObject));
-		$this->assertEquals('74-1', $oObject->getTransaction());
-		$this->assertEquals('U', $oObject->getAction());
-		$this->assertEquals('file.txt', $oObject->getObjectPath());
+		$this->assertEquals('CommitObject', get_class($oObject), 'Not object CommitObject');
+		$this->assertEquals('74-1', $oObject->getTransaction(), 'Txn wrong');
+		$this->assertEquals('U', $oObject->getAction(), 'Action wrong');
+		$this->assertEquals('file.txt', $oObject->getObjectPath(), 'objectpath wrong');
 	} // function
 
 	/**
@@ -129,8 +129,8 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 
 		$oObject = $this->oCommitData->createObject($aParams);
 
-		$this->assertEquals('CommitObject', get_class($oObject));
-		$this->assertEquals('/path', $oObject->getObjectPath());
+		$this->assertEquals('CommitObject', get_class($oObject), 'class not CommitObject');
+		$this->assertEquals('/path', $oObject->getObjectPath(), 'objectpath wrong');
 	} // function
 
 
@@ -179,10 +179,10 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 
 		$aFiles = $this->oCommitData->getObjects($oListener);
 
-		$this->assertTrue(is_array($aFiles));
-		$this->assertEquals(2, count($aFiles));
+		$this->assertTrue(is_array($aFiles), '$aFiles no array');
+		$this->assertEquals(2, count($aFiles), '$aFiles count wrong');
 
-		$this->assertEquals('/path/file_2.php', $aFiles[1]->getObjectPath());
+		$this->assertEquals('/path/file_2.php', $aFiles[1]->getObjectPath(), 'objectpath wrong');
 	} // function
 
 	/**
@@ -225,10 +225,10 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 
 		$aFiles = $this->oCommitData->getObjects($oListener);
 
-		$this->assertTrue(is_array($aFiles));
-		$this->assertEquals(3, count($aFiles));
+		$this->assertTrue(is_array($aFiles), '$aFiles no array');
+		$this->assertEquals(3, count($aFiles), 'count $aFiles wrong');
 
-		$this->assertEquals('/path/file_2.php', $aFiles[1]->getObjectPath());
+		$this->assertEquals('/path/file_2.php', $aFiles[1]->getObjectPath(), 'objectpath wrong');
 	} // function
 
 	/**
@@ -275,10 +275,10 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 
 		$aFiles = $this->oCommitData->getObjects($oListener);
 
-		$this->assertTrue(is_array($aFiles));
-		$this->assertEquals(3, count($aFiles));
+		$this->assertTrue(is_array($aFiles), '$aFiles no array');
+		$this->assertEquals(3, count($aFiles), 'count $aFiles wrong');
 
-		$this->assertEquals('/path/file_0.php', $aFiles[1]->getObjectPath());
+		$this->assertEquals('/path/file_0.php', $aFiles[1]->getObjectPath(), 'objectpath wrong');
 	} // function
 
 	/**
@@ -331,10 +331,10 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 
 		$aFiles = $this->oCommitData->getObjects($oListener);
 
-		$this->assertTrue(is_array($aFiles));
-		$this->assertEquals(3, count($aFiles));
+		$this->assertTrue(is_array($aFiles), '$aFile no aray');
+		$this->assertEquals(3, count($aFiles), 'file count wrong');
 
-		$this->assertEquals('/path/file_1.phtml', $aFiles[1]->getObjectPath());
+		$this->assertEquals('/path/file_1.phtml', $aFiles[1]->getObjectPath(), 'objectpath wrong');
 	} // function
 
 	/**
@@ -354,11 +354,11 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 
 		$oInfo = $this->oCommitData->getCommitInfo();
 
-		$this->assertEquals('CommitInfo', get_class($oInfo));
-		$this->assertEquals($aInfos['txn'], $oInfo->getTransaction());
-		$this->assertEquals($aInfos['rev'], $oInfo->getRevision());
-		$this->assertEquals($aInfos['user'], $oInfo->getUser());
-		$this->assertEquals($aInfos['datetime'], $oInfo->getDateTime());
-		$this->assertEquals($aInfos['message'], $oInfo->getMessage());
+		$this->assertEquals('CommitInfo', get_class($oInfo), 'wrong class');
+		$this->assertEquals($aInfos['txn'], $oInfo->getTransaction(), 'txn wrong');
+		$this->assertEquals($aInfos['rev'], $oInfo->getRevision(), 'rev wrong');
+		$this->assertEquals($aInfos['user'], $oInfo->getUser(), 'user wrong');
+		$this->assertEquals($aInfos['datetime'], $oInfo->getDateTime(), 'datetime wrong');
+		$this->assertEquals($aInfos['message'], $oInfo->getMessage(), 'message wrong');
 	} // function
 } // class

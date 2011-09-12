@@ -5,7 +5,7 @@
  * @package    Listener
  * @subpackage Failures
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2010 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id: ObjectListenerFailureRegisterValues2.php 134 2009-01-02 22:17:12Z alexander $
  * @link       http://www.azimmermann.com/
@@ -18,9 +18,9 @@
  * @package    Listener
  * @subpackage Failures
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2010 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.0
+ * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */

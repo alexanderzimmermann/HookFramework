@@ -5,7 +5,7 @@
  * @package    Main
  * @subpackage Filter
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2010 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
@@ -25,9 +25,9 @@ require_once 'Core/Filter/ObjectFilter.php';
  * @package    Main
  * @subpackage Filter
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2010 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.0
+ * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -186,11 +186,7 @@ class FilterTest extends PHPUnit_Framework_TestCase
 		$oFilter = new Filter($aObjects);
 		$aActual = $oFilter->getFilteredFiles($oObjectFilter);
 
-
-//var_dump($aActual);exit;
-
 		// Tests.
 		$this->assertEquals(4, count($aActual), 'Count false.');
-
 	} // function
 } // class

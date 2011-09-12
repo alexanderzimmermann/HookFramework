@@ -5,7 +5,7 @@
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2010 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
@@ -21,9 +21,9 @@ require_once 'Core/Error.php';
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2010 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.0
+ * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -52,11 +52,11 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testNoError()
 	{
-		$this->assertFalse($this->oError->getCommonError());
-		$this->assertFalse($this->oError->getError());
+		$this->assertFalse($this->oError->getCommonError(), 'Common error');
+		$this->assertFalse($this->oError->getError(), 'Error');
 
-		$this->assertEquals('', $this->oError->getCommonMessages());
-		$this->assertEquals('', $this->oError->getMessages());
+		$this->assertEquals('', $this->oError->getCommonMessages(), 'Common Messages');
+		$this->assertEquals('', $this->oError->getMessages(), 'Messages');
 	} // function
 
 	/**
@@ -69,8 +69,8 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 		$sMessage = 'Simple Error Message';
 		$this->oError->addError($sMessage);
 
-		$this->assertTrue($this->oError->getCommonError());
-		$this->assertEquals($sMessage, $this->oError->getCommonMessages());
+		$this->assertTrue($this->oError->getCommonError(), 'Common Error');
+		$this->assertEquals($sMessage, $this->oError->getCommonMessages(), 'Message');
 	} // function
 
 	/**
@@ -88,9 +88,9 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 
 		$this->oError->addErrorLines($aMessage);
 
-		$this->assertTrue($this->oError->getCommonError());
+		$this->assertTrue($this->oError->getCommonError(), 'Common Error');
 
-		$this->assertEquals($sMessage, $this->oError->getCommonMessages());
+		$this->assertEquals($sMessage, $this->oError->getCommonMessages(), 'Common Messages');
 	} // function
 
 	/**
@@ -187,7 +187,7 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 		$this->oError->processActionObject($oObject);
 
 		// Tests.
-		$this->assertTrue($this->oError->getError());
+		$this->assertTrue($this->oError->getError(), 'getError not true.');
 
 		$sExpected  = "\n\n" . str_repeat('~', 80) . "\n";
 		$sExpected .= '/path/to/a/file/in/svn.txt' . "\n";
@@ -197,7 +197,7 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 		$sExpected .= "\n\n";
 		$sExpected .= str_repeat('~', 80) . "\n";
 
-		$this->assertEquals($sExpected, $this->oError->getMessages());
+		$this->assertEquals($sExpected, $this->oError->getMessages(), 'getMessage false.');
 	} // function
 
 	/**
@@ -260,7 +260,7 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 		$this->oError->processActionObject($oObject);
 
 		// Tests.
-		$this->assertTrue($this->oError->getError());
+		$this->assertTrue($this->oError->getError(), 'getError not true.');
 
 		$sExpected  = "\n\n" . str_repeat('~', 80) . "\n";
 		$sExpected .= '/path/to/a/file/in/svn.txt' . "\n";
@@ -276,6 +276,6 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 		$sExpected .= "\n\n";
 		$sExpected .= str_repeat('~', 80) . "\n";
 
-		$this->assertEquals($sExpected, $this->oError->getMessages());
+		$this->assertEquals($sExpected, $this->oError->getMessages(), 'Messages not equal.');
 	} // function
 } // class

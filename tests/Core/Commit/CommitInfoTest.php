@@ -5,7 +5,7 @@
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2010 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
@@ -23,9 +23,9 @@ require_once 'Core/Commit/CommitInfo.php';
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2010 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.0
+ * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -108,11 +108,11 @@ class CommitInfoTest extends PHPUnit_Framework_TestCase
 
 		$aObjects = $this->oCommitInfo->getObjects();
 
-		$this->assertTrue(is_array($aObjects));
-		$this->assertEquals(1, count($aObjects));
+		$this->assertTrue(is_array($aObjects), 'no array');
+		$this->assertEquals(1, count($aObjects), 'count aObjects not 1');
 
-		$this->assertEquals('/path/to/file', $aObjects[0]->getObjectPath());
-		$this->assertEquals('74-1', $aObjects[0]->getTransaction());
-		$this->assertEquals(74, $aObjects[0]->getRevision());
+		$this->assertEquals('/path/to/file', $aObjects[0]->getObjectPath(), 'path wrong');
+		$this->assertEquals('74-1', $aObjects[0]->getTransaction(), 'txn not 74');
+		$this->assertEquals(74, $aObjects[0]->getRevision(), 'rev not 74');
 	} // function
 } // class
