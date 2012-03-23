@@ -124,6 +124,7 @@ class ListenerParser
 		$this->checkListener();
 		$this->registerListenerInfo();
 		$this->registerListenerObject();
+        log::getInstance()->writeLog(Log::HF_INFO, $this->sError);
 	} // function
 
 	/**
@@ -140,7 +141,7 @@ class ListenerParser
 			$aListener['info'] = $this->aListenerInfo;
 		} // if
 
-		if (empty($this->aListenerInfo) === false)
+		if (empty($this->aListenerObject) === false)
 		{
 			$aListener['object'] = $this->aListenerObject;
 		} // if
@@ -156,13 +157,22 @@ class ListenerParser
 	 */
 	private function readDirectory($sType)
 	{
-		// TODO: Use SPL directory iterator.
-		$sType     = ucfirst($sType);
-		$aListener = glob($this->sPath . $sType . '/*.php');
+        $oLog = log::getInstance();
+        $sType     = ucfirst($sType);
 
-		$oLog = log::getInstance();
-		$oLog->writeLog(Log::HF_VARDUMP, 'files', $aListener);
-		$this->aListenerFiles = $aListener;
+        $oIter = new \DirectoryIterator($this->sPath.$sType);
+        $aListener = array();
+
+        foreach ($oIter as $oFile)
+        {
+            /* @var $oFile \SplFileInfo */
+            if ($oFile->getExtension() == 'php')
+            {
+                $aListener[] = $oFile->getPathname();
+            }
+        }
+
+        $this->aListenerFiles = $aListener;
 	} // function
 
 	/**
@@ -334,13 +344,14 @@ class ListenerParser
 				}
 				catch (Exception $oException)
 				{
-					echo $oException->getMessage();
+					$this->sError .= $oException->getMessage() . PHP_EOL . $oException->getTraceAsString() . PHP_EOL;
 				} // try
 			} // if
 		} // for
 
 		// Die noch verbliebenen korrekten Listener setzen.
 		$this->aListenerFiles = $aListener;
+        Log::getInstance()->writeLog(Log::HF_VARDUMP, 'Accepted Listeners', $this->aListenerFiles);
 	} // function
 
 	/**
