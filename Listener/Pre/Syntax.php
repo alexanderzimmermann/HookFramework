@@ -55,32 +55,28 @@ class Syntax extends ListenerObjectAbstract
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	public function processAction(CommitObject $oObject)
-	{
-		$aLines = array();
-		$sCmd   = 'php -l ' . $oObject->getTmpObjectPath() . '';
-		exec($sCmd, $aLines);
+    public function processAction(CommitObject $oObject)
+    {
+        $aLines = array();
+        $sCmd   = 'php -l ' . $oObject->getTmpObjectPath() . ' 2>&1';
+        exec($sCmd, $aLines);
 
-        Log::getInstance()->writeLog(Log::HF_VARDUMP, 'Error Lines', $aLines);
-		if (empty($aLines) === true)
-		{
-			return;
-		} // if
+        if (empty($aLines) === true)
+        {
+            return;
+        } // if
 
-		$sMessage  = 'No syntax errors detected in ';
-		$sMessage .= $oObject->getTmpObjectPath();
+        $sMessage  = 'No syntax errors detected in ';
+        $sMessage .= $oObject->getTmpObjectPath();
 
-		if (count($aLines) === 1)
-		{
-			if ($aLines[0] === $sMessage)
-			{
-				return;
-			} // if
-		} // if
+        if (count($aLines) === 1)
+        {
+            if ($aLines[0] === $sMessage)
+            {
+                return;
+            } // if
+        } // if
 
-		unset($aLines[0]);
-		$aLines[] = '';
-
-		$oObject->addErrorLines($aLines);
-	} // function
+        $oObject->addErrorLines($aLines);
+    } // function
 } // class

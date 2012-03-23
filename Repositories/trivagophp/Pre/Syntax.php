@@ -39,13 +39,6 @@ class Syntax extends ListenerObjectAbstract
 	 */
 	public function register()
 	{
-		// Testdateien ignorieren.
-		$sBaseFolder     = '/tmp/newfolder1/newfolder1_1/';
-		$sParseErrorFile = $sBaseFolder . 'parse-error_file1.php';
-		$this->oObjectFilter->addFileToFilter($sParseErrorFile);
-
-		$sParseErrorFile = $sBaseFolder . 'parse-error_file2.php';
-		$this->oObjectFilter->addFileToFilter($sParseErrorFile);
 
 		return array(
 				'action'     => 'commit',
@@ -66,7 +59,7 @@ class Syntax extends ListenerObjectAbstract
 	public function processAction(CommitObject $oObject)
 	{
 		$aLines = array();
-		$sCmd   = 'php -l ' . $oObject->getTmpObjectPath() . ' 2>/dev/null';
+		$sCmd   = 'php -l ' . $oObject->getTmpObjectPath() . ' 2>&1';
 		exec($sCmd, $aLines);
 
 		if (empty($aLines) === true)
@@ -84,9 +77,6 @@ class Syntax extends ListenerObjectAbstract
 				return;
 			} // if
 		} // if
-
-		unset($aLines[0]);
-		$aLines[] = '';
 
 		$oObject->addErrorLines($aLines);
 	} // function
