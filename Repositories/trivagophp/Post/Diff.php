@@ -2,12 +2,12 @@
 /**
  * Style Guide Listener.
  * @category   Listener
- * @package    Pre
- * @subpackage Pre
+ * @package    Post
+ * @subpackage Post
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    SVN: $Id: Diff.php 173 2010-02-27 23:06:48Z alexander $
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
@@ -15,8 +15,8 @@
 /**
  * Style Guide Listener.
  * @category   Listener
- * @package    Pre
- * @subpackage Pre
+ * @package    Post
+ * @subpackage Post
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
@@ -24,13 +24,13 @@
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class Syntax extends ListenerObjectAbstract
+class Diff extends ListenerObjectAbstract
 {
 	/**
 	 * Listener Name.
 	 * @var string
 	 */
-	protected $sListener = 'Syntax Pruefung';
+	protected $sListener = 'Post Commit Diff';
 
 	/**
 	 * Registrieren auf die Aktion.
@@ -41,11 +41,9 @@ class Syntax extends ListenerObjectAbstract
 	{
 		return array(
 				'action'     => 'commit',
-				'fileaction' => array(
-								 'A', 'U'
-								),
-				'extensions' => array('PHP'),
-				'withdirs'   => false
+				'fileaction' => array(),
+				'extensions' => array(),
+				'withdirs'   => true
 			   );
 	} // function
 
@@ -55,28 +53,9 @@ class Syntax extends ListenerObjectAbstract
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-    public function processAction(CommitObject $oObject)
-    {
-        $aLines = array();
-        $sCmd   = 'php -l ' . $oObject->getTmpObjectPath() . ' 2>&1';
-        exec($sCmd, $aLines);
-
-        if (empty($aLines) === true)
-        {
-            return;
-        } // if
-
-        $sMessage  = 'No syntax errors detected in ';
-        $sMessage .= $oObject->getTmpObjectPath();
-
-        if (count($aLines) === 1)
-        {
-            if ($aLines[0] === $sMessage)
-            {
-                return;
-            } // if
-        } // if
-
-        $oObject->addErrorLines($aLines);
-    } // function
+	public function processAction(CommitObject $oObject)
+	{
+		error_log('POST');
+	} // function
 } // class
+
