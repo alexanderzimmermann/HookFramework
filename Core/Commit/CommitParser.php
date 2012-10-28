@@ -5,18 +5,19 @@
  * @package    Parser
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
-// CommitData objekt.
-require_once 'Core/Commit/CommitData.php';
+namespace Core\Commit;
 
-// CommitDiffParser object.
-require_once 'Core/Commit/Parser/DiffParser.php';
+use Core\Arguments;
+use Core\Svn;
+use Core\Commit\CommitData;
+use Core\Commit\Parser\DiffParser;
 
 /**
  * Daten in der Transaktion.
@@ -24,7 +25,7 @@ require_once 'Core/Commit/Parser/DiffParser.php';
  * @package    Parser
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
@@ -39,13 +40,13 @@ class CommitParser
 	private $oArguments;
 
 	/**
-	 * Svn Objekt.
+	 * Svn object.
 	 * @var Svn
 	 */
 	private $oSvn;
 
 	/**
-	 * CommitData Objekt.
+	 * CommitData Object.
 	 * @var CommitData
 	 */
 	private $oCommitData;
@@ -64,8 +65,8 @@ class CommitParser
 
 	/**
 	 * Constructor.
-	 * @param Arguments $oArguments Argumentenobjekt.
-	 * @param Svn       $oSvn       Subversionobjekt.
+	 * @param Arguments $oArguments Arguments object.
+	 * @param Svn       $oSvn       Subversion object.
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function __construct(Arguments $oArguments, Svn $oSvn)
@@ -106,7 +107,7 @@ class CommitParser
 	} // function
 
 	/**
-	 * Commit Data Objekt zurueck geben.
+	 * Return commit data object.
 	 * @return CommitData
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -116,7 +117,7 @@ class CommitParser
 	} // function
 
 	/**
-	 * Info aus Commit parsen.
+	 * Parse info from commit.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -221,8 +222,8 @@ class CommitParser
 	} // function
 
 	/**
-	 * Parsen der Infos zum Commit.
-	 * @param array $aData Commit Daten Infos.
+	 * Parse info from the commit.
+	 * @param array $aData Commit Data info.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -244,7 +245,7 @@ class CommitParser
 
 		$iMax = count($aData);
 
-		// Leere Elemente dahinter nicht beachten. Anzahl kann auch mal 0 sein.
+		// Discard empty elements. Count could also be 0.
 		if ($iMax > 4)
 		{
 			$iMax = 4;
@@ -265,7 +266,7 @@ class CommitParser
 	} // function
 
 	/**
-	 * Message Parsen.
+	 * Parse message.
 	 * @param string $sMessage Commit Text.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -274,7 +275,7 @@ class CommitParser
 	{
 		$aMatches = array();
 
-		// Austauschen von Sonderzeichen im Format \\123.
+		// Replace special signs in Format \\123.
 		preg_match_all('/\?\\\\\\\\([0-9]+)/', $sMessage, $aMatches);
 
 		$iMax = count($aMatches[0]);

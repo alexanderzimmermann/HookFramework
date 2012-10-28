@@ -5,14 +5,21 @@
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
-require_once dirname(__FILE__) . '/../../TestHelper.php';
+namespace CoreTest\Commit;
+
+use Core\Arguments;
+use Core\Svn;
+use Core\Commit\CommitParser;
+use CoreTest\Commit\CommitParserHelper;
+
+require_once __DIR__ . '/../../Bootstrap.php';
 
 // Argumenten-Objekt.
 require_once 'Core/Arguments.php';
@@ -32,62 +39,56 @@ require_once 'Core/Commit/CommitParserHelper.php';
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class CommitParserTest extends PHPUnit_Framework_TestCase
+class CommitParserTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * Commit Parser Objekt.
+	 * Commit Parser object.
 	 * @var CommitParser
 	 */
 	private $oCommitParser;
 
 	/**
-	 * Svn Objekt.
+	 * Svn object.
 	 * @var Svn
 	 */
 	private $oSvn;
 
 	/**
-	 * Argument Objekt.
+	 * Argument object.
 	 * @var Argument
 	 */
 	private $oArgument;
 
 	/**
-	 * Set Up Methode.
-	 * @param array $aArguments Argumente.
+	 * Set Up Method.
+	 * @param array $aArguments Arguments.
 	 * @return CommitData
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	private function setUpCommit(array $aArguments)
 	{
-		// Argumentenobjekt erzeugen.
-		$sSvn = dirname(__FILE__);
-		$sSvn = str_replace('Commit', 'svn/', $sSvn);
-
-		// Ueberschreiben.
-		$aArguments[1] = $sSvn;
-
+		// Create Argument object.
 		$this->oArgument = new Arguments($aArguments);
 
 		$this->assertTrue($this->oArgument->argumentsOk());
 
-		// Svn initiieren.
-		$this->oSvn = new Svn($sSvn);
+		// Init Svn object.
+		$this->oSvn = new Svn(TEST_SVN_BIN);
 		$this->oSvn->init($this->oArgument);
 
 		$this->oCommitParser = new CommitParser($this->oArgument, $this->oSvn);
 
 		$oCommitData = $this->oCommitParser->getCommitDataObject();
-		$this->assertEquals('CommitData', get_class($oCommitData));
+		$this->assertEquals('Core\Commit\CommitData', get_class($oCommitData));
 
 		$oCommitInfo = $oCommitData->getCommitInfo();
-		$this->assertEquals('CommitInfo', get_class($oCommitInfo));
+		$this->assertEquals('Core\Commit\CommitInfo', get_class($oCommitInfo));
 
 		return $oCommitData;
 	} // function
@@ -101,7 +102,7 @@ class CommitParserTest extends PHPUnit_Framework_TestCase
 	{
 		$aArguments = array(
 					   '/var/local/svn/hooks/Hook',
-					   '#replace#',
+					   TEST_SVN_EXAMPLE,
 					   '74-1',
 					   'pre-commit'
 					  );
@@ -134,7 +135,7 @@ class CommitParserTest extends PHPUnit_Framework_TestCase
 	{
 		$aArguments = array(
 					   '/var/local/svn/hooks/Hook',
-					   '#replace#',
+					   TEST_SVN_EXAMPLE,
 					   '110-1',
 					   'pre-commit'
 					  );
@@ -189,7 +190,7 @@ class CommitParserTest extends PHPUnit_Framework_TestCase
 	{
 		$aArguments = array(
 					   '/var/local/svn/hooks/Hook',
-					   '#replace#',
+					   TEST_SVN_EXAMPLE,
 					   '1719-1',
 					   'pre-commit'
 					  );
@@ -214,7 +215,7 @@ class CommitParserTest extends PHPUnit_Framework_TestCase
 	{
 		$aArguments = array(
 					   '/var/local/svn/hooks/Hook',
-					   '#replace#',
+					   TEST_SVN_EXAMPLE,
 					   '1748-1',
 					   'pre-commit'
 					  );
@@ -239,7 +240,7 @@ class CommitParserTest extends PHPUnit_Framework_TestCase
 	{
 		$aArguments = array(
 					   '/var/local/svn/hooks/Hook',
-					   '#replace#',
+					   TEST_SVN_EXAMPLE,
 					   '1749-1',
 					   'pre-commit'
 					  );

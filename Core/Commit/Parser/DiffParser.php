@@ -5,15 +5,14 @@
  * @package    Commit
  * @subpackage Parser
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
-require_once 'Core/Commit/Parser/Lines.php';
-require_once 'Core/Commit/Parser/Properties.php';
+namespace Core\Commit\Parser;
 
 /**
  * Parser for the differences of the whole commit.
@@ -23,7 +22,7 @@ require_once 'Core/Commit/Parser/Properties.php';
  * @package    Commit
  * @subpackage Parser
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/

@@ -1,24 +1,26 @@
 <?php
 /**
- * Kleiner Logger.
+ * Little log object.
  * @category   Core
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
+namespace Core;
+
 /**
- * Kleiner Logger.
+ * Little log object.
  * @category   Core
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
@@ -27,40 +29,40 @@
 class Log
 {
 	/**
-	 * Nur Infos, normales Protkoll.
+	 * Just infos, normal protocol.
 	 */
 	const HF_INFO = 1;
 
 	/**
-	 * Fuer einen einfachen Debug Mode.
+	 * For a simple debug mode..
 	 */
 	const HF_DEBUG = 2;
 
 	/**
-	 * Erweitert um Variablen Dumps.
+	 * Need some dumps for debugging.
 	 */
 	const HF_VARDUMP = 3;
 
 	/**
-	 * Logger Instanz.
+	 * Log object.
 	 * @var Log
 	 */
 	static private $oLog = null;
 
 	/**
-	 * Log Modus.
+	 * Log Mode.
 	 * @var integer
 	 */
 	private $iLogMode;
 
 	/**
-	 * Resource auf Logdatei.
+	 * Resource to log file.
 	 * @var resource
 	 */
 	private $rFile;
 
 	/**
-	 * Konstruktor / Nicht erlauben.
+	 * Construct not allowed.
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	private function __construct()
@@ -68,7 +70,7 @@ class Log
 	} // function
 
 	/**
-	 * Klonen nicht erlauben.
+	 * Clone not allowed.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -77,7 +79,7 @@ class Log
 	} // function
 
 	/**
-	 * Instanz des Loggers holen.
+	 * Get the log instance.
 	 * @return Log
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -92,8 +94,8 @@ class Log
 	} // function
 
 	/**
-	 * Logdatei setzen.
-	 * @param string $sFile Log Datei.
+	 * Set the logfile name.
+	 * @param string $sFile Log file.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -107,21 +109,21 @@ class Log
 	} // function
 
 	/**
-	 * Log Modus setzen.
-	 * @param integer $iLogMode Log Modus.
+	 * Sets the log mode.
+	 * @param integer $iLogMode Log mode.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	public function setLogMode($iLogMode = 1)
+	public function setLogMode($iLogMode = self::HF_INFO)
 	{
 		$this->iLogMode = $iLogMode;
 	} // function
 
 	/**
-	 * Loggen.
-	 * @param integer $iLogMode Log Modus.
-	 * @param string  $sHeadMsg Ueberschrift fuer Var.
-	 * @param mixed   $mVar     Variable fuer Debug.
+	 * Write log.
+	 * @param integer $iLogMode Log mode.
+	 * @param string  $sHeadMsg Headline for var.
+	 * @param mixed   $mVar     Variable for Debug.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */

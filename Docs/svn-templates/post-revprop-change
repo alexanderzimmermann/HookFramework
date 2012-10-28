@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# POST-REVPROP-CHANGE HOOK
+#
+# The post-revprop-change hook is invoked after a revision property
+# has been added, modified or deleted.  Subversion runs this hook by
+# invoking a program (script, executable, binary, etc.) named
+# 'post-revprop-change' (for which this file is a template), with the
+# following ordered arguments:
+#
+#   [1] REPOS-PATH   (the path to this repository)
+#   [2] REV          (the revision that was tweaked)
+#   [3] USER         (the username of the person tweaking the property)
+#   [4] PROPNAME     (the property that was changed)
+#   [5] ACTION       (the property was 'A'dded, 'M'odified, or 'D'eleted)
+#
+#   [STDIN] PROPVAL  ** the old property value is passed via STDIN.
+
+REPOS="$1"
+REV="$2"
+USER="$3"
+PROPNAME="$4"
+ACTION="$5"
+
+/path/to/hookframework/Hook "$REPOS" "$REV" "$USER" "$PROPNAME" "$ACTION" post-revprop-change >&2 || exit 1
+
+exit 0

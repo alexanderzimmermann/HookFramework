@@ -5,41 +5,30 @@
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
-// Logger einfuegen.
-require_once 'Core/Log.php';
+namespace Core;
 
-// Commit Parser einfuegen.
-require_once 'Core/Commit/CommitParser.php';
-
-// Listener Parser einfuegen.
-require_once 'Core/Listener/ListenerParser.php';
-
-// Argumente der Kommandozeile pruefen.
-require_once 'Core/Arguments.php';
-
-// Argumente der Kommandozeile pruefen.
-require_once 'Core/Repository.php';
-
-// Svn Objekt.
-require_once 'Core/Svn.php';
-
-// Error Objekt.
-require_once 'Core/Error.php';
+use Core\Repository;
+use Core\Svn;
+use Core\Commit\CommitData;
+use Core\Commit\CommitObject;
+use Core\Commit\CommitParser;
+use Core\Listener\ListenerInfoAbstract;
+use Core\Listener\ListenerObjectAbstract;
 
 /**
- * Hauptdatei fuer das Hook Framework.
+ * Main class for the Hook Framework.
  * @category   Core
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
@@ -90,37 +79,37 @@ class HookMain
 	protected $oLog;
 
 	/**
-	 * Liste mit den Listener Objekten fuer Info und Object.
+	 * List with Listener object for Info and object.
 	 * @var array
 	 */
 	private $aListener;
 
 	/**
-	 * Fehler aufgetreten.
+	 * Are errors occurred.
 	 * @var boolean
 	 */
 	private $bError;
 
 	/**
-	 * Liste der Fehlermeldungen.
+	 * List of error messages.
 	 * @var array
 	 */
 	private $aErrors;
 
 	/**
-	 * Dateien die bereits geschrieben wurden fuer die Listener.
+	 * Files that are written for the listener.
 	 * @var array
 	 */
 	private $aWrittenFiles;
 
 	/**
-	 * Dateien die der Listener angefordert hat.
+	 * Files that the listener ordered.
 	 * @var array
 	 */
 	private $aListenerFiles;
 
 	/**
-	 * Meldungszeilen.
+	 * Messages.
 	 * @var string
 	 */
 	private $sMessages;
@@ -128,13 +117,13 @@ class HookMain
 	/**
 	 * Constructor.
 	 *
-	 * Es werden 4 Parameter erwartet.
-	 * <b>Modus</b>
+	 * There are 4 parameters expected.
+	 * <b>Mode</b>
 	 * <ul>
 	 * <li>Repository (REPOS)</li>
 	 * <li>Transaction-Nr. (TXN)</li>
-	 * <li>Pfad zum SVN (/usr/bin/svnlook)</li>
-	 * <li>Modus: z.B. pre-commit, post-commit</li>
+	 * <li>Path to SVN (/usr/bin/svnlook)</li>
+	 * <li>Mode: z.B. pre-commit, post-commit</li>
 	 * </ul>
 	 *
 	 * <ul>
@@ -172,7 +161,7 @@ class HookMain
 	} // function
 
 	/**
-	 * Parsen INI- Datei.
+	 * Parse INI- file.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -237,13 +226,13 @@ class HookMain
 	} // function
 
 	/**
-	 * Anzeigen des korrekten Aufrufs.
+	 * Show usage.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	private function showUsage()
 	{
-		include_once 'Core/Usage.php';
+		include_once __DIR__ . '/Usage.php';
 
 		$sMainType = $this->oArguments->getMainType();
 		$sSubType  = $this->oArguments->getSubType();
@@ -253,7 +242,7 @@ class HookMain
 	} // function
 
 	/**
-	 * Fehlerbehandlung der Listener.
+	 * Error handling of listener.
 	 * @return integer
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -275,13 +264,13 @@ class HookMain
 	} // function
 
 	/**
-	 * Starten des Checks.
+	 * Run the hook.
 	 * @return integer
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function run()
 	{
-		// Initialisieren, false wenn fehlgeschlagen.
+		// Initialize, false when errors occurred.
 		if ($this->init() === false)
 		{
 			if ($this->bError === true)
@@ -289,7 +278,7 @@ class HookMain
 				return 1;
 			} // if
 
-			// Leere Listener sind ein Abbruch, aber kein Fehler.
+			// Empty Listener are an abort, but no error.
 			if (empty($this->aListener) === true)
 			{
 				return 0;
@@ -298,24 +287,24 @@ class HookMain
 
 		$this->oLog->writeLog(Log::HF_INFO, 'run');
 
-		// Parsen des Commits.
+		// Parse the commits.
 		$this->oLog->writeLog(Log::HF_INFO, 'parse commit');
 		$oCommitParser     = new CommitParser($this->oArguments, $this->oSvn);
 		$this->oCommitData = $oCommitParser->getCommitDataObject();
 
-		// Listener durchlaufen.
+		// Iterate over the listener.
 		$this->oLog->writeLog(Log::HF_INFO, 'run listener');
 		$this->runListenerInfo();
 		$this->runListenerObject();
 
-		// Dateien aufraeumen.
+		// Cleanup files.
 		$this->deleteFiles();
 
 		return $this->handleErrors();
 	} // function
 
 	/**
-	 * Listener aufrufen.
+	 * Call info listener.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -335,14 +324,14 @@ class HookMain
 	} // function
 
 	/**
-	 * Listener fuer Info ausfuehren.
+	 * Call Listener for Info.
 	 * @param ListenerInfoAbstract $oListener Listener.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	private function processInfoListener(ListenerInfoAbstract $oListener)
 	{
-		// Keine Dateien dann den Listener einmal aufrufen.
+		// No files, call listener once.
 		$sLog  = 'process info listener ';
 		$sLog .= $oListener->getListenerName();
 		$this->oLog->writeLog(Log::HF_INFO, $sLog);
@@ -356,7 +345,7 @@ class HookMain
 	} // function
 
 	/**
-	 * Listener aufrufen.
+	 * Call Listener.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -380,8 +369,8 @@ class HookMain
 	} // function
 
 	/**
-	 * Listener ausfuehren.
-	 * @param ListenerObjectAbstract $oListener Listener Objekt.
+	 * Execute Listener.
+	 * @param ListenerObjectAbstract $oListener Listener Object.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -402,8 +391,8 @@ class HookMain
 	} // function
 
 	/**
-	 * Schreiben der Dateien auf die Platte.
-	 * @param CommitObject $oObject Objektdatei.
+	 * Write file to disk.
+	 * @param CommitObject $oObject Object file.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -415,14 +404,14 @@ class HookMain
 		$sLog = 'process file "' . $sFile . '"';
 		$this->oLog->writeLog(Log::HF_INFO, $sLog);
 
-		$sContent = $this->oSvn->getContent($sFile, $sTmpFile);
+		$this->oSvn->getContent($sFile, $sTmpFile);
 
 		$this->addFile($sTmpFile);
 	} // function
 
 	/**
-	 * Erzeugte Dateien in einem Array verwalten.
-	 * @param string $sFile Geschriebene Datei.
+	 * Created files store in an array.
+	 * @param string $sFile Created file.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -437,7 +426,7 @@ class HookMain
 	} // function
 
 	/**
-	 * Dateien aufraeumen die aus dem Commit erstellt wurden.
+	 * Cleanup files that are created.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */

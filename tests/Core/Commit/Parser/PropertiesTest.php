@@ -5,14 +5,18 @@
  * @package    Commit
  * @subpackage Parser
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
-require_once dirname(__FILE__) . '/../../../TestHelper.php';
+namespace CoreTest\Commit\Parser;
+
+use Core\Commit\Parser\Properties;
+
+require_once __DIR__ . '/../../../Bootstrap.php';
 
 require_once 'Core/Commit/Parser/Properties.php';
 
@@ -22,13 +26,13 @@ require_once 'Core/Commit/Parser/Properties.php';
  * @package    Commit
  * @subpackage Parser
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class DiffPropertiesTest extends PHPUnit_Framework_TestCase
+class DiffPropertiesTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Test class to be tested.

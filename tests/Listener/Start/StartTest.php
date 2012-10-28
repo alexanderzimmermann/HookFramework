@@ -10,11 +10,9 @@
  * @since      File available since Release 1.0.0
  */
 
-require_once dirname(__FILE__) . '/../../TestHelper.php';
+use Example\Start;
 
-require_once 'Core/Listener/ListenerInfoAbstract.php';
-require_once 'Core/Commit/CommitInfo.php';
-require_once 'Listener/Start/Start.php';
+require_once __DIR__ . '/../../Bootstrap.php';
 
 /**
  * Start Test.
@@ -22,13 +20,13 @@ require_once 'Listener/Start/Start.php';
  * @package    Listener
  * @subpackage Post
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class StartTest extends PHPUnit_Framework_TestCase
+class StartTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Testobjekt fuer Start.
@@ -37,7 +35,7 @@ class StartTest extends PHPUnit_Framework_TestCase
 	private $oStartListener;
 
 	/**
-	 * SetUp Operationen.
+	 * SetUp operations.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@zimmemann.com>
 	 */
@@ -47,7 +45,7 @@ class StartTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen ob das Objekt erzeugt wurde.
+	 * Test that the object was created.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */

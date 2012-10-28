@@ -5,23 +5,25 @@
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.1
  */
 
-// Listener Parser einfuegen.
-require_once 'Core/Listener/ListenerParser.php';
+namespace Core;
+
+use Core\Listener\ListenerParser as Parser;
+use Core\Arguments;
 
 /**
- * Handles listener and logpath for each subversion repository.
+ * Handles listener and log path for each subversion repository.
  * @category   Core
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
@@ -37,7 +39,7 @@ class Repository
 
 	/**
 	 * Path to the repositories listener and logs.
-	 * @var sring
+	 * @var string
 	 */
 	private $sPath;
 
@@ -66,7 +68,7 @@ class Repository
 	private $sLogfile;
 
 	/**
-	 * List of the catual listener for this repository and hook action.
+	 * List of the actual listener for this repository and hook action.
 	 * @var array
 	 */
 	private $aListener = array();
@@ -86,7 +88,7 @@ class Repository
 	 * Set path where the listener and logs are stored.
 	 * @param string $sPath Path where all listener and logs are stored.
 	 * @return void
-	 * @author Alexander Zimmermann <alexander.zimmermann@twt.de>
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function setPath($sPath)
 	{
@@ -102,19 +104,19 @@ class Repository
 	{
 		$sDirectory = $this->sPath . $this->oArguments->getRepositoryName() . '/';
 
-		// Check if there is a respository path.
-		if (false === is_dir($sDirectory . ucfirst($this->sType)))
+		// Check if there is a repository path.
+		if (false === is_dir($sDirectory))
 		{
 			// Use the Listener that come with the hookframework.
-			$sDirectory = dirname(__FILE__) . '/../Listener/';
+			$sDirectory = $this->sPath . 'Example/';
 		} // if
 
 		// Parse listener in directory.
-		$oListenerParser = new ListenerParser($this->oArguments);
-		$oListenerParser->setPath($sDirectory);
-		$oListenerParser->init();
-		$this->aListener = $oListenerParser->getListener();
-		unset($oListenerParser);
+		$oParser = new Parser($this->oArguments);
+		$oParser->setPath($sDirectory);
+		$oParser->init();
+		$this->aListener = $oParser->getListener();
+		unset($oParser);
 
 		// Check if a common.log file is available.
 		$this->bUseLog = false;
@@ -125,12 +127,14 @@ class Repository
 			$this->bUseLog  = true;
 			$this->sLogfile = $sFile;
 		} // if
+
+
 	} // function
 
 	/**
 	 * Is a logfile in for the repository provided.
 	 * @return boolean
-	 * @author Alexander Zimmermann <alexander.zimmermann@twt.de>
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function hasLogfile()
 	{
@@ -140,7 +144,7 @@ class Repository
 	/**
 	 * Return path and logfile.
 	 * @return string
-	 * @author Alexander Zimmermann <alexander.zimmermann@twt.de>
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function getLogfile()
 	{

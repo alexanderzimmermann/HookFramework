@@ -5,12 +5,14 @@
  * @package    Filter
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
+
+namespace Core\Filter;
 
 /**
  * Filterklasse um die Objekte zu filtern.
@@ -18,7 +20,7 @@
  * @package    Filter
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
@@ -156,7 +158,7 @@ class Filter
 	/**
 	 * Copy itmes in a white listed directory into the new array.
 	 * @return void
-	 * @author Alexander Zimmermann <alexander.zimmermann@twt.de>
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	private function handleWhiteListDirectories()
 	{

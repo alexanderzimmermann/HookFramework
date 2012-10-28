@@ -1,33 +1,31 @@
 <?php
 /**
- * Daten in der Transaktion.
+ * Data in the transaction.
  * @category   Core
  * @package    Commit
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
-// CommitInfo.
-require_once 'Core/Commit/CommitInfo.php';
+namespace Core\Commit;
 
-// CommitObject.
-require_once 'Core/Commit/CommitObject.php';
-
-// Filterobekt.
-require_once 'Core/Filter/Filter.php';
+use Core\Commit\CommitInfo;
+use Core\Commit\CommitObject;
+use Core\Filter\Filter;
+use Core\Listener\ListenerObjectAbstract;
 
 /**
- * Daten in der Transaktion.
+ * Data in the transaction.
  * @category   Core
  * @package    Commit
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
@@ -36,13 +34,13 @@ require_once 'Core/Filter/Filter.php';
 class CommitData
 {
 	/**
-	 * Commit Infos.
+	 * Commit Information.
 	 * @var CommitInfo
 	 */
 	private $oCommitInfo;
 
 	/**
-	 * Alle Verzeichnisse und Dateien Objekte. (Mehrdimensionales Array).
+	 * All directories and file objects. (Multidimension Array).
 	 * @var array
 	 */
 	private $aObjects;
@@ -62,7 +60,7 @@ class CommitData
 	} // function
 
 	/**
-	 * Objekt hinzufuegen.
+	 * Add an object.
 	 * @param array $aParams Params for the commit object.
 	 * @return CommitObject
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -79,7 +77,7 @@ class CommitData
 		}
 		else
 		{
-			// Dateien nach Extensions.
+			// Determine Files after extensions.
 			$sExt = $this->determineFileExtension($aParams['item']);
 
 			$this->aObjects[$sObjectAction]['FILES']['ALL'][] = $oCommitObject;
@@ -90,7 +88,7 @@ class CommitData
 	} // function
 
 	/**
-	 * Commit Info zurueck geben.
+	 * Return the commit info object.
 	 * @return CommitInfo
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */

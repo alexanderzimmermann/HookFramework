@@ -1,3 +1,7 @@
+Docs/_build
+Docs/tmp
+Repositories/Example/logs/common.log
+tests/common-test.log
 config.ini
 .settings
 .project

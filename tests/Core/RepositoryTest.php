@@ -5,16 +5,19 @@
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.1
  */
 
-require_once dirname(__FILE__) . '/../TestHelper.php';
-require_once 'Core/Arguments.php';
-require_once 'Core/Repository.php';
+namespace CoreTest;
+
+use Core\Arguments;
+use Core\Repository;
+
+require_once __DIR__ . '/../Bootstrap.php';
 
 /**
  * Repository-Object Tests.
@@ -22,13 +25,13 @@ require_once 'Core/Repository.php';
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.0.0
  * @link       http://www.azimmermann.com/
- * @since      Class available since Release 1.0.1
+ * @since      Class available since Release 2.0.0
  */
-class RepositoryTest extends PHPUnit_Framework_TestCase
+class RepositoryTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Test.
@@ -38,22 +41,22 @@ class RepositoryTest extends PHPUnit_Framework_TestCase
 	public function testInit()
 	{
 		$aFunctions = array(
-					   'getRepository', 'getMainType', 'getSubActions'
+					   'getRepositoryName', 'getMainType', 'getSubActions'
 					  );
 
 		$aArguments = array(
-					   array(
-						0 => '/var/local/svn/hooks/Hook',
-						1 => dirname(__FILE__) . '/svn',
-						2 => 'testuser12',
-						3 => 'pre-commit'
-					   )
-					  );
+			array(
+				0 => '/var/local/svn/hooks/Hook',
+				1 => TEST_SVN_EXAMPLE,
+				2 => 'testuser12',
+				3 => 'pre-commit'
+			)
+		);
 
-		$oArguments = $this->getMock('Arguments', $aFunctions, $aArguments);
+		$oArguments = $this->getMock('Core\Arguments', $aFunctions, $aArguments);
 
 		$oArguments->expects($this->any())
-				   ->method('getRepository')
+				   ->method('getRepositoryName')
 				   ->will($this->returnValue('test'));
 
 		$oArguments->expects($this->any())
@@ -64,7 +67,7 @@ class RepositoryTest extends PHPUnit_Framework_TestCase
 				   ->method('getSubActions')
 				   ->will($this->returnValue(array('commit')));
 
-		$sPath = dirname(__FILE__) . '/_files/Repositories/';
+		$sPath = __DIR__ . '/../../Repositories/';
 
 		$oRepos = new Repository($oArguments);
 		$oRepos->setPath($sPath);
@@ -73,36 +76,35 @@ class RepositoryTest extends PHPUnit_Framework_TestCase
 		// Tests.
 		$this->assertTrue($oRepos->hasLogfile(), 'Logfile is not available');
 
-		$sExpected = dirname(__FILE__)
-				   . '/_files/Repositories/test/logs/common.log';
+		$sExpected = __DIR__ . '/../../Repositories/Example/logs/common.log';
 		$this->assertSame($sExpected, $oRepos->getLogfile(), 'Logfile false');
 	} // function
 
 	/**
-	 * Test that the correct listener are found.
+	 * Test that the correct listeners are found.
 	 * @return void
-	 * @author Alexander Zimmermann <alexander.zimmermann@twt.de>
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function testGetListener()
 	{
 		$aFunctions = array(
-					   'getRepository', 'getMainType', 'getSubActions'
+					   'getRepositoryName', 'getMainType', 'getSubActions'
 					  );
 
 		$aArguments = array(
 					   array(
 						0 => '/var/local/svn/hooks/Hook',
-						1 => dirname(__FILE__) . '/svn',
+						1 => TEST_SVN_EXAMPLE,
 						2 => 'testuser12',
 						3 => 'pre-commit'
 					   )
 					  );
 
-		$oArguments = $this->getMock('Arguments', $aFunctions, $aArguments);
+		$oArguments = $this->getMock('Core\Arguments', $aFunctions, $aArguments);
 
 		$oArguments->expects($this->any())
-				   ->method('getRepository')
-				   ->will($this->returnValue('test'));
+				   ->method('getRepositoryName')
+				   ->will($this->returnValue('Example'));
 
 		$oArguments->expects($this->any())
 				   ->method('getMainType')
@@ -112,14 +114,13 @@ class RepositoryTest extends PHPUnit_Framework_TestCase
 				   ->method('getSubActions')
 				   ->will($this->returnValue(array('commit')));
 
-		$sPath = dirname(__FILE__) . '/_files/Repositories/';
+		$sPath = __DIR__ . '/../../Repositories/';
 
 		$oRepos = new Repository($oArguments);
 		$oRepos->setPath($sPath);
 		$oRepos->init();
 
-		$aExpected = array();
-		$aActual   = $oRepos->getListener();
+		$aActual = $oRepos->getListener();
 
 		$this->assertTrue(isset($aActual['info']), 'Index info missing');
 		$this->assertTrue(isset($aActual['object']), 'Index object missing');

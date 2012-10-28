@@ -5,14 +5,16 @@
  * @package    Commit
  * @subpackage Parser
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
-require_once 'Core/Commit/Diff/Lines.php';
+namespace Core\Commit\Parser;
+
+use Core\Commit\Diff\Diff_Lines;
 
 /**
  * Class for parsing the difference lines of a commit.
@@ -20,7 +22,7 @@ require_once 'Core/Commit/Diff/Lines.php';
  * @package    Commit
  * @subpackage Parser
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/

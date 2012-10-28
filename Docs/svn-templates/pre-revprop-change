@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# PRE-REVPROP-CHANGE HOOK
+#
+# The pre-revprop-change hook is invoked before a revision property
+# is added, modified or deleted.  Subversion runs this hook by invoking
+# a program (script, executable, binary, etc.) named 'pre-revprop-change'
+# (for which this file is a template), with the following ordered
+# arguments:
+#
+#   [1] REPOS-PATH   (the path to this repository)
+#   [2] REV          (the revision being tweaked)
+#   [3] USER         (the username of the person tweaking the property)
+#   [4] PROPNAME     (the property being set on the revision)
+#   [5] ACTION       (the property is being 'A'dded, 'M'odified, or 'D'eleted)
+#
+#   [STDIN] PROPVAL  ** the new property value is passed via STDIN.
+
+REPOS="$1"
+REV="$2"
+USER="$3"
+PROPNAME="$4"
+ACTION="$5"
+
+/path/to/hookframework/Hook "$REPOS" "$REV" "$USER" "$PROPNAME" "$ACTION" pre-revprop-change >&2 || exit 1
+
+exit 0

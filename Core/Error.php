@@ -1,24 +1,29 @@
 <?php
 /**
- * Error Objekt fuer die Fehlermeldungen aus den Listern und der Fehlerausgabe.
+ * Error Object for the error messages from the listeners and the output.
  * @category   Core
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
+namespace Core;
+
+use Core\Commit\CommitInfo;
+use Core\Commit\CommitObject;
+
 /**
- * Error Objekt fuer die Fehlermeldungen aus den Listern und der Fehlerausgabe.
+ * Error Object for the error messages from the listeners and the output.
  * @category   Core
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
@@ -27,37 +32,37 @@
 class Error
 {
 	/**
-	 * Fehlerzeilen nach Dateien.
+	 * Error lines for files.
 	 * @var array
 	 */
 	private $aLines;
 
 	/**
-	 * Fehlerzeilen fuer die Info Elemente.
+	 * Error lines for the Info elements.
 	 * @var array
 	 */
 	private $aInfoLines;
 
 	/**
-	 * Standard Fehlerzeilen von anderen Fehlern.
+	 * Standard error lines of other errors.
 	 * @var array
 	 */
 	private $aCommonLines;
 
 	/**
-	 * Schalter ob Fehler vorhanden.
+	 * Switch if errors messages are available.
 	 * @var boolean
 	 */
 	private $bError;
 
 	/**
-	 * Standard Fehler Schalter.
+	 * Standard error switch.
 	 * @var boolean
 	 */
 	private $bCommonError;
 
 	/**
-	 * Aktueller Listener.
+	 * Actual Listener.
 	 * @var string
 	 */
 	private $sListener;
@@ -76,7 +81,7 @@ class Error
 	} // function
 
 	/**
-	 * Setzen des Listenernamens im Array.
+	 * Set the Listener names in Array.
 	 * @param string $sName Listenername.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -87,8 +92,8 @@ class Error
 	} // function
 
 	/**
-	 * Fehler aus den Listener verarbeiten.
-	 * @param CommitInfo $oInfo Commit Info Objekt.
+	 * Format the info listener error messages.
+	 * @param CommitInfo $oInfo Commit Info Object.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -113,8 +118,8 @@ class Error
 	} // function
 
 	/**
-	 * Fehler aus den Listener verarbeiten.
-	 * @param CommitObject $oObject Aktuelles File Objekt das verarbeitet wird.
+	 * Format the object listener error messages.
+	 * @param CommitObject $oObject Actual File Object that is processed.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -140,8 +145,8 @@ class Error
 	} // function
 
 	/**
-	 * Fehler hinzufuegen.
-	 * @param string $sMessage Text der Fehlermeldung.
+	 * Add an error message.
+	 * @param string $sMessage Text for error message.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -152,8 +157,8 @@ class Error
 	} // function
 
 	/**
-	 * Fehlerzeilen hinzufeugen.
-	 * @param array $aLines Fehlerzeilen.
+	 * Add error lines.
+	 * @param array $aLines Error lines.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -164,7 +169,7 @@ class Error
 	} // function
 
 	/**
-	 * Fehlermeldungen die bis jetzt aufgelaufen sind, danach leeren.
+	 * Return messages that occurred so far, after that clear messages.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -178,13 +183,13 @@ class Error
 
 		$sMessage = "\n\n" . str_repeat('~', 80) . "\n";
 
-		// Zuerst die Info Listener Zeilen.
+		// First the Info listener lines.
 		if (empty($this->aInfoLines) === false)
 		{
 			$sMessage .= implode("\n", $this->aInfoLines);
 		} // if
 
-		// Listener fuer die Dateien.
+		// Listener lines for the files.
 		if (empty($this->aLines) === false)
 		{
 			$bPrintLine = false;
@@ -213,7 +218,7 @@ class Error
 	} // function
 
 	/**
-	 * Standardfehlermeldungen zurueck geben.
+	 * Return standard error messages.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -228,7 +233,7 @@ class Error
 	} // function
 
 	/**
-	 * Sind Meldungen vorhanden.
+	 * Are there any error messages.
 	 * @return boolean
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -238,7 +243,7 @@ class Error
 	} // function
 
 	/**
-	 * Standard Meldungen vorhanen.
+	 * Standard messages available.
 	 * @return boolean
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */

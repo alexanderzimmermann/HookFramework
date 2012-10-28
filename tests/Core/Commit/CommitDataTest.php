@@ -5,14 +5,25 @@
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
-require_once dirname(__FILE__) . '/../../TestHelper.php';
+namespace CoreTest\Commit;
+
+use Core\Commit\CommitData;
+use Core\Commit\CommitInfo;
+use Core\Commit\CommitObject;
+use Core\Filter\Filter;
+use CoreTest\Commit\CommitDataHelper;
+use CoreTest\Commit\CommitDataHelperDirs;
+use CoreTest\Commit\CommitDataHelperActionTypes;
+use CoreTest\Commit\CommitDataHelperExtensions;
+
+require_once __DIR__ . '/../../Bootstrap.php';
 
 require_once 'Core/Commit/CommitData.php';
 
@@ -43,22 +54,22 @@ require_once 'Core/Commit/CommitDataHelperExtensions.php';
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class CommitDataTest extends PHPUnit_Framework_TestCase
+class CommitDataTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * Commit Data Objekt.
+	 * Commit Data Object.
 	 * @var CommitData
 	 */
 	private $oCommitData;
 
 	/**
-	 * Set Up Methode.
+	 * Set Up Method.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -68,7 +79,7 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Objekt hinzufuegen.
+	 * Test add object.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -82,7 +93,7 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 
 		$this->oCommitData->createCommitInfo($aInfos);
 
-		// Eine Datei Objekt.
+		// A file object.
 		$aParams = array(
 					'txn'    => '74-1',
 					'rev'    => 74,
@@ -95,14 +106,14 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 
 		$oObject = $this->oCommitData->createObject($aParams);
 
-		$this->assertEquals('CommitObject', get_class($oObject), 'Not object CommitObject');
+		$this->assertEquals('Core\Commit\CommitObject', get_class($oObject), 'Not object CommitObject');
 		$this->assertEquals('74-1', $oObject->getTransaction(), 'Txn wrong');
 		$this->assertEquals('U', $oObject->getAction(), 'Action wrong');
 		$this->assertEquals('file.txt', $oObject->getObjectPath(), 'objectpath wrong');
 	} // function
 
 	/**
-	 * Objekt hinzufuegen.
+	 * Test add directory object.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -116,7 +127,7 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 
 		$this->oCommitData->createCommitInfo($aInfos);
 
-		// Ein Verzeichnis Objekt.
+		// A directory object.
 		$aParams = array(
 					'txn'    => '74-1',
 					'rev'    => 74,
@@ -129,10 +140,9 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 
 		$oObject = $this->oCommitData->createObject($aParams);
 
-		$this->assertEquals('CommitObject', get_class($oObject), 'class not CommitObject');
+		$this->assertEquals('Core\Commit\CommitObject', get_class($oObject), 'class not CommitObject');
 		$this->assertEquals('/path', $oObject->getObjectPath(), 'objectpath wrong');
 	} // function
-
 
 	/**
 	 * Test to give the correct files for the listener.
@@ -149,7 +159,7 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 
 		$this->oCommitData->createCommitInfo($aInfos);
 
-		// Ein Verzeichnis Objekt.
+		// A directory object.
 		$aParams = array(
 					'txn'    => '74-1',
 					'rev'    => 74,
@@ -162,14 +172,14 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 
 		$this->oCommitData->createObject($aParams);
 
-		// Ein Datei Objekt.
+		// A file object.
 		$aParams['item']   = '/path/file_1.php';
 		$aParams['action'] = 'A';
 		$aParams['isdir']  = false;
 
 		$this->oCommitData->createObject($aParams);
 
-		// Ein Datei Objekt.
+		// A file object.
 		$aParams['item'] = '/path/file_2.php';
 
 		$this->oCommitData->createObject($aParams);
@@ -186,7 +196,7 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Test Verzeichnisse und Dateien nach Aktion und Extension zurueck geben.
+	 * Test directories and files after action and extension.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -200,7 +210,7 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 
 		$this->oCommitData->createCommitInfo($aInfos);
 
-		// Ein Verzeichnis Objekt.
+		// A directory object.
 		$aParams = array(
 					'txn'    => '110-1',
 					'rev'    => 111,
@@ -210,16 +220,16 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 					'props'  => array(),
 					'lines'  => array()
 				   );
-		$oObject = $this->oCommitData->createObject($aParams);
+		$this->oCommitData->createObject($aParams);
 
-		// Ein Datei Objekt.
+		// A file object.
 		$aParams['item']   = '/path/file_1.php';
 		$aParams['action'] = 'A';
-		$oObject = $this->oCommitData->createObject($aParams);
+		$this->oCommitData->createObject($aParams);
 
-		// Ein Datei Objekt.
+		// A file object.
 		$aParams['item']   = '/path/file_2.php';
-		$oObject = $this->oCommitData->createObject($aParams);
+		$this->oCommitData->createObject($aParams);
 
 		$oListener = new CommitDataHelperDirs();
 
@@ -232,7 +242,7 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Test alle Actions zurueck geben wenn Array in register Methode leer.
+	 * Test return all actions, when Array in register method is empty.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -246,7 +256,7 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 
 		$this->oCommitData->createCommitInfo($aInfos);
 
-		// Ein Verzeichnis Objekt.
+		// A directory object.
 		$aParams = array(
 					'txn'    => '110-1',
 					'rev'    => 111,
@@ -257,19 +267,19 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 					'lines'  => array()
 				   );
 
-		$oObject = $this->oCommitData->createObject($aParams);
+		$this->oCommitData->createObject($aParams);
 
-		// Ein Datei Objekt.
+		// A file object
 		$aParams['action'] = 'A';
 		$aParams['item']   = '/path/file_1.php';
 
-		$oObject = $this->oCommitData->createObject($aParams);
+		$this->oCommitData->createObject($aParams);
 
-		// Ein Datei Objekt.
+		// A file object
 		$aParams['action'] = 'D';
 		$aParams['item']   = '/path/file_2.php';
 
-		$oObject = $this->oCommitData->createObject($aParams);
+		$this->oCommitData->createObject($aParams);
 
 		$oListener = new CommitDataHelperActionTypes();
 
@@ -282,7 +292,7 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Test alle Extensions zurueck geben wenn Array in register leer.
+	 * Test return all extensions, when register array is empty.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -296,7 +306,7 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 
 		$this->oCommitData->createCommitInfo($aInfos);
 
-		// Ein Datei Objekt.
+		// A file object
 		$aParams = array(
 					'txn'    => '110-1',
 					'rev'    => 111,
@@ -307,25 +317,25 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 					'lines'  => array()
 				   );
 
-		$oObject = $this->oCommitData->createObject($aParams);
+		$this->oCommitData->createObject($aParams);
 
-		// Ein Datei Objekt.
+		// A file object
 		$aParams['action'] = 'A';
 		$aParams['item']   = '/path/file_1.php';
 
-		$oObject = $this->oCommitData->createObject($aParams);
+		$this->oCommitData->createObject($aParams);
 
-		// Ein Datei Objekt.
+		// A file object
 		$aParams['action'] = 'A';
 		$aParams['item']   = '/path/file_1.phtml';
 
-		$oObject = $this->oCommitData->createObject($aParams);
+		$this->oCommitData->createObject($aParams);
 
-		// Ein Datei Objekt.
+		// A file object
 		$aParams['action'] = 'D';
 		$aParams['item']   = '/path/file_2.phtml';
 
-		$oObject = $this->oCommitData->createObject($aParams);
+		$this->oCommitData->createObject($aParams);
 
 		$oListener = new CommitDataHelperExtensions();
 
@@ -338,7 +348,7 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen Commit Info Objekt erstellen.
+	 * Test create commit info object.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -354,7 +364,7 @@ class CommitDataTest extends PHPUnit_Framework_TestCase
 
 		$oInfo = $this->oCommitData->getCommitInfo();
 
-		$this->assertEquals('CommitInfo', get_class($oInfo), 'wrong class');
+		$this->assertEquals('Core\Commit\CommitInfo', get_class($oInfo), 'wrong class');
 		$this->assertEquals($aInfos['txn'], $oInfo->getTransaction(), 'txn wrong');
 		$this->assertEquals($aInfos['rev'], $oInfo->getRevision(), 'rev wrong');
 		$this->assertEquals($aInfos['user'], $oInfo->getUser(), 'user wrong');

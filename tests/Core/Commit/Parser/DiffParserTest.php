@@ -5,14 +5,18 @@
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
-require_once dirname(__FILE__) . '/../../../TestHelper.php';
+namespace CoreTest\Commit\Parser;
+
+use Core\Commit\Parser\DiffParser;
+
+require_once __DIR__ . '/../../../Bootstrap.php';
 
 // CommitDiffParser.
 require_once 'Core/Commit/Parser/DiffParser.php';
@@ -23,22 +27,22 @@ require_once 'Core/Commit/Parser/DiffParser.php';
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class DiffParserTest extends PHPUnit_Framework_TestCase
+class DiffParserTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * Parser Objekt.
+	 * Parser Object.
 	 * @var DiffParser
 	 */
 	private $oParser;
 
 	/**
-	 * Set Up Methode.
+	 * Set Up Method.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -47,7 +51,7 @@ class DiffParserTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Set Up der Hilfsdaten.
+	 * Set Up of help data.
 	 * @param string $sTxn Transaction Nummer des Tests.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -133,7 +137,7 @@ class DiffParserTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen wenn nur Properties gesetzt wurden.
+	 * Test when only properties were set.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -164,7 +168,7 @@ class DiffParserTest extends PHPUnit_Framework_TestCase
 		$aDiff[]  = '- * @author     Alexander Zimmermann <zimmermann.alexander@web.de>';
 		$aDiff[]  = '- * @copyright  2008-2009 Alexander Zimmermann <zimmermann.alexander@web.de>';
 		$aDiff[]  = '+ * @author     Alexander Zimmermann <alex@azimmermann.com>';
-		$aDiff[] = '+ * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>';
+		$aDiff[] = '+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>';
 		$aDiff[] = '  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License';
 		$aDiff[] = '  * @version    SVN: $Id$';
 		$aDiff[] = '  * @link       http://www.azimmermann.com/';
@@ -175,7 +179,7 @@ class DiffParserTest extends PHPUnit_Framework_TestCase
 		$aDiff[] = '- * @author     Alexander Zimmermann <zimmermann.alexander@web.de>';
 		$aDiff[] = '- * @copyright  2008-2009 Alexander Zimmermann <zimmermann.alexander@web.de>';
 		$aDiff[] = '+ * @author     Alexander Zimmermann <alex@azimmermann.com>';
-		$aDiff[] = '+ * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>';
+		$aDiff[] = '+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>';
 		$aDiff[] = '  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License';
 		$aDiff[] = '  * @version    Release: 1.0.1';
 		$aDiff[] = '  * @link       http://www.azimmermann.com/';

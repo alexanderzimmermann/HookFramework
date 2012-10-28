@@ -5,14 +5,16 @@
  * @package    Commit
  * @subpackage Parser
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
-require_once 'Core/Commit/Diff/Property.php';
+namespace Core\Commit\Parser;
+
+use Core\Commit\Diff\Diff_Property;
 
 /**
  * Class for parsing the change properties of a commit.
@@ -20,7 +22,7 @@ require_once 'Core/Commit/Diff/Property.php';
  * @package    Commit
  * @subpackage Parser
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/

@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# POST-UNLOCK HOOK
+#
+# The post-unlock hook runs after a path is unlocked.  Subversion runs
+# this hook by invoking a program (script, executable, binary, etc.)
+# named 'post-unlock' (for which this file is a template) with the
+# following ordered arguments:
+#
+#   [1] REPOS-PATH   (the path to this repository)
+#   [2] USER         (the user who destroyed the lock)
+
+REPOS="$1"
+USER="$2"
+
+/path/to/hookframework/Hook "$REPOS" "$USER" post-unlock >&2 || exit 1
+
+# All checks passed, so allow the commit.
+exit 0
+

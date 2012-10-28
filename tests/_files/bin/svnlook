@@ -1,0 +1,71 @@
+#!/usr/bin/php
+<?php
+/**
+ * Executable for the hook tests.
+ * @category   Tests
+ * @package    Main
+ * @subpackage Core
+ * @author     Alexander Zimmermann <alex@zimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@zimmermann.com>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    SVN: $Id: $
+ * @link       http://www.azimmermann.com/
+ * @since      File available since Release 1.0.0
+ */
+
+/**
+	The check for the params can be skipped, cause the script is only used in the test environment.
+*/
+
+$aCommands = array(
+			  'changed', 'diff', 'info', 'cat'
+			 );
+
+$sCommand = $argv[1];
+$sParam   = $argv[2];
+$sNumber  = $argv[3];
+$sRepos   = $argv[4];
+
+$sCatFile = '';
+if (true === isset($argv[5]))
+{
+	$sCatFile = $argv[5];
+} // if
+
+if (in_array($sCommand, $aCommands) === false)
+{
+	exit;
+} // if
+
+// Path to _files directory.
+$sPath = str_replace('bin', '', __DIR__);
+
+// Determine file.
+$sCatFile = basename($sCatFile);
+
+if ($sParam === '-t')
+{
+	$sType = 'txn';
+} // if
+
+if ($sParam === '-r')
+{
+	$sType = 'rev';
+} // if
+
+// Prepare file for svn fake.
+$sFile = $sPath . $sType . '/' . $sNumber . '/';
+
+// On "cat" the file will be attached.
+if ($sCommand === 'cat')
+{
+	$sFile .= $sCatFile;
+}
+else
+{
+	$sFile .= $sCommand;
+} // if
+
+$sFile .= '.txt';
+
+echo file_get_contents($sFile);

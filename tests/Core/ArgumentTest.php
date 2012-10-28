@@ -5,14 +5,18 @@
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
-require_once dirname(__FILE__) . '/../TestHelper.php';
+namespace CoreTest;
+
+use Core\Arguments;
+
+require_once __DIR__ . '/../Bootstrap.php';
 
 require_once 'Core/Arguments.php';
 
@@ -22,38 +26,22 @@ require_once 'Core/Arguments.php';
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class ArgumentTest extends PHPUnit_Framework_TestCase
+class ArgumentTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * Testobjekt.
+	 * Test object.
 	 * @var Arguments
 	 */
 	private $oArguments;
 
 	/**
-	 * Simuliertes SVN Verzeichnis.
-	 * @var string
-	 */
-	private $sSvn;
-
-	/**
-	 * SetUp Operationen.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@zimmemann.com>
-	 */
-	protected function setUp()
-	{
-		$this->sSvn = dirname(__FILE__) . '/svn';
-	} // function
-
-	/**
-	 * Dataprovider.
+	 * Data provider.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@zimmemann.com>
 	 */
@@ -63,29 +51,26 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 				array(
 				 array(
 				  'path'  => '/var/local/svn/hooks/Hook',
-				  'repos' => '/var/local/svn',
+				  'repos' => TEST_SVN_EXAMPLE,
 				  'user'  => 'testuser12',
 				  'hook'  => 'start-commit',
-				  'ok'    => true
-				 )
+				 ), true
 				),
 				array(
 				 array(
 				  'path'  => '/var/local/svn/hooks/Hook',
-				  'repos' => '/var/local/svn',
+				  'repos' => TEST_SVN_EXAMPLE,
 				  'user'  => 'testuser',
 				  'hook'  => 'start-commit',
-				  'ok'    => true
-				 )
+				 ), true
 				),
 				array(
 				 array(
 				  'path'  => '/var/local/svn/hooks/Hook',
-				  'repos' => '/var/local/svn',
+				  'repos' => TEST_SVN_EXAMPLE,
 				  'user'  => '',
 				  'hook'  => 'start-commit',
-				  'ok'    => false
-				 )
+				 ), false
 				),
 				array(
 				 array(
@@ -93,8 +78,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 				  'repos' => '',
 				  'user'  => 'testuser',
 				  'hook'  => 'start-commit',
-				  'ok'    => false
-				 )
+				 ), false
 				),
 				array(
 				 array(
@@ -102,26 +86,23 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 				  'repos' => '/x/x/svn',
 				  'user'  => 'testuser',
 				  'hook'  => 'start-commit',
-				  'ok'    => false
-				 )
+				 ), false
 				),
 				array(
 				 array(
 				  'path'  => '/var/local/svn/hooks/Hook',
-				  'repos' => '/var/local/svn',
+				  'repos' => TEST_SVN_EXAMPLE,
 				  'user'  => 'testuser',
 				  'hook'  => '',
-				  'ok'    => false
-				 )
+				 ), false
 				),
 				array(
 				 array(
 				  'path'  => '/var/local/svn/hooks/Hook',
-				  'repos' => '/var/local/svn',
+				  'repos' => TEST_SVN_EXAMPLE,
 				  'user'  => 'testuser',
 				  'hook'  => 'startcommit',
-				  'ok'    => false
-				 )
+				 ), false
 				),
 				array(
 				 array(
@@ -129,46 +110,35 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 				  'repos' => '',
 				  'user'  => '',
 				  'hook'  => '',
-				  'ok'    => false
-				 )
+				 ), false
 				)
 			   );
 	} // function
 
 	/**
-	 * Testen ob die Argumente richtig geprueft werden.
-	 * @param array $aData Testdatenset.
+	 * Test for arguments check.
+	 * @param array   $aData     Test data.
+     * @param boolean $bExpected Expected Assert.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@zimmemann.com>
 	 * @dataProvider getStartArguments
 	 */
-	public function testStartArguments(array $aData)
+	public function testStartArguments(array $aData, $bExpected)
 	{
-		if ($aData['repos'] === '')
-		{
-			$this->sSvn = '';
-		} // if
-
-		if ($aData['repos'] === '/x/x/svn')
-		{
-			$this->sSvn = '/x/x/svn';
-		} // if
-
-		$bExpect = $aData['ok'];
-		$aData   = array(
-					$aData['path'],
-					$this->sSvn,
-					$aData['user'],
-					$aData['hook']
-				   );
+		$aData = array(
+				  $aData['path'],
+				  $aData['repos'],
+				  $aData['user'],
+				  $aData['hook']
+				 );
 
 		$oArguments = new Arguments($aData);
 
-		$this->assertEquals($bExpect, $oArguments->argumentsOk());
+		$this->assertEquals($bExpected, $oArguments->argumentsOk(), $oArguments->getError());
 	} // function
 
 	/**
-	 * Dataprovider.
+	 * Data provider.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@zimmemann.com>
 	 */
@@ -178,57 +148,58 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 				array(
 				 array(
 				  'path'  => '/var/local/svn/hooks/Hook',
-				  'repos' => '/var/local/svn',
+				  'repos' => TEST_SVN_EXAMPLE,
 				  'txn'   => '666-xx',
 				  'hook'  => 'pre-commit',
-				  'ok'    => true
-				 ),
+				 ), true
+				),
+				array(
 				 array(
 				  'path'  => '/var/local/svn/hooks/Hook',
-				  'repos' => '/var/local/svn',
+				  'repos' => TEST_SVN_EXAMPLE,
 				  'txn'   => '666-5j',
 				  'hook'  => 'pre-commit',
-				  'ok'    => true
-				 ),
+				 ), true
+				),
+				array(
 				 array(
 				  'path'  => '/var/local/svn/hooks/Hook',
-				  'repos' => '/var/local/svn',
+				  'repos' => TEST_SVN_EXAMPLE,
 				  'txn'   => '666-11',
 				  'hook'  => 'pre-commit',
-				  'ok'    => true
-				 ),
+				 ), true
+				),
+				array(
 				 array(
 				  'path'  => '/var/local/svn/hooks/Hook',
-				  'repos' => '/var/local/svn',
+				  'repos' => TEST_SVN_EXAMPLE,
 				  'txn'   => '666-x',
 				  'hook'  => 'pre-commit',
-				  'ok'    => true
-				 ),
+				 ), true
+				),
+				array(
 				 array(
 				  'path'  => '/var/local/svn/hooks/Hook',
-				  'repos' => '/var/local/svn',
+				  'repos' => TEST_SVN_EXAMPLE,
 				  'txn'   => '666-1',
 				  'hook'  => 'pre-commit',
-				  'ok'    => true
-				 )
+				 ), true
 				),
 				array(
 				 array(
 				  'path'  => '/var/local/svn/hooks/Hook',
-				  'repos' => '/var/local/svn',
+				  'repos' => TEST_SVN_EXAMPLE,
 				  'txn'   => '',
 				  'hook'  => 'pre-commit',
-				  'ok'    => false
-				 )
+				 ), false
 				),
 				array(
 				 array(
 				  'path'  => '/var/local/svn/hooks/Hook',
-				  'repos' => '/var/local/svn',
+				  'repos' => TEST_SVN_EXAMPLE,
 				  'txn'   => 'testuser',
 				  'hook'  => 'pre-commit',
-				  'ok'    => false
-				 )
+				 ), false
 				),
 				array(
 				 array(
@@ -236,36 +207,30 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 				  'repos' => '/x/x/svn',
 				  'txn'   => '66',
 				  'hook'  => 'pre-commit',
-				  'ok'    => false
-				 )
+				 ), false
 				)
 			   );
 	} // function
 
 	/**
-	 * Testen der Pre Argumente beim Commit.
-	 * @param array $aData Testdaten.
+	 * Test of pre arguments on commit.
+	 * @param array   $aData     Test data.
+	 * @param boolean $bExpected Expected Value.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 * @dataProvider getPreCommitArguments
 	 */
-	public function testPreCommitArguments(array $aData)
+	public function testPreCommitArguments(array $aData, $bExpected)
 	{
-		if ($aData['repos'] === '/x/x/svn')
-		{
-			$this->sSvn = '/x/x/svn';
-		} // if
-
-		$bExpect = $aData['ok'];
-		$aData   = array(
-					$aData['path'],
-					$this->sSvn,
-					$aData['txn'],
-					$aData['hook']
-				   );
+		$aData = array(
+				  $aData['path'],
+				  $aData['repos'],
+				  $aData['txn'],
+				  $aData['hook']
+				 );
 
 		$oArguments = new Arguments($aData);
-		$this->assertEquals($bExpect, $oArguments->argumentsOk());
+		$this->assertEquals($bExpected, $oArguments->argumentsOk(), $oArguments->getError());
 	} // function
 
 	/**
@@ -279,29 +244,26 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 				array(
 				 array(
 				  'path'  => '/var/local/svn/hooks/Hook',
-				  'repos' => '/var/local/svn',
+				  'repos' => TEST_SVN_EXAMPLE,
 				  'rev'   => '666',
 				  'hook'  => 'post-commit',
-				  'ok'    => true
-				 )
+				 ), true
 				),
 				array(
 				 array(
 				  'path'  => '/var/local/svn/hooks/Hook',
-				  'repos' => '/var/local/svn',
+				  'repos' => TEST_SVN_EXAMPLE,
 				  'rev'   => '',
 				  'hook'  => 'post-commit',
-				  'ok'    => false
-				 )
+				 ), false
 				),
 				array(
 				 array(
 				  'path'  => '/var/local/svn/hooks/Hook',
-				  'repos' => '/var/local/svn',
+				  'repos' => TEST_SVN_EXAMPLE,
 				  'rev'   => 'testuser',
 				  'hook'  => 'post-commit',
-				  'ok'    => false
-				 )
+				 ), false
 				),
 				array(
 				 array(
@@ -309,40 +271,34 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 				  'repos' => '/x/x/svn',
 				  'rev'   => '666-1',
 				  'hook'  => 'post-commit',
-				  'ok'    => false
-				 )
+				 ), false
 				)
 			   );
 	} // function
 
 	/**
-	 * Testen der Pre Argumente beim Commit.
-	 * @param array $aData Testdaten.
+	 * Test arguments in pre commit.
+	 * @param array   $aData     Test data.
+	 * @param boolean $bExpected Expected assert.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 * @dataProvider getPostCommitArguments
 	 */
-	public function testPostCommitArguments(array $aData)
+	public function testPostCommitArguments(array $aData, $bExpected)
 	{
-		if ($aData['repos'] === '/x/x/svn')
-		{
-			$this->sSvn = '/x/x/svn';
-		} // if
-
-		$bExpect = $aData['ok'];
-		$aData   = array(
-					$aData['path'],
-					$this->sSvn,
-					$aData['rev'],
-					$aData['hook']
-				   );
+		$aData = array(
+				  $aData['path'],
+				  $aData['repos'],
+				  $aData['rev'],
+				  $aData['hook']
+				 );
 
 		$oArguments = new Arguments($aData);
-		$this->assertEquals($bExpect, $oArguments->argumentsOk());
+		$this->assertEquals($bExpected, $oArguments->argumentsOk(), $oArguments->getError());
 	} // function
 
 	/**
-	 * Test zu wenige Argumente.
+	 * Test too few arguments.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -362,7 +318,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 	/**
 	 * Test with no arguments provided.
 	 * @return void
-	 * @author Alexander Zimmermann <alexander.zimmermann@twt.de>
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function testNoArguemnts()
 	{
@@ -372,7 +328,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Test ob Werte richtig zurueck gegeben werden.
+	 * Test if values are returned correctly.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -380,7 +336,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 	{
 		$aData = array(
 				  0 => '/var/local/svn/hooks/Hook',
-				  1 => $this->sSvn,
+				  1 => TEST_SVN_EXAMPLE,
 				  2 => 'testuser12',
 				  3 => 'start-commit'
 				 );
@@ -388,8 +344,8 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 		$oArguments = new Arguments($aData);
 
 		$this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
-		$this->assertEquals($this->sSvn, $oArguments->getRepository(), 'Repository false');
-		$this->assertEquals('svn', $oArguments->getRepositoryName(), 'ReposName false');
+		$this->assertEquals(TEST_SVN_EXAMPLE, $oArguments->getRepository(), 'Repository false');
+		$this->assertEquals('Example', $oArguments->getRepositoryName(), 'ReposName false');
 		$this->assertEquals('testuser12', $oArguments->getUser(), 'User false');
 		$this->assertEquals('start-commit', $oArguments->getMainHook(), 'MainHook false');
 		$this->assertEquals('start', $oArguments->getMainType(), 'MainType false');
@@ -397,7 +353,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Test ob Werte richtig zurueck gegeben werden.
+	 * Test if values are returned correctly.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -405,7 +361,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 	{
 		$aData = array(
 				  0 => '/var/local/svn/hooks/Hook',
-				  1 => $this->sSvn,
+				  1 => TEST_SVN_EXAMPLE,
 				  2 => '666-1',
 				  3 => 'pre-commit',
 				 );
@@ -413,8 +369,8 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 		$oArguments = new Arguments($aData);
 
 		$this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
-		$this->assertEquals($this->sSvn, $oArguments->getRepository(), 'Repository false');
-		$this->assertEquals('svn', $oArguments->getRepositoryName(), 'ReposName false');
+		$this->assertEquals(TEST_SVN_EXAMPLE, $oArguments->getRepository(), 'Repository false');
+		$this->assertEquals('Example', $oArguments->getRepositoryName(), 'ReposName false');
 		$this->assertEquals('666-1', $oArguments->getTransaction(), 'Transcatino false');
 		$this->assertEquals('pre-commit', $oArguments->getMainHook(), 'MainHook false');
 		$this->assertEquals('pre', $oArguments->getMainType(), 'MainType false');
@@ -422,7 +378,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Test ob Werte richtig zurueck gegeben werden.
+	 * Test if values are returned correctly..
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -430,7 +386,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 	{
 		$aData = array(
 				  0 => '/var/local/svn/hooks/Hook',
-				  1 => $this->sSvn,
+				  1 => TEST_SVN_EXAMPLE,
 				  2 => 666,
 				  3 => 'post-commit'
 				 );
@@ -438,8 +394,8 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 		$oArguments = new Arguments($aData);
 
 		$this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
-		$this->assertEquals($this->sSvn, $oArguments->getRepository(), 'Repository false');
-		$this->assertEquals('svn', $oArguments->getRepositoryName(), 'ReposName false');
+		$this->assertEquals(TEST_SVN_EXAMPLE, $oArguments->getRepository(), 'Repository false');
+		$this->assertEquals('Example', $oArguments->getRepositoryName(), 'ReposName false');
 		$this->assertEquals(666, $oArguments->getRevision(), 'Revision false');
 		$this->assertEquals('post-commit', $oArguments->getMainHook(), 'MainHook false');
 		$this->assertEquals('post', $oArguments->getMainType(), 'MainType false');
@@ -447,7 +403,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Test ob Werte richtig zurueck gegeben werden.
+	 * Test if values are returned correctly.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -455,7 +411,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 	{
 		$aData = array(
 				  0 => '/var/local/svn/hooks/Hook',
-				  1 => $this->sSvn,
+				  1 => TEST_SVN_EXAMPLE,
 				  2 => 'testuser',
 				  3 => '/hookframework/trunk/Core/Hook.php',
 				  4 => 'pre-lock'
@@ -465,8 +421,8 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 
 		$sHook = '/hookframework/trunk/Core/Hook.php';
 		$this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
-		$this->assertEquals($this->sSvn, $oArguments->getRepository(), 'Repository false');
-		$this->assertEquals('svn', $oArguments->getRepositoryName(), 'ReposName false');
+		$this->assertEquals(TEST_SVN_EXAMPLE, $oArguments->getRepository(), 'Repository false');
+		$this->assertEquals('Example', $oArguments->getRepositoryName(), 'ReposName false');
 		$this->assertEquals($sHook, $oArguments->getFile(), 'File false');
 		$this->assertEquals('pre-lock', $oArguments->getMainHook(), 'Main Hook false');
 		$this->assertEquals('pre', $oArguments->getMainType(), 'MainType false');
@@ -474,7 +430,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Test ob Werte richtig zurueck gegeben werden.
+	 * Test if values are returned correctly.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -482,7 +438,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 	{
 		$aData = array(
 				  0 => '/var/local/svn/hooks/Hook',
-				  1 => $this->sSvn,
+				  1 => TEST_SVN_EXAMPLE,
 				  2 => 2009,
 				  3 => 'testuser',
 				  4 => 'ignore',
@@ -493,8 +449,8 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 		$oArguments = new Arguments($aData);
 
 		$this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
-		$this->assertEquals($this->sSvn, $oArguments->getRepository(), 'Repos path false');
-		$this->assertEquals('svn', $oArguments->getRepositoryName(), 'ReposName false');
+		$this->assertEquals(TEST_SVN_EXAMPLE, $oArguments->getRepository(), 'Repos path false');
+		$this->assertEquals('Example', $oArguments->getRepositoryName(), 'ReposName false');
 		$this->assertEQuals(2009, $oArguments->getRevision(), 'Revision false');
 		$this->assertEquals('pre-revprop-change', $oArguments->getMainHook(), 'Main Hook false');
 		$this->assertEquals('pre', $oArguments->getMainType(), 'Main Type false');
@@ -504,7 +460,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Test ob Werte richtig zurueck gegeben werden. X ist nicht korrekt.
+	 * Test if values are returned correctly.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -512,7 +468,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 	{
 		$aData = array(
 				  0 => '/var/local/svn/hooks/Hook',
-				  1 => $this->sSvn,
+				  1 => TEST_SVN_EXAMPLE,
 				  2 => 2009,
 				  3 => 'testuser',
 				  4 => 'ignore',
@@ -527,7 +483,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Test ob Werte richtig zurueck gegeben werden.
+	 * Test if values are returned correctly.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -535,7 +491,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 	{
 		$aData = array(
 				  0 => '/var/local/svn/hooks/Hook',
-				  1 => $this->sSvn,
+				  1 => TEST_SVN_EXAMPLE,
 				  2 => '666-1',
 				  3 => 'pre-commit',
 				 );
@@ -551,7 +507,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Test ob Werte richtig zurueck gegeben werden.
+	 * Test if values are returned correctly.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -559,7 +515,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 	{
 		$aData = array(
 				  0 => '/var/local/svn/hooks/Hook',
-				  1 => $this->sSvn,
+				  1 => TEST_SVN_EXAMPLE,
 				  2 => 666,
 				  3 => 'post-commit'
 				 );
@@ -575,7 +531,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Test ob Werte richtig zurueck gegeben werden.
+	 * Test if values are returned correctly.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -583,7 +539,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 	{
 		$aData = array(
 				  0 => '/var/local/svn/hooks/Hook',
-				  1 => $this->sSvn,
+				  1 => TEST_SVN_EXAMPLE,
 				  2 => 'testuser12',
 				  3 => 'start-commit'
 				 );
@@ -592,7 +548,7 @@ class ArgumentTest extends PHPUnit_Framework_TestCase
 
 		$oArguments = new Arguments($aData);
 
-		$this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
+		$this->assertTrue($oArguments->argumentsOk(), 'Arguments false');
 		$this->assertEquals($aExpect, $oArguments->getSubActions(), 'Subaction false');
 	} // function
 } // class

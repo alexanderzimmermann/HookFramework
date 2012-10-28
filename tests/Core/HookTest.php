@@ -5,14 +5,16 @@
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
-require_once dirname(__FILE__) . '/../TestHelper.php';
+namespace CoreTest;
+
+require_once __DIR__ . '/../Bootstrap.php';
 
 require_once 'Core/Arguments.php';
 require_once 'Core/Listener/ListenerParser.php';
@@ -24,32 +26,22 @@ require_once 'tests/Core/HookHelper.php';
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class HookTest extends PHPUnit_Framework_TestCase
+class HookTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * Fake SVN Pfad.
-	 * @var string
-	 */
-	private $sSvn;
-
-	/**
-	 * SetUp Operationen.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@zimmemann.com>
-	 */
-	protected function setUp()
+	protected function tearDown()
 	{
-		$this->sSvn = dirname(__FILE__) . '/svn';
+		echo ob_get_contents();
+		ob_clean();
 	} // function
 
 	/**
-	 * Testen Ausgabe Usage.
+	 * Test usage output.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -57,14 +49,14 @@ class HookTest extends PHPUnit_Framework_TestCase
 	{
 		$aData = array(
 				  0 => '/var/local/svn/hooks/Hook',
-				  1 => $this->sSvn,
+				  1 => TEST_SVN_EXAMPLE,
 				  2 => 'testuser12',
 				  3 => 'pre-commit'
 				 );
 
 		$oHook = new HookHelperMain($aData);
 
-		// Ausgabe unterdruecken.
+		// Avoid output.
 		ob_start();
 		$iExit = $oHook->run();
 
@@ -86,7 +78,7 @@ class HookTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen des Start Hooks.
+	 * Test start hook.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -94,7 +86,7 @@ class HookTest extends PHPUnit_Framework_TestCase
 	{
 		$aData = array(
 				  0 => '/var/local/svn/hooks/Hook',
-				  1 => $this->sSvn,
+				  1 => TEST_SVN_EXAMPLE,
 				  2 => 'testuser12',
 				  3 => 'start-commit'
 				 );
@@ -106,7 +98,7 @@ class HookTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen des Pre Hooks.
+	 * Test pre hook with errors.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -114,7 +106,7 @@ class HookTest extends PHPUnit_Framework_TestCase
 	{
 		$aData = array(
 				  0 => '/var/local/svn/hooks/Hook',
-				  1 => $this->sSvn,
+				  1 => TEST_SVN_EXAMPLE,
 				  2 => '666-1',
 				  3 => 'pre-commit',
 				 );
@@ -130,7 +122,7 @@ class HookTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen des Pre Hooks.
+	 * Test pre hook that works fine.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -138,7 +130,7 @@ class HookTest extends PHPUnit_Framework_TestCase
 	{
 		$aData = array(
 				  0 => '/var/local/svn/hooks/Hook',
-				  1 => $this->sSvn,
+				  1 => TEST_SVN_EXAMPLE,
 				  2 => '74-1',
 				  3 => 'pre-commit',
 				 );
@@ -152,7 +144,7 @@ class HookTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen des Post Hooks.
+	 * Test post hook.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -160,7 +152,7 @@ class HookTest extends PHPUnit_Framework_TestCase
 	{
 		$aData = array(
 				  0 => '/var/local/svn/hooks/Hook',
-				  1 => $this->sSvn,
+				  1 => TEST_SVN_EXAMPLE,
 				  2 => 76,
 				  3 => 'post-commit',
 				 );
@@ -168,7 +160,7 @@ class HookTest extends PHPUnit_Framework_TestCase
 		$oHook = new HookHelperMain($aData);
 		$iExit = $oHook->run();
 
-		// Post kann immer 0 sein, da hier nichts mehr abgebrochen werden kann.
+		// Post is always 0, cause we do not abort here.
 		$this->assertEquals(0, $iExit);
 	} // function
 } // class

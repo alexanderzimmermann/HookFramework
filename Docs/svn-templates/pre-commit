@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# PRE-COMMIT HOOK
+#
+# The pre-commit hook is invoked before a Subversion txn is
+# committed.  Subversion runs this hook by invoking a program
+# (script, executable, binary, etc.) named 'pre-commit' (for which
+# this file is a template), with the following ordered arguments:
+#
+#   [1] REPOS-PATH   (the path to this repository)
+#   [2] TXN          (the name of the txn about to be committed)
+
+REPOS="$1"
+TXN="$2"
+
+/path/to/hookframework/Hook "$REPOS" "$TXN" pre-commit >&2 || exit 1
+
+exit 0

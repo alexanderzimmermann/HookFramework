@@ -1,36 +1,25 @@
 <?php
 /**
- * Parsen der verschiedenen Typlistener.
+ * Parsing the different listener types.
  * @category   Core
  * @package    Listener
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
-// Interface einfuegen damit die Listener das nicht alle brauchen.
-require_once 'Core/Listener/ListenerInfo.php';
+namespace Core\Listener;
 
-// Interface einfuegen damit die Listener das nicht alle brauchen.
-require_once 'Core/Listener/ListenerObject.php';
-
-// Eigentlich sollte der Kommentar mit /** */ sein wegen documentor.
-// Abstrakte Klasse einfuegen damit die Listener das nicht alle brauchen.
-require_once 'Core/Listener/ListenerInfoAbstract.php';
-
-// Eigentlich sollte der Kommentar mit /** */ sein wegen documentor.
-// Abstrakte Klasse einfuegen damit die Listener das nicht alle brauchen.
-require_once 'Core/Listener/ListenerObjectAbstract.php';
-
-// Logger einfuegen.
-require_once 'Core/Log.php';
+use \DirectoryIterator;
+use Core\Arguments;
+use Core\Log;
 
 /**
- * Parsen der verschiedenen Typlistener.
+ * Parsing the different listener types.
  *
  * Es gibt 3 Arten von Transaktionen. Eine fuer den Start, eine nach dem die
  * Transaktion gestartet wurde aber noch commited (pre). Und eine nachdem die
@@ -44,7 +33,7 @@ require_once 'Core/Log.php';
  * @package    Listener
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
@@ -65,10 +54,16 @@ class ListenerParser
 	private $sPath;
 
 	/**
-	 * Liste der Listener Dateien.
+	 * List of listener files from directory.
 	 * @var array
 	 */
 	private $aListenerFiles;
+
+	/**
+	 * Namespace of listener.
+	 * @var array
+	 */
+	private $aListenerNamespace = array();
 
 	/**
 	 * Liste der Listener Objekte fuer Dateiobjekte.
@@ -98,15 +93,16 @@ class ListenerParser
 		$this->oArguments = $oArguments;
 		$this->aListener  = array();
 
+		$this->aListenerFiles  = array();
 		$this->aListenerInfo   = array();
 		$this->aListenerObject = array();
 	} // function
 
 	/**
 	 * Set path where the listener are stored.
-	 * @param string $sPath Path where all listener are stored.
+	 * @param string $sPath Path where all listeners are stored.
 	 * @return void
-	 * @author Alexander Zimmermann <alexander.zimmermann@twt.de>
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function setPath($sPath)
 	{
@@ -116,7 +112,7 @@ class ListenerParser
 	/**
 	 * Init the Listener Parser.
 	 * @return void
-	 * @author Alexander Zimmermann <alexander.zimmermann@twt.de>
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function init()
 	{
@@ -124,7 +120,6 @@ class ListenerParser
 		$this->checkListener();
 		$this->registerListenerInfo();
 		$this->registerListenerObject();
-        log::getInstance()->writeLog(Log::HF_INFO, $this->sError);
 	} // function
 
 	/**
@@ -150,33 +145,41 @@ class ListenerParser
 	} // function
 
 	/**
-	 * Read the files for the actual maion hook action in directory.
-	 * @param string $sType Typ der aktuellen Transaktion.
+	 * Read the files for the actual main hook action in directory.
+	 * @param string $sType Type of actual transaction.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	private function readDirectory($sType)
 	{
-        $oLog = log::getInstance();
-        $sType     = ucfirst($sType);
+		$sType = ucfirst($sType);
 
-        $oIter = new \DirectoryIterator($this->sPath.$sType);
-        $aListener = array();
+		// If directory does not exists, return.
+		if (false === is_dir($this->sPath . $sType))
+		{
+			return;
+		} // if
 
-        foreach ($oIter as $oFile)
-        {
-            /* @var $oFile \SplFileInfo */
-            if ($oFile->getExtension() == 'php')
-            {
-                $aListener[] = $oFile->getPathname();
-            }
-        }
+		$oIterator = new \DirectoryIterator($this->sPath . $sType);
+		$aListener = array();
 
-        $this->aListenerFiles = $aListener;
+		foreach ($oIterator as $oFile)
+		{
+			if (true === $oFile->isFile())
+			{
+				if (false !== strpos($oFile->getFilename(), 'php'))
+				// if ('php' === $oFile->getExtension())
+				{
+					$aListener[] = $oFile->getPathname();
+				} // if
+			} // if
+		} // foreach
+
+		$this->aListenerFiles = $aListener;
 	} // function
 
 	/**
-	 * Register Methoden fuer die Info Listener aufrufen.
+	 * Register Call methods of info listener.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -197,7 +200,7 @@ class ListenerParser
 	} // function
 
 	/**
-	 * Register Methoden fuer die Info Listener aufrufen.
+	 * Register Call methods of object listener.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -220,7 +223,7 @@ class ListenerParser
 	} // function
 
 	/**
-	 * Register Werte fuer Info Listener abrufen und pruefen.
+	 * Register values for info listener and check it.
 	 * @param ListenerInfoAbstract $oListener Name des Listener Objekts.
 	 * @return Listener
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -258,7 +261,7 @@ class ListenerParser
 	} // function
 
 	/**
-	 * Register Werte fuer Objekt Listener abrufen und pruefen.
+	 * Register values for object listener and check it.
 	 * @param ListenerObjectAbstract $oListener Name des Listener Objekts.
 	 * @return Listener
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -268,25 +271,25 @@ class ListenerParser
 		$aRegister = $oListener->register();
 		$sListener = $oListener->getListenerName();
 
-		// Alle Werte vorhanden?
+		// All needed values available.
 		if ((isset($aRegister['action']) === false) ||
-		(isset($aRegister['extensions']) === false) ||
-		(isset($aRegister['fileaction']) === false))
+			(isset($aRegister['extensions']) === false) ||
+			(isset($aRegister['fileaction']) === false))
 		{
 			$this->sError .= $sListener . ' Error Register Key Elements';
 			return false;
 		} // if
 
-		// Richtige Typen?
+		// Correct type?
 		if ((is_string($aRegister['action']) === false) ||
-		(is_array($aRegister['extensions']) === false) ||
-		(is_array($aRegister['fileaction']) === false))
+			(is_array($aRegister['extensions']) === false) ||
+			(is_array($aRegister['fileaction']) === false))
 		{
 			$this->sError .= $sListener . ' Error Register Array Types';
 			return false;
 		} // if
 
-		// Typen leer?
+		// Type empty?
 		if (($aRegister['action'] === '') &&
 			(empty($aRegister['extension']) === true) &&
 			(empty($aRegister['fileaction']) === true))
@@ -295,7 +298,7 @@ class ListenerParser
 				return false;
 		} // if
 
-		// Richtige Werte?
+		// Valid values?
 		$sAction     = $aRegister['action'];
 		$aSvnActions = $this->oArguments->getSubActions();
 
@@ -321,19 +324,21 @@ class ListenerParser
 		$iMax = count($this->aListenerFiles);
 		for ($iFor = 0; $iFor < $iMax; $iFor++)
 		{
-			if (file_exists($this->aListenerFiles[$iFor]) === true)
+			if (true === file_exists($this->aListenerFiles[$iFor]))
 			{
-				// Einfuegen der Listenerdatei.
+				// Include the listener file.
 				include_once $this->aListenerFiles[$iFor];
 
-				// Listenername aus den Dateinamen extrahieren.
+				// Extract listener name from filename.
 				$sListener = basename($this->aListenerFiles[$iFor]);
 				$sListener = str_replace('.php', '', $sListener);
 
-				// Listener erzeugen und Kategorisieren.
+				// Check the listener is available after including. If the file contains other code
+				// like Helper for a listener, we don't want to use it..
+				// Create the listener and put in category (info, object) list.
 				try
 				{
-					if ($this->checkListenerObject($sListener) === false)
+					if (false === $this->checkListenerObject($sListener))
 					{
 						unset($this->aListenerFiles[$iFor]);
 					}
@@ -349,48 +354,56 @@ class ListenerParser
 			} // if
 		} // for
 
-		// Die noch verbliebenen korrekten Listener setzen.
+		// Sets the listener.
 		$this->aListenerFiles = $aListener;
-        Log::getInstance()->writeLog(Log::HF_VARDUMP, 'Accepted Listeners', $this->aListenerFiles);
+
+		Log::getInstance()->writeLog(Log::HF_VARDUMP, 'Accepted Listeners', $this->aListenerFiles);
 	} // function
 
 	/**
-	 * Pruefen des eingefuegten Listeners.
+	 * Check the included listener implements the required stuff.
 	 * @param string $sListener Name des Listenere-Objekts.
 	 * @return boolean
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	private function checkListenerObject($sListener)
 	{
-		// Existiert die Klasse?
-		if (class_exists($sListener) === false)
+		// Class exists?
+		$sClass = $this->oArguments->getRepositoryName() . '\\'
+				. ucfirst($this->oArguments->getMainType()) . '\\' . $sListener;
+
+		if (false === class_exists($sClass, false))
 		{
-			$this->sError .= $sListener . ' class and filename dont match!' . "\n";
+			$sMsg          = $sClass . ' class and filename doesn\'t match!';
+			$this->sError .= $sMsg . "\n";
+
+			Log::getInstance()->writeLog(Log::HF_DEBUG, $sMsg);
+
 			return false;
 		} // if
 
-		// Implmentiert der Listener das richtige Interface und Abstrakt Klasse?
-		$aImplements = class_implements($sListener);
-		$aParents    = class_parents($sListener);
+		// Check for correct interface and abstract class.
+		$aImplements = class_implements($sClass);
+		$aParents    = class_parents($sClass);
 
-		if ((isset($aImplements['ListenerInfo']) === true) &&
-			(isset($aParents['ListenerInfoAbstract']) === true))
+		if ((isset($aImplements['Core\Listener\ListenerInfo']) === true) &&
+			(isset($aParents['Core\Listener\ListenerInfoAbstract']) === true))
 		{
-			// TODO: In einem try catch Block abfangen bei Fehlern.
-			$this->aListenerInfo[] = new $sListener;
+			$this->aListenerInfo[] = new $sClass;
 			return true;
 		} // if
 
-		if ((isset($aImplements['ListenerObject']) === true) &&
-			(isset($aParents['ListenerObjectAbstract']) === true))
+		if ((isset($aImplements['Core\Listener\ListenerObject']) === true) &&
+			(isset($aParents['Core\Listener\ListenerObjectAbstract']) === true))
 		{
-			// TODO: In einem try catch Block abfangen bei Fehlern.
-			$this->aListenerObject[] = new $sListener;
+			$this->aListenerObject[] = new $sClass;
 			return true;
 		} // if
 
 		$sError  = $sListener . ' does not implement or extend correct ';
 		$sError .= 'interface or abstract class.!' . "\n";
+
+		Log::getInstance()->writeLog(Log::HF_DEBUG, $sError);
 
 		$this->sError .= $sError;
 

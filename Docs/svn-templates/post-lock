@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# POST-LOCK HOOK
+#
+# The post-lock hook is run after a path is locked.  Subversion runs
+# this hook by invoking a program (script, executable, binary, etc.)
+# named 'post-lock' (for which this file is a template) with the
+# following ordered arguments:
+#
+#   [1] REPOS-PATH   (the path to this repository)
+#   [2] USER         (the user who created the lock)
+
+REPOS="$1"
+USER="$2"
+
+/path/to/hookframework/Hook "$REPOS" "$USER" post-lock >&2 || exit 1
+
+# All checks passed, so allow the commit.
+exit 0
+

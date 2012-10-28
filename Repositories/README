@@ -10,14 +10,14 @@ Lets say you have two SVN repositories you want to have differente listeners for
 pre-commit hook. Then this directory may contain the following structure:
 
 Repositories
-├── Project-Repository-1
+├── SVN-Project-Repository-1
 │   ├── logs
 │   ├── Post
 │   │   └── Mailing.php
 │   ├── Pre
 │   │   └── Syntax.php
 │   └── Start
-└── Project-Repository-2
+└── SVN-Project-Repository-2
     ├── logs
     ├── Post
     │   └── Mailing.php
@@ -30,7 +30,7 @@ Repositories
 Hints
 -----
 The root directory "Repositories" here, is just an example. You can store your
-listener whereever you want.
+listener wherever you want.
 
 If, in our example the directory "Project-Repository-1", does not exist and or
 the main hook directory (Pre, Post) does not exists, the default build-in

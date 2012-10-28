@@ -5,12 +5,16 @@
  * @package    Listener
  * @subpackage Object
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
+
+namespace Core\Listener;
+
+use Core\Commit\CommitObject;
 
 /**
  * Interface für Object Listener.
@@ -18,7 +22,7 @@
  * @package    Listener
  * @subpackage Object
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
@@ -27,16 +31,16 @@
 interface ListenerObject
 {
 	/**
-	 * Listener Name zurueck geben.
+	 * Return listener name.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function getListenerName();
 
 	/**
-	 * Registrieren auf die Aktion und Dateien (Extension).
+	 * Register the action and the file actions and file types that are needed.
 	 *
-	 * Beispiel
+	 * Example
 	 * <pre>
 	 * return array(
 	 * 		   'action'     => 'commit',
@@ -49,41 +53,39 @@ interface ListenerObject
 	 * 		  );
 	 * </pre>
 	 *
-	 * Werte fuer <i>action:</i>
+	 * Values for <i>action:</i>
 	 * <ul>
-	 * <li><b>Bei post</b></li>
+	 * <li><b>On post</b></li>
 	 * <li>commit</li>
 	 * <li>lock</li>
 	 * <li>revprop-change</li>
 	 * <li>unlock</li>
-	 * <li><b>Bei pre</b></li>
+	 * <li><b>On pre</b></li>
 	 * <li>commit</li>
 	 * <li>lock</li>
 	 * <li>revprop-change</li>
 	 * <li>unlock</li>
-	 * <li><b>Bei start</b></li>
+	 * <li><b>On start</b></li>
 	 * <li>start-commit</li>
 	 * </ul>
 	 *
-	 * Werte fuer <i>fileaction:</i>
+	 * Values for <i>fileaction:</i>
 	 * <ul
-	 * <li>A Hinzugefuegt</li>
-	 * <li>U Aktualisierte</li>
-	 * <li>D Geloescht</li>
+	 * <li>A Added</li>
+	 * <li>U Updated</li>
+	 * <li>D Deleted</li>
 	 * </ul>
 	 *
-	 * Werte fuer <i>extensions:</i>
+	 * Values for <i>extensions:</i>
 	 * PHP, C, TXT, CSS, usw.
-	 *
-	 * Werte fuer
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function register();
 
 	/**
-	 * Ausfuehren der Aktion.
-	 * @param CommitObject $oObject Verz. / Datei-Objekt.
+	 * Execute the action.
+	 * @param CommitObject $oObject Directory / File-object.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */

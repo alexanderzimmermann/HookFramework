@@ -1,44 +1,49 @@
 <?php
 /**
- * Argument Tests.
+ * Commit info tests.
  * @category   Tests
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
-require_once dirname(__FILE__) . '/../../TestHelper.php';
+namespace CoreTest\Commit;
 
-require_once 'Core/Commit/CommitObject.php';
+use Core\Commit\CommitInfo;
+use Core\Commit\CommitObject;
+
+require_once __DIR__ . '/../../Bootstrap.php';
+
 require_once 'Core/Commit/CommitInfo.php';
+require_once 'Core/Commit/CommitObject.php';
 
 /**
- * Argument Tests.
+ * Commit info tests.
  * @category   Tests
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class CommitInfoTest extends PHPUnit_Framework_TestCase
+class CommitInfoTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * Commit Info Objekt.
+	 * Commit Info Object.
 	 * @var CommitInfo
 	 */
 	private $oCommitInfo;
 
 	/**
-	 * Set Up Methode.
+	 * Set up method.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@zimmemann.com>
 	 */
@@ -52,7 +57,7 @@ class CommitInfoTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen ob der Benutzer korrekt zurueck gegeben wird.
+	 * Test if the user is returned correctly.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -63,7 +68,7 @@ class CommitInfoTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Test ob Datum Zeit korrekt zurueck gegeben wird.
+	 * Test for correct return of date time.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -74,7 +79,7 @@ class CommitInfoTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Textbemerkung zum Commit zurueck geben.
+	 * Test return text message of the commit.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -85,7 +90,7 @@ class CommitInfoTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Setzen der Liste der Objekte des Commits.
+	 * Test set the list of object of the commit.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */

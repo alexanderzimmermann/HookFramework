@@ -1,24 +1,26 @@
 <?php
 /**
- * Argumente des Aufrufs behandeln.
+ * Class for handling the arguments of a hook call.
  * @category   Core
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
+namespace Core;
+
 /**
- * Argumente des Aufrufs behandeln.
+ * Class for handling the arguments of a hook call.
  * @category   Core
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
@@ -27,7 +29,7 @@
 class Arguments
 {
 	/**
-	 * Gueltige Hooks.
+	 * Valid hooks (complete name).
 	 * @var array
 	 */
 	private $aHooks = array(
@@ -37,7 +39,7 @@ class Arguments
 					  );
 
 	/**
-	 * Verfuegbare SVN Actions je Typ.
+	 * Available svn actions for each type.
 	 * @var array
 	 */
 	private $aActions = array(
@@ -85,67 +87,67 @@ class Arguments
 						);
 
 	/**
-	 * Argumente aus dem Aufruf des Hooks.
+	 * Arguments of hook call.
 	 * @var array
 	 */
 	private $aArguments;
 
 	/**
-	 * Anzahl der Argumente.
+	 * arguments count.
 	 * @var integer
 	 */
 	private $iArguments;
 
 	/**
-	 * Haupttyp fuer den Hook (start, pre, post).
+	 * main type for hook call (start, pre, post).
 	 * @var string
 	 */
 	private $sMainType;
 
 	/**
-	 * Subtyp fuer den Hook (commit, lock).
+	 * Subtype for Hook (commit, lock).
 	 * @var string
 	 */
 	private $sSubType;
 
 	/**
-	 * Argumente in Ordnung.
+	 * Arguments Ok.
 	 * @var boolean
 	 */
 	private $bArgumentsOk;
 
 	/**
-	 * Repository Pfad.
+	 * Repository path.
 	 * @var string
 	 */
 	private $sRepository;
 
 	/**
-	 * Repository Name.
+	 * Repository name.
 	 * @var string
 	 */
 	private $sRepositoryName;
 
 	/**
-	 * Benutzer.
+	 * Username of commit.
 	 * @var string
 	 */
 	private $sUser;
 
 	/**
-	 * Transaktionsnummer.
+	 * Transaction number.
 	 * @var string
 	 */
 	private $sTxn;
 
 	/**
-	 * Revisionsnummer.
+	 * Revision number.
 	 * @var integer
 	 */
 	private $iRev;
 
 	/**
-	 * Datei bei Lock.
+	 * file of lock.
 	 * @var string
 	 */
 	private $sFile;
@@ -157,25 +159,25 @@ class Arguments
 	private $sPropertyName;
 
 	/**
-	 * Aktion fuer Property.
+	 * Action for property.
 	 * @var string
 	 */
 	private $sAction;
 
 	/**
-	 * Interner Fehlertext.
+	 * Internal error text.
 	 * @var string
 	 */
 	private $sError;
 
 	/**
 	 * Constructor.
-	 * @param array $aArguments Kommandozeilen Argumente.
+	 * @param array $aArguments Command line arguments.
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function __construct(array $aArguments)
 	{
-		// Erstes Argument (Pfad Datei selber) loeschen.
+		// Delete first element (path file).
 		array_shift($aArguments);
 
 		$this->bArgumentsOk = false;
@@ -184,7 +186,7 @@ class Arguments
 	} // function
 
 	/**
-	 * Argumente Ok?.
+	 * Arguments Ok.
 	 * @return boolean
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -196,7 +198,7 @@ class Arguments
 	} // function
 
 	/**
-	 * Main Hook Typ zurueck geben.
+	 * Return complete hook type.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -206,7 +208,7 @@ class Arguments
 	} // function
 
 	/**
-	 * Haupttyp zurueck geben.
+	 * Return only main type string.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -216,7 +218,7 @@ class Arguments
 	} // function
 
 	/**
-	 * Subtyp zurueck geben.
+	 * Return subtype.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -226,7 +228,7 @@ class Arguments
 	} // function
 
 	/**
-	 * Repository Pfad zurueck geben.
+	 * Return repository path.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -238,7 +240,7 @@ class Arguments
 	/**
 	 * Return the repository name.
 	 * @return string
-	 * @author Alexander Zimmermann <alexander.zimmermann@twt.de>
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function getRepositoryName()
 	{
@@ -246,7 +248,7 @@ class Arguments
 	} // function
 
 	/**
-	 * Benutzer zurueck geben.
+	 * Return user.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -256,7 +258,7 @@ class Arguments
 	} // function
 
 	/**
-	 * Transaktionsnummer zurueck geben.
+	 * Return Transaction number.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -266,7 +268,7 @@ class Arguments
 	} // function
 
 	/**
-	 * Versionsnummer zurueckgeben.
+	 * Return version number.
 	 * @return integer
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -276,7 +278,7 @@ class Arguments
 	} // function
 
 	/**
-	 * Datei bei Lock zurueck geben.
+	 * Return the file on lock call.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -286,7 +288,7 @@ class Arguments
 	} // function
 
 	/**
-	 * Property Name zurueckgeben der bei Revprop-Change verlangt wird.
+	 * Return property name that is required on a Revprop-Change hook call.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -296,7 +298,7 @@ class Arguments
 	} // function
 
 	/**
-	 * Aktion fuer Property Name zurueckgeben das bei Revprop-Change vorkommt.
+	 * Returns action name.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -306,7 +308,7 @@ class Arguments
 	} // function
 
 	/**
-	 * Sub Aktonen der Hauptaktion zurueck geben.
+	 * Returns all available sub actions from the main action.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -316,7 +318,17 @@ class Arguments
 	} // function
 
 	/**
-	 * Pruefen der Argumente.
+	 * Returns error text.
+	 * @return string
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function getError()
+	{
+		return $this->sError;
+	} // function
+
+	/**
+	 * Check the arguments.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -338,9 +350,9 @@ class Arguments
 	} // function
 
 	/**
-	 * Pruefen ob der Initial Hook korrekt ist.
+	 * Check if the initial hook call is correct.
 	 *
-	 * Das letzte Element sollte einen korrekten Wert enthalten.
+	 * The last element of the parameters should contain the correct value.
 	 * @return boolean
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -348,6 +360,7 @@ class Arguments
 	{
 		if (true === empty($this->aArguments))
 		{
+			$this->sError = 'Empty Arguments';
 			return false;
 		} // if
 
@@ -371,7 +384,7 @@ class Arguments
 	} // function
 
 	/**
-	 * Anzahl der Argumente vergleichen.
+	 * Compare count of arguments.
 	 * @return boolean
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -389,7 +402,7 @@ class Arguments
 	} // function
 
 	/**
-	 * Pruefen der Argumententypen.
+	 * Check the arguments.
 	 * @return boolean
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -400,98 +413,70 @@ class Arguments
 
 		foreach ($aTypes as $iIndex => $sType)
 		{
-			$bResult   = false;
 			$sArgument = $this->aArguments[$iIndex];
+			$bResult   = $this->checkType($sType, $sArgument);
 
-			$bResult = $this->checkType($sType, $sArgument);
-
-			if ($bResult === false)
+			if (false === $bResult)
 			{
 				$iErrors++;
 			} // if
 		} // foreach
 
-		if ($iErrors === 0)
+		if (0 === $iErrors)
 		{
 			return true;
 		} // if
 
-		$this->sError .= 'Argument Types ';
 		return false;
 	} // function
 
 	/**
-	 * Nach Typ die Pruefroutine aufrufen.
-	 * @param string $sType     Typ des Parameters.
-	 * @param string $sArgument Wert des Parameters.
+	 * Call check routine after the type value.
+	 * @param string $sType     Type parameter.
+	 * @param string $sArgument Value of parameter.
 	 * @return boolean
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	private function checkType($sType, $sArgument)
 	{
-		switch ($sType)
+		$sFunction = 'check' . ucfirst($sType);
+
+		if (true === method_exists($this, $sFunction))
 		{
-			case 'repos':
-				$bResult = $this->checkRepository($sArgument);
-			break;
+			return $this->$sFunction($sArgument);
+		} // if
 
-			case 'txn':
-				$bResult = $this->checkTransaction($sArgument);
-			break;
-
-			case 'user':
-				$bResult = $this->checkUser($sArgument);
-			break;
-
-			case 'rev':
-				$bResult = $this->checkRevision($sArgument);
-			break;
-
-			case 'file':
-				$bResult = $this->checkFile($sArgument);
-			break;
-
-			case 'propname':
-				$bResult = $this->checkPropname($sArgument);
-			break;
-
-			case 'action':
-				$bResult = $this->checkAction($sArgument);
-			break;
-
-			default:
-				// Da ist etwas falsch.
-				$bResult = false;
-			break;
-		} // switch
+		$bResult = false;
+		$this->sError .= 'Check Type Error for ' . $sType;
 
 		return $bResult;
 	} // function
 
 	/**
-	 * Pruefen Pfad des Repository ob existiert.
+	 * Check if the repository exists.
 	 *
-	 * Pruefen ob dort eine Datei format existiert.
-	 * @param string $sRepository Repositorypfad.
+	 * Just a simple test if the file format exists.
+	 * @param string $sRepository Repository path.
 	 * @return boolean
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	private function checkRepository($sRepository)
+	private function checkRepos($sRepository)
 	{
-		if (file_exists($sRepository . '/format') === true)
+		if (true === file_exists($sRepository . '/format'))
 		{
 			$this->sRepository     = $sRepository;
 			$this->sRepositoryName = basename($sRepository);
 			return true;
 		} // if
 
-		$this->sError .= 'Repository ';
+		$this->sError .= 'Repository ' . $sRepository . ' does not exists.';
+
 		return false;
 	} // function
 
 	/**
-	 * Pruefen Benutzer.
-	 * @param string $sUser Benutzername.
+	 * Checks the user.
+	 * @param string $sUser Username.
 	 * @return boolean
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -508,12 +493,12 @@ class Arguments
 	} // function
 
 	/**
-	 * Pruefen der Transaktion Nummer (z.B. 501-a, 501-11).
-	 * @param string $sTransaction Transaktionsnummer.
+	 * Check the transaction number (z.B. 501-a, 501-11).
+	 * @param string $sTransaction Transaction number.
 	 * @return boolean
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	private function checkTransaction($sTransaction)
+	private function checkTxn($sTransaction)
 	{
 		if (preg_match('/^[0-9]+\-([a-z0-9]{1,2}|[0-9]+)$/', $sTransaction) > 0)
 		{
@@ -526,12 +511,12 @@ class Arguments
 	} // function
 
 	/**
-	 * Pruefen der Revisionsnummer (z.B. 501).
-	 * @param string $sRevision Revisionsnummer.
+	 * Checks the revision number (i.e. 501).
+	 * @param string $sRevision Revision number.
 	 * @return boolean
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	private function checkRevision($sRevision)
+	private function checkRev($sRevision)
 	{
 		if (preg_match('/[0-9]+/', $sRevision) > 0)
 		{
@@ -544,8 +529,8 @@ class Arguments
 	} // function
 
 	/**
-	 * Pruefen ob Datei korrekt ist.
-	 * @param string $sFile Dateiname.
+	 * Check if file is correct.
+	 * @param string $sFile Filename.
 	 * @return boolean
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -556,8 +541,8 @@ class Arguments
 	} // function
 
 	/**
-	 * Property Name pruefen.
-	 * @param string $sPropertyName Eigenschaftsname.
+	 * Check property name.
+	 * @param string $sPropertyName Property name.
 	 * @return boolean
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -568,8 +553,8 @@ class Arguments
 	} // function
 
 	/**
-	 * Propset Action pruefen.
-	 * @param string $sAction Aktion (A, M, D).
+	 * Check propset action.
+	 * @param string $sAction Action (A, M, D).
 	 * @return boolean
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */

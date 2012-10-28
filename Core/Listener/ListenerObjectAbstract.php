@@ -1,27 +1,29 @@
 <?php
 /**
- * Abstrakte Klasse fuer Object Listener.
+ * Abstract Class for object listener.
  * @category   Core
  * @package    Listener
  * @subpackage Object
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
-require_once 'Core/Listener/ListenerObject.php';
-require_once 'Core/Filter/ObjectFilter.php';
+namespace Core\Listener;
+
+use Core\Filter\ObjectFilter;
+use Core\Listener\ListenerObject;
 
 /**
- * Abstrakte Klasse fuer Object Listener.
+ * Abstract Class for object listener.
  * @category   Core
  * @package    Listener
  * @subpackage Object
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
@@ -42,7 +44,7 @@ abstract class ListenerObjectAbstract implements ListenerObject
 	protected $oObjectFilter;
 
 	/**
-	 * Konstruktor.
+	 * Constructor.
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function __construct()
@@ -51,7 +53,7 @@ abstract class ListenerObjectAbstract implements ListenerObject
 	} // function
 
 	/**
-	 * Listenern Name zurueck liefern.
+	 * Return listener name.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -61,7 +63,7 @@ abstract class ListenerObjectAbstract implements ListenerObject
 	} // function
 
 	/**
-	 * Filterobjekt des Listeners zurück geben.
+	 * Return Filter object of the listeners.
 	 * @return ObjectFilter
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */

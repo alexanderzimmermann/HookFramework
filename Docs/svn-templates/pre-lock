@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# PRE-LOCK HOOK
+#
+# The pre-lock hook is invoked before an exclusive lock is
+# created.  Subversion runs this hook by invoking a program
+# (script, executable, binary, etc.) named 'pre-lock' (for which
+# this file is a template), with the following ordered arguments:
+#
+#   [1] REPOS-PATH   (the path to this repository)
+#   [2] PATH         (the path in the repository about to be locked)
+#   [3] USER         (the user creating the lock)
+
+REPOS="$1"
+PATH="$2"
+USER="$3"
+
+/path/to/hookframework/Hook "$REPOS" "$USER" "$PATH" pre-lock >&2 || exit 1
+
+# All checks passed, so allow the commit.
+exit 0
+

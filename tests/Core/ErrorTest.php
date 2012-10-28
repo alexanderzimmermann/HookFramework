@@ -5,38 +5,46 @@
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
-require_once dirname(__FILE__) . '/../TestHelper.php';
+namespace CoreTest;
+
+use Core\Error;
+use Core\Commit\CommitInfo;
+use Core\Commit\CommitObject;
+
+require_once __DIR__ . '/../Bootstrap.php';
 require_once 'Core/Error.php';
+require_once 'Core/Commit/CommitInfo.php';
+require_once 'Core/Commit/CommitObject.php';
 
 /**
- * Error-Objekt Tests.
+ * Error-Object Tests.
  * @category   Tests
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class ErrorTest extends PHPUnit_Framework_TestCase
+class ErrorTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * Error Objekt.
+	 * Error Object.
 	 * @var Error
 	 */
 	private $oError;
 
 	/**
-	 * SetUp Operationen.
+	 * SetUp Operations.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@zimmemann.com>
 	 */
@@ -46,7 +54,7 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen, wenn kein Fehler aufgetreten ist.
+	 * Test, when a error occurred.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -60,7 +68,7 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen für addError Methode.
+	 * Test for addError method.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -74,7 +82,7 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen Fehlerzeilen hinzufuegen.
+	 * Test add error lines.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -94,13 +102,13 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen fuer Error Handling eines Info Objektes.
+	 * Test for error handling of a Info Object..
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function testErrorInfo()
 	{
-		// Erzeugen der Objekte CommitInfo und CommitObject.
+		// Create objects for Objekte CommitInfo and CommitObject.
 		$aFunctions = array(
 					   'getObjectPath', 'getErrorLines'
 					  );
@@ -110,14 +118,10 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 		$aErrorInfo = explode("\n", $sErrorInfo);
 
 		$aArguments = array(
-					   array('/path/to/a/file/in/svn.txt'), $aErrorInfo
-					  );
-
-		$aArguments = array(
 					   '666-1', 666, 'alexander', '21.12.2008', 'Test'
 					  );
 
-		$oInfo = $this->getMock('CommitInfo', $aFunctions, $aArguments);
+		$oInfo = $this->getMock('Core\Commit\CommitInfo', $aFunctions, $aArguments);
 		$oInfo->expects($this->any())
 			  ->method('getObjectPath')
 			  ->will($this->returnValue('/path/to/a/file/in/svn.ext'));
@@ -140,18 +144,18 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen 2.
+	 * Test 2.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function testErrorObject()
 	{
-		// Erzeugen der Objekte CommitInfo und CommitObject.
+		// Create objects for Objekte CommitInfo and CommitObject.
 		$aArguments = array(
 					   '666-1', 666, 'alexander', '21.12.2008', 'Test'
 					  );
 
-		$oInfo = $this->getMock('CommitInfo', array(), $aArguments);
+		$oInfo = $this->getMock('Core\Commit\CommitInfo', array(), $aArguments);
 
 		// Commit Object Objekt.
 		$sFile        = dirname(__FILE__) . '/_files/error_lines_object.txt';
@@ -175,7 +179,7 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 					)
 				   );
 
-		$oObject = $this->getMock('CommitObject', $aFunctions, $aParams);
+		$oObject = $this->getMock('Core\Commit\CommitObject', $aFunctions, $aParams);
 		$oObject->expects($this->any())
 				->method('getObjectPath')
 				->will($this->returnValue('/path/to/a/file/in/svn.txt'));
@@ -201,20 +205,20 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen, wenn 2 Objekte Fehler haben.
+	 * Test, when 2 Objects contain errors.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function testErrorObjectTwoObjects()
 	{
-		// Erzeugen der Objekte CommitInfo und CommitObject.
+		// Create objects for Objekte CommitInfo and CommitObject.
 		$aArguments = array(
 					   '666-1', 666, 'alexander', '21.12.2008', 'Test'
 					  );
 
-		$oInfo = $this->getMock('CommitInfo', array(), $aArguments);
+		$oInfo = $this->getMock('Core\Commit\CommitInfo', array(), $aArguments);
 
-		// Commit Object Objekt.
+		// Commit Object.
 		$sFile        = dirname(__FILE__) . '/_files/error_lines_object.txt';
 		$sFile        = file_get_contents($sFile);
 		$aErrorObject = explode("\n", $sFile);
@@ -236,7 +240,7 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 					)
 				   );
 
-		$oObject = $this->getMock('CommitObject', $aFunctions, $aParams);
+		$oObject = $this->getMock('Core\Commit\CommitObject', $aFunctions, $aParams);
 		$oObject->expects($this->any())
 				->method('getObjectPath')
 				->will($this->returnValue('/path/to/a/file/in/svn.txt'));
@@ -247,8 +251,8 @@ class ErrorTest extends PHPUnit_Framework_TestCase
 
 		$this->oError->processActionObject($oObject);
 
-		// Eine zweite Datei simulieren.
-		$oObject = $this->getMock('CommitObject', $aFunctions, $aParams);
+		// Simulate a 2nd file.
+		$oObject = $this->getMock('Core\Commit\CommitObject', $aFunctions, $aParams);
 		$oObject->expects($this->any())
 				->method('getObjectPath')
 				->will($this->returnValue('/path/to/a/file/in/info.txt'));

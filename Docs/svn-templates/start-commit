@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# START-COMMIT HOOK
+#
+# The start-commit hook is invoked before a Subversion txn is created
+# in the process of doing a commit.  Subversion runs this hook
+# by invoking a program (script, executable, binary, etc.) named
+# 'start-commit' (for which this file is a template)
+# with the following ordered arguments:
+#
+#   [1] REPOS-PATH   (the path to this repository)
+#   [2] USER         (the authenticated user attempting to commit)
+#
+# If the hook program exits with success, the commit continues; but
+# if it exits with failure (non-zero), the commit is stopped before
+# a Subversion txn is created, and STDERR is returned to the client.
+
+REPOS="$1"
+USER="$2"
+
+/path/to/hookframework/Hook "$REPOS" "$USER" start-commit >&2 || exit 1
+
+# All checks passed, so allow the commit.
+exit 0

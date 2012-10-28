@@ -1,27 +1,32 @@
 <?php
 /**
- * Hilfsklasse fuer die Tests.
+ * Help class for the tests.
  * @category   Tests
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
-// Hook Objekt.
-require_once 'Core/Hook.php';
+namespace CoreTest;
+
+use Core\HookMain;
+use Core\Log;
+
+// Hook object.
+require_once __DIR__ . '/../../Core/Hook.php';
 
 /**
- * Hilfsklasse fuer die Tests.
+ * Help class for the tests.
  * @category   Tests
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
@@ -30,19 +35,31 @@ require_once 'Core/Hook.php';
 class HookHelperMain extends HookMain
 {
 	/**
-	 * Parsen INI- Datei.
+	 * Parse INI- file.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	protected function parseIniFile()
 	{
-		$sPath = dirname(__FILE__) . '/../';
-		$this->oLog->writeLog(Log::HF_DEBUG, 'Using tests/config.ini');
-		$this->aCfg = parse_ini_file($sPath . 'config.ini');
+		$sPath = __DIR__ . '/../';
+		$sFile = 'config.ini';
+
+		if (false === file_exists($sPath . $sFile))
+		{
+			$sFile = 'config-dist.ini';
+		} // if
+
+		$this->oLog->writeLog(Log::HF_DEBUG, 'Using tests/' . $sFile);
+		$this->aCfg = parse_ini_file($sPath . $sFile);
+
+		// Overwrite configuration file.
+		$this->aCfg['binpath']      = __DIR__ . '/../_files/bin/';
+		$this->aCfg['repositories'] = __DIR__ . '/../../Repositories/';
+		$this->aCfg['logfile']      = __DIR__ . '/../common-test.log';
 	} // function
 
 	/**
-	 * Fehlerbehandlung der Listener.
+	 * Error handling of the listener.
 	 * @return integer
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */

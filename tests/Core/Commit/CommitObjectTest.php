@@ -1,18 +1,23 @@
 <?php
 /**
- * Argument Tests.
+ * Commit object tests.
  * @category   Tests
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
-require_once dirname(__FILE__) . '/../../TestHelper.php';
+namespace CoreTest\Commit;
+
+use Core\Commit\CommitInfo;
+use Core\Commit\CommitObject;
+
+require_once __DIR__ . '/../../Bootstrap.php';
 
 require_once 'Core/Commit/CommitObject.php';
 
@@ -20,33 +25,33 @@ require_once 'Core/Commit/CommitObject.php';
 require_once 'Core/Commit/CommitInfo.php';
 
 /**
- * Argument Tests.
+ * Commit object tests.
  * @category   Tests
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2011 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 1.0.1
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class CommitObjectTest extends PHPUnit_Framework_TestCase
+class CommitObjectTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * Commit Info Objekt.
+	 * Commit info object.
 	 * @var CommitInfo
 	 */
 	private $oCommitInfo;
 
 	/**
-	 * Commit Objekt.
+	 * Commit object.
 	 * @var CommitObject
 	 */
 	private $oCommitObject;
 
 	/**
-	 * Set Up Methode.
+	 * Set up method.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -73,7 +78,7 @@ class CommitObjectTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Aktion zurueck geben.
+	 * Test return get action.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -83,7 +88,7 @@ class CommitObjectTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Ist das Objekt ein Verzeichnis.
+	 * Test get isDir.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -93,7 +98,7 @@ class CommitObjectTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Pfad zu der Datei zurueck geben.
+	 * Test return object path of file.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -104,7 +109,7 @@ class CommitObjectTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Das Commit Info Objekt zurueck geben.
+	 * Test of return commit info object.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -115,7 +120,7 @@ class CommitObjectTest extends PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Temporaeren Pfad zur Datei zurueck geben.
+	 * Test return temporarily path of file.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
