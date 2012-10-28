@@ -48,6 +48,5 @@ class Start extends ListenerInfoAbstract
 	 */
 	public function processAction(CommitInfo $oInfo)
 	{
-		error_log('START LISTENER');
 	} // function
 } // class

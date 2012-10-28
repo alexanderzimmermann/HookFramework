@@ -38,13 +38,13 @@ class Mailing extends ListenerInfoAbstract
 	protected $sListener = 'Post Commit Mailing';
 
 	/**
-	 * Commit Info Objekt.
+	 * Commit info object.
 	 * @var CommitInfo
 	 */
 	private $oInfo;
 
 	/**
-	 * Registrieren auf die Aktion.
+	 * Register the action.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -54,7 +54,7 @@ class Mailing extends ListenerInfoAbstract
 	} // function
 
 	/**
-	 * Ausfuehren der Aktion.
+	 * Execute the action.
 	 * @param CommitInfo $oInfo Info des Commits.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -84,10 +84,10 @@ class Mailing extends ListenerInfoAbstract
 	 */
 	private function getCommitInfoMailHead()
 	{
-		$sHead  = 'Zeitpunkt : ' . $this->oInfo->getDateTime() . "\n\n";
-		$sHead .= 'Benutzer  : ' . $this->oInfo->getUser() . "\n";
+		$sHead  = 'Date Time : ' . $this->oInfo->getDateTime() . "\n\n";
+		$sHead .= 'User      : ' . $this->oInfo->getUser() . "\n";
 		$sHead .= "\n";
-		$sHead .= 'Kommentar : ' . $this->oInfo->getMessage() . "\n\n";
+		$sHead .= 'Comment   : ' . $this->oInfo->getMessage() . "\n\n";
 
 		$sHead .= str_repeat('=', 80) . "\n";
 
@@ -95,7 +95,7 @@ class Mailing extends ListenerInfoAbstract
 	} // function
 
 	/**
-	 * Aufbereiten der Dateiinformationen fuer den Mailinhalt.
+	 * Prepare file information for mail body.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -116,44 +116,44 @@ class Mailing extends ListenerInfoAbstract
 			if ($aObjects[$iFor]->getAction() === 'A')
 			{
 				$aAdded[]   = $aObjects[$iFor]->getObjectPath();
-				$sFileList .= ' (neu)';
+				$sFileList .= ' (new)';
 			} // if
 
 			if ($aObjects[$iFor]->getAction() === 'U')
 			{
 				$aUpdated[] = $aObjects[$iFor]->getObjectPath();
-				$sFileList .= ' (geändert)';
+				$sFileList .= ' (update)';
 			} // if
 
 			if ($aObjects[$iFor]->getAction() === 'D')
 			{
 				$aDeleted[] = $aObjects[$iFor]->getObjectPath();
-				$sFileList .= ' (gelöscht)';
+				$sFileList .= ' (delete)';
 			} // if
 
 			$sFileList .= "\n";
 		} // for
 
-		$sMailBody  = 'Verzeichnis, Dateiinformationen:' . "\n";
+		$sMailBody  = 'Directories, Fileinformations:' . "\n";
 		$sMailBody .= str_repeat('-', 40) . "\n";
 
 		if (empty($aAdded) === false)
 		{
-			$sMailBody .= 'Hinzugefügt  : ' . count($aAdded) . "\n";
+			$sMailBody .= 'Added   : ' . count($aAdded) . "\n";
 
 			$sFileListAdded = implode("\n", $aAdded);
 		} // if
 
 		if (empty($aUpdated) === false)
 		{
-			$sMailBody .= 'Aktualisiert : ' . count($aUpdated) . "\n";
+			$sMailBody .= 'Update  : ' . count($aUpdated) . "\n";
 
 			$sFileListUpdated = implode("\n", $aUpdated);
 		} // if
 
 		if (empty($aDeleted) === false)
 		{
-			$sMailBody .= 'Gelöscht ... : ' . count($aDeleted) . "\n";
+			$sMailBody .= 'Deleted : ' . count($aDeleted) . "\n";
 
 			$sFileListDeleted = implode("\n", $aDeleted);
 		} // if

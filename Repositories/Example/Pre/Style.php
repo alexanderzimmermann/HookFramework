@@ -38,7 +38,7 @@ class Style extends ListenerObjectAbstract
 	protected $sListener = 'Style Guide';
 
 	/**
-	 * Registrieren auf die Aktion.
+	 * Register the action.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -70,7 +70,7 @@ class Style extends ListenerObjectAbstract
 	} // function
 
 	/**
-	 * Ausfuehren der Aktion.
+	 * Execute the action.
 	 * @param CommitObject $oObject Verz. / Datei-Objekt.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>

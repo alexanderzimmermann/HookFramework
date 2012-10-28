@@ -35,23 +35,15 @@ class Syntax extends ListenerObjectAbstract
 	 * Listener Name.
 	 * @var string
 	 */
-	protected $sListener = 'Syntax Pruefung';
+	protected $sListener = 'Syntax check';
 
 	/**
-	 * Registrieren auf die Aktion.
+	 * Register the action.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function register()
 	{
-		// Testdateien ignorieren.
-		$sBaseFolder     = '/tmp/newfolder1/newfolder1_1/';
-		$sParseErrorFile = $sBaseFolder . 'parse-error_file1.php';
-		$this->oObjectFilter->addFileToFilter($sParseErrorFile);
-
-		$sParseErrorFile = $sBaseFolder . 'parse-error_file2.php';
-		$this->oObjectFilter->addFileToFilter($sParseErrorFile);
-
 		return array(
 				'action'     => 'commit',
 				'fileaction' => array(
@@ -63,15 +55,15 @@ class Syntax extends ListenerObjectAbstract
 	} // function
 
 	/**
-	 * Ausfuehren der Aktion.
-	 * @param CommitObject $oObject Verz. / Datei-Objekt.
+	 * Execute the action.
+	 * @param CommitObject $oObject Directory / File-Object.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function processAction(CommitObject $oObject)
 	{
 		$aLines = array();
-		$sCmd   = 'php -l ' . $oObject->getTmpObjectPath() . ' 2>/dev/null';
+		$sCmd   = 'php -l ' . $oObject->getTmpObjectPath() . ' 2>&1';
 		exec($sCmd, $aLines);
 
 		if (empty($aLines) === true)
