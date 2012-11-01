@@ -47,7 +47,7 @@ function hfautoload($class)
 			'hook\\listener\\infoabstract' => '/Listener/InfoAbstract.php',
 			'hook\\listener\\object' => '/Listener/Object.php',
 			'hook\\listener\\objectabstract' => '/Listener/ObjectAbstract.php',
-			'hook\\listener\\listenerparser' => '/Listener/ListenerParser.php'
+			'hook\\listener\\loader' => '/Listener/Loader.php'
 		);
 	} // if
 

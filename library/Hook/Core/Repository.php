@@ -14,7 +14,7 @@
 
 namespace Hook\Core;
 
-use Hook\Listener\ListenerParser as Parser;
+use Hook\Listener\Loader;
 use Hook\Core\Arguments;
 
 /**
@@ -112,11 +112,11 @@ class Repository
 		} // if
 
 		// Parse listener in directory.
-		$oParser = new Parser($this->oArguments);
-		$oParser->setPath($sDirectory);
-		$oParser->init();
-		$this->aListener = $oParser->getListener();
-		unset($oParser);
+		$oLoader = new Loader($this->oArguments);
+		$oLoader->setPath($sDirectory);
+		$oLoader->init();
+		$this->aListener = $oLoader->getListener();
+		unset($oLoader);
 
 		// Check if a common.log file is available.
 		$this->bUseLog = false;
@@ -127,8 +127,6 @@ class Repository
 			$this->bUseLog  = true;
 			$this->sLogfile = $sFile;
 		} // if
-
-
 	} // function
 
 	/**

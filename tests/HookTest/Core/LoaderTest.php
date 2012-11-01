@@ -15,12 +15,12 @@
 namespace HookTest\Core;
 
 use Hook\Core\Arguments;
-use Hook\Listener\ListenerParser as Parser;
+use Hook\Listener\Loader;
 
 require_once __DIR__ . '/../../Bootstrap.php';
 
 /**
- * Listener parser tests.
+ * Listener loader tests.
  * @category   Tests
  * @package    Main
  * @subpackage Core
@@ -31,14 +31,14 @@ require_once __DIR__ . '/../../Bootstrap.php';
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class ListenerParserTest extends \PHPUnit_Framework_TestCase
+class LoaderTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Tests the handle of errors in listener classes.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	public function testListenerParserFailures()
+	public function testLoaderFailures()
 	{
 		$aFunctions = array(
 					   'getRepositoryName', 'getMainType', 'getSubActions'
@@ -48,7 +48,7 @@ class ListenerParserTest extends \PHPUnit_Framework_TestCase
 					   array(
 						0 => '/var/local/svn/hooks/Hook',
 						1 => TEST_SVN_EXAMPLE,
-						2 => 'testuser12',
+						2 => 'Juliana',
 						3 => 'pre-commit'
 					   )
 					  );
@@ -71,11 +71,11 @@ class ListenerParserTest extends \PHPUnit_Framework_TestCase
 		$sTestDir = TEST_SVN_REPOSITORY;
 		$sTestDir = __DIR__ . '/../Listener/';
 
-		$oListenerParser = new Parser($oArguments);
-		$oListenerParser->setPath($sTestDir);
-		$oListenerParser->init();
+		$oLoader = new Loader($oArguments);
+		$oLoader->setPath($sTestDir);
+		$oLoader->init();
 
-		$aListener = $oListenerParser->getListener();
+		$aListener = $oLoader->getListener();
 
 		$this->assertTrue(is_array($aListener), '$aListener is not an array.');
 		$this->assertTrue(isset($aListener['info']), 'Info Element is not set in $aListener.');
@@ -146,7 +146,7 @@ class ListenerParserTest extends \PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Test the listener parser.
+	 * Test the listener Loader.
 	 *
 	 * Simple test with the available listener of the framework.
 	 * @param array $aArguments Arguments.
@@ -155,16 +155,16 @@ class ListenerParserTest extends \PHPUnit_Framework_TestCase
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 * @dataProvider getArguments
 	 */
-	public function testListenerParserObjects(array $aArguments, array $aExpected)
+	public function testLoaderObjects(array $aArguments, array $aExpected)
 	{
 		$oArguments = new Arguments($aArguments);
 		$this->assertTrue($oArguments->argumentsOk(), 'Arguments not ok.');
 
-		$oListenerParser = new Parser($oArguments);
-		$oListenerParser->setPath(TEST_SVN_REPOSITORY . 'Example/');
+		$oLoader = new Loader($oArguments);
+		$oLoader->setPath(TEST_SVN_REPOSITORY . 'Example/');
 
-		$oListenerParser->init();
-		$aListener = $oListenerParser->getListener();
+		$oLoader->init();
+		$aListener = $oLoader->getListener();
 
 		$this->assertFalse(empty($aListener), 'Listener empty.');
 

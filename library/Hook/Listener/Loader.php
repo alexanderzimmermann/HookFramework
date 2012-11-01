@@ -1,6 +1,6 @@
 <?php
 /**
- * Parsing the different listener types.
+ * Loading the different listener types.
  * @category   Core
  * @package    Listener
  * @subpackage Main
@@ -19,11 +19,12 @@ use Hook\Core\Arguments;
 use Hook\Core\Log;
 
 /**
- * Parsing the different listener types.
+ * Loading the different listener types.
  *
- * Es gibt 3 Arten von Transaktionen. Eine fuer den Start, eine nach dem die
- * Transaktion gestartet wurde aber noch commited (pre). Und eine nachdem die
- * Transaktion und Verarbeitung abgeschlossen wurde (post).
+ * There are 3 types of transactions.
+ * One for Start (start), before a transaction is started.
+ * One after the transaction is stared, but not commit to the repository (pre).
+ * One after the transaction is commit to the repository and the work is done (post).
  * <ul>
  * <li>Start</li>
  * <li>Pre</li>
@@ -39,7 +40,7 @@ use Hook\Core\Log;
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class ListenerParser
+class Loader
 {
 	/**
 	 * Main Hook.
@@ -233,21 +234,21 @@ class ListenerParser
 		$sRegister = $oListener->register();
 		$sListener = $oListener->getListenerName();
 
-		// Richtige Typen?
+		// Correct Types?
 		if (is_string($sRegister) === false)
 		{
 			$this->sError .= $sListener . ' Register not a String for InfoType';
 			return false;
 		} // if
 
-		// Typen leer?
+		// Types empty?
 		if ($sRegister === '')
 		{
 			$this->sError .= $sListener . ' Error Register String Empty';
 			return false;
 		} // if
 
-		// Richtige Werte?
+		// Correct values?
 		$aSvnActions = $this->oArguments->getSubActions();
 
 		if (in_array($sRegister, $aSvnActions) === false)
@@ -263,7 +264,7 @@ class ListenerParser
 	/**
 	 * Register values for object listener and check it.
 	 * @param ObjectAbstract $oListener Name des Listener Objekts.
-	 * @return Listener
+	 * @return boolean
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	private function registerListenersObject(ObjectAbstract $oListener)
@@ -349,7 +350,8 @@ class ListenerParser
 				}
 				catch (Exception $oException)
 				{
-					$this->sError .= $oException->getMessage() . PHP_EOL . $oException->getTraceAsString() . PHP_EOL;
+					$this->sError .= $oException->getMessage() . PHP_EOL
+								  . $oException->getTraceAsString() . PHP_EOL;
 				} // try
 			} // if
 		} // for
