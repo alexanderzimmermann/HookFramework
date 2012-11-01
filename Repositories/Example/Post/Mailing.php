@@ -14,8 +14,8 @@
 
 namespace Example\Post;
 
-use Core\Commit\CommitInfo;
-use Core\Listener\ListenerInfoAbstract;
+use Hook\Commit\CommitInfo;
+use Hook\Listener\InfoAbstract;
 
 /**
  * Mailing Listener.
@@ -29,7 +29,7 @@ use Core\Listener\ListenerInfoAbstract;
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class Mailing extends ListenerInfoAbstract
+class Mailing extends InfoAbstract
 {
 	/**
 	 * Listener Name.
@@ -122,13 +122,13 @@ class Mailing extends ListenerInfoAbstract
 			if ($aObjects[$iFor]->getAction() === 'U')
 			{
 				$aUpdated[] = $aObjects[$iFor]->getObjectPath();
-				$sFileList .= ' (update)';
+				$sFileList .= ' (updated)';
 			} // if
 
 			if ($aObjects[$iFor]->getAction() === 'D')
 			{
 				$aDeleted[] = $aObjects[$iFor]->getObjectPath();
-				$sFileList .= ' (delete)';
+				$sFileList .= ' (deleted)';
 			} // if
 
 			$sFileList .= "\n";
@@ -146,7 +146,7 @@ class Mailing extends ListenerInfoAbstract
 
 		if (empty($aUpdated) === false)
 		{
-			$sMailBody .= 'Update  : ' . count($aUpdated) . "\n";
+			$sMailBody .= 'Updated : ' . count($aUpdated) . "\n";
 
 			$sFileListUpdated = implode("\n", $aUpdated);
 		} // if

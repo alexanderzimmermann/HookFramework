@@ -14,11 +14,15 @@
 
 namespace Example\Pre;
 
-use Core\Commit\CommitObject;
-use Core\Listener\ListenerObjectAbstract;
+use Hook\Commit\CommitObject;
+use Hook\Listener\ObjectAbstract;
 
 /**
  * Id svn keyword.
+ *
+ * The command svnlook propget /var/svn/xxxx svn:keywords
+ * /trunk/path/to/file.php returns the "Id", and so we can check that
+ * that the property is set.
  * @category   Listener
  * @package    Pre
  * @subpackage Pre
@@ -29,7 +33,7 @@ use Core\Listener\ListenerObjectAbstract;
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class Id extends ListenerObjectAbstract
+class Id extends ObjectAbstract
 {
 	/**
 	 * Listener Name.

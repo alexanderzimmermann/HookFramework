@@ -17,7 +17,7 @@ This example uses Apache with the following .htaccess:
    :linenos:
 
    	/**
-   	 * Registrieren auf die Aktion.
+   	 * Register the action.
    	 * @return array
    	 * @author Alexander Zimmermann <alex@azimmermann.com>
    	 */

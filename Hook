@@ -57,11 +57,8 @@ set_include_path(implode(PATH_SEPARATOR, $aPath));
 // Include autoloader.
 require_once 'Core/Autoload.php';
 
-// Hook object.
-//require_once 'Core/Hook.php';
-
 // Create object.
-$oMain = new HookMain($argv);
+$oMain = new Hook($argv);
 
 // Run.
 $iExit = $oMain->run();

@@ -14,10 +14,8 @@
 
 namespace Example\Pre;
 
-use Core\Commit\CommitInfo;
-use Core\Listener\ListenerInfoAbstract;
-
-require_once 'Core/Listener/ListenerInfoAbstract.php';
+use Hook\Commit\CommitInfo;
+use Hook\Listener\InfoAbstract;
 
 /**
  * Message Listener.
@@ -31,7 +29,7 @@ require_once 'Core/Listener/ListenerInfoAbstract.php';
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class MessageStrict extends ListenerInfoAbstract
+class MessageStrict extends InfoAbstract
 {
 	/**
 	 * Listener Name.
@@ -96,6 +94,7 @@ class MessageStrict extends ListenerInfoAbstract
 			$sErrorMessage .= '* If you changed something.' . "\n";
 
 			$oInfo->addError($sErrorMessage);
+			return;
 		} // if
 
 		$sMessage = preg_replace('[\*+\-] ', '', $sMessage);
@@ -107,16 +106,16 @@ class MessageStrict extends ListenerInfoAbstract
 			$oInfo->addError($sErrorMessage);
 		} // if
 
-		// Provide whole sentences not only fix, bugfix and so on.
+		// Provide whole sentences not only fix, bug fix and so on.
 		$aMessage = explode(' ', $sMessage);
 		if (count($aMessage) < 3)
 		{
 			$sErrorMessage  = 'Comment should contain whole sentences';
-			$sErrorMessage .= "\n" . 'Subject, Praedicat, Object, Point!';
+			$sErrorMessage .= "\n" . 'Subject, Predicate, Object, Point!';
 			$oInfo->addError($sErrorMessage);
 		} // if
 
-		// Word length is less than 3 sign for each word.
+		// Word length is less than 3 signs for each word.
 		$iMax = count($aMessage);
 		$iLen = 0;
 		for ($iFor = 0; $iFor < $iMax; $iFor++)
@@ -129,11 +128,9 @@ class MessageStrict extends ListenerInfoAbstract
 		if ($iSqr <= 3)
 		{
 			$sErrorMessage  = 'Comment should contain whole sentences and more precisely.';
-			$sErrorMessage .= "\n" . 'Subject, Praedicat, Object, Point!';
+			$sErrorMessage .= "\n" . 'Subject, Predicate, Object, Point!';
 
 			$oInfo->addError($sErrorMessage);
 		} // if
-
-		return true;
 	} // function
 } // class

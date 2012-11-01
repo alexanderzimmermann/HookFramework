@@ -11,5 +11,5 @@ user, the commit message and the data that was commited, like directories and fi
 (user, message) or the items of a commit.
 
 
-Therefore listeners are distinguished between a commit info listener (ListenerInfoAbstract) and
-commit object listener (ListenerObjectAbstract).
+Therefore listeners are distinguished between a commit info listener (InfoAbstract) and
+commit object listener (ObjectAbstract).

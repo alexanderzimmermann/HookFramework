@@ -14,8 +14,8 @@
 
 namespace Example\Pre;
 
-use Core\Commit\CommitInfo;
-use Core\Listener\ListenerInfoAbstract;
+use Hook\Commit\CommitInfo;
+use Hook\Listener\InfoAbstract;
 
 /**
  * Message Listener.
@@ -29,7 +29,7 @@ use Core\Listener\ListenerInfoAbstract;
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class Message extends ListenerInfoAbstract
+class Message extends InfoAbstract
 {
 	/**
 	 * Listener Name.
@@ -104,7 +104,5 @@ class Message extends ListenerInfoAbstract
 			$sErrorMessage = 'Der Kommentar sollte aussagekraeftig sein!';
 			$oInfo->addError($sErrorMessage);
 		} // if
-
-		return true;
 	} // function
 } // class

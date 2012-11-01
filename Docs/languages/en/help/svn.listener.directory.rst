@@ -29,21 +29,9 @@ Example:
 Valid Listener Objects
 ----------------------
 
+A valid listener should implement the correct interface and extends the correct abstract class.
 
+For info listener its `Info` and `InfoAbstract`.
 
-		// Check for correct interface and abstract class.
-		$aImplements = class_implements($sListener);
+For object listener its `Object` and `ObjectAbstract`.
 
-		if ((isset($aImplements['ListenerInfo']) === true) &&
-			(isset($aParents['ListenerInfoAbstract']) === true))
-		{
-			$this->aListenerInfo[] = new $sListener;
-			return true;
-		} // if
-
-		if ((isset($aImplements['ListenerObject']) === true) &&
-			(isset($aParents['ListenerObjectAbstract']) === true))
-		{
-			$this->aListenerObject[] = new $sListener;
-			return true;
-		} // if

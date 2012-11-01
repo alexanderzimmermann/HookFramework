@@ -14,8 +14,8 @@
 
 namespace Example\Pre;
 
-use Core\Commit\CommitObject;
-use Core\Listener\ListenerObjectAbstract;
+use Hook\Commit\CommitObject;
+use Hook\Listener\ObjectAbstract;
 
 /**
  * Style Guide Listener.
@@ -29,7 +29,7 @@ use Core\Listener\ListenerObjectAbstract;
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class Style extends ListenerObjectAbstract
+class Style extends ObjectAbstract
 {
 	/**
 	 * Listener Name.
@@ -71,7 +71,7 @@ class Style extends ListenerObjectAbstract
 
 	/**
 	 * Execute the action.
-	 * @param CommitObject $oObject Verz. / Datei-Objekt.
+	 * @param CommitObject $oObject Directory / File-Object.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */

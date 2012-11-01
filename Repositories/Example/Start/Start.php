@@ -14,8 +14,8 @@
 
 namespace Example\Start;
 
-use Core\Commit\CommitInfo;
-use Core\Listener\ListenerInfoAbstract;
+use Hook\Commit\CommitInfo;
+use Hook\Listener\InfoAbstract;
 /**
  * Start Listener.
  * @category   Hook
@@ -28,7 +28,7 @@ use Core\Listener\ListenerInfoAbstract;
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class Start extends ListenerInfoAbstract
+class Start extends InfoAbstract
 {
 	/**
 	 * Register the action.

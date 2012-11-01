@@ -12,9 +12,9 @@
  * @since      File available since Release 1.0.0
  */
 
-use Core\Log;
+use Hook\Core\Log;
 
-require_once __DIR__ . '/../Core/Autoload.php';
+require_once __DIR__ . '/../library/Hook/Autoload.php';
 
 // Required unit test files.
 require_once 'PHPUnit/Autoload.php';
@@ -56,8 +56,8 @@ set_include_path(implode(PATH_SEPARATOR, $aPath));
  * Define Example SVN directory and subversion test binary.
  */
 
-define('TEST_SVN_BIN', __DIR__ . '/_files/bin/');
-define('TEST_SVN_EXAMPLE', __DIR__ . '/_files/Example/');
+define('TEST_SVN_BIN', __DIR__ . '/HookTest//_files/bin/');
+define('TEST_SVN_EXAMPLE', __DIR__ . '/HookTest/_files/Example/');
 define('TEST_SVN_REPOSITORY', __DIR__ . '/../Repositories/');
 
 /**
@@ -69,8 +69,6 @@ if (false === file_exists($sFile))
 {
 	$sFile = 'config-dist.ini';
 } // if
-
-require_once 'Core/Log.php';
 
 $aCfg = parse_ini_file($sRootTests . $sFile);
 $oLog = Log::getInstance();
