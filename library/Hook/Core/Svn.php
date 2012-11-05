@@ -1,6 +1,6 @@
 <?php
 /**
- * SVN- Klasse zum ausfuehren der SVN-Befehle.
+ * * SVN- class for executing the svn commands to collect data from commit.
  * @category   Core
  * @package    Main
  * @subpackage Main
@@ -15,7 +15,7 @@
 namespace Hook\Core;
 
 /**
- * SVN- Klasse zum ausfuehren der SVN-Befehle.
+ * SVN- class for executing the svn commands to collect data from commit.
  * @category   Core
  * @package    Main
  * @subpackage Main
@@ -29,7 +29,7 @@ namespace Hook\Core;
 class Svn
 {
 	/**
-	 * Pfad zu den SVN- Bin's.
+	 * Path to svn binaries.
 	 * @var string
 	 */
 	private $sSvnPath = '/usr/bin/';
