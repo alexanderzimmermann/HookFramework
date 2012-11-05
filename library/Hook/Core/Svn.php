@@ -35,8 +35,8 @@ class Svn
 	private $sSvnPath = '/usr/bin/';
 
 	/**
-	 * SVN Kommand (inkl. Pfad).
-	 * @var stringt
+	 * SVN command  (incl. path).
+	 * @var string
 	 */
 	private $sSvnCmd;
 
@@ -47,14 +47,14 @@ class Svn
 	private $sRepos;
 
 	/**
-	 * Svn Param (Transaktion [-t TXN] oder Revision [-r REV]).
+	 * Svn Param (Transaction [-t TXN] or Revision [-r REV]).
 	 * @var string
 	 */
 	private $sSvnLookParam;
 
 	/**
-	 * Konstruktor.
-	 * @param string $sSvnPath Pfad zur ausfuehrbaren Datei svnlook.
+	 * Constructor.
+	 * @param string $sSvnPath Path to the subversion executable.
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function __construct($sSvnPath)
@@ -63,8 +63,8 @@ class Svn
 	} // function
 
 	/**
-	 * Initialisieren.
-	 * @param Arguments $oArguments Kommandozeilenargumente.
+	 * Initialize.
+	 * @param Arguments $oArguments Command line arguments.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -87,8 +87,8 @@ class Svn
 	} // function
 
 	/**
-	 * SVN Kommando ausfuehren.
-	 * @param string $sCommand SVN Kommando.
+	 * Execut the svn command line.
+	 * @param string $sCommand SVN Command.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -105,7 +105,7 @@ class Svn
 	} // function
 
 	/**
-	 * Daten aus Commit die geaender wurden.
+	 * Get commit data was changed.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -120,7 +120,7 @@ class Svn
 	} // function
 
 	/**
-	 * Infos zu dem Commit holen.
+	 * Get information of that commit (user, text message).
 	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -135,7 +135,7 @@ class Svn
 	} // function
 
 	/**
-	 * Unterschiede des Commits (Diff).
+	 * Get the difference of that commit.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -150,9 +150,9 @@ class Svn
 	} // function
 
 	/**
-	 * Schreiben des Contents aus der uebermittelten Datei.
-	 * @param string $sFile    Datei aus TXN.
-	 * @param string $sTmpFile Temporare Datei auf der Platte.
+	 * Write content from commited file.
+	 * @param string $sFile    File from TXN.
+	 * @param string $sTmpFile Temporary file on disk.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -169,8 +169,8 @@ class Svn
 	} // function
 
 	/**
-	 * Property Liste Unterschiede des Commits (Diff).
-	 * @param string $sItem Element fuer die Eigenschaften (Dir, File).
+	 * Get list of properties to the item.
+	 * @param string $sItem Element for the properties (Directory or file).
 	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 * @since  1.0.0
@@ -187,9 +187,9 @@ class Svn
 	} // function
 
 	/**
-	 * Property Liste Unterschiede des Commits (Diff).
-	 * @param string $sItem     Element fuer die Eigenschaften (Dir, File).
-	 * @param string $sProperty Name der Eigenschaft.
+	 * Get the property value.
+	 * @param string $sItem     Element for the properties (Directory or file).
+	 * @param string $sProperty Name of property of value to get.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 * @since  1.0.0

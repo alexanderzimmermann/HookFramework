@@ -51,7 +51,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
 	/**
 	 * Argument object.
-	 * @var Argument
+	 * @var Arguments
 	 */
 	private $oArgument;
 
