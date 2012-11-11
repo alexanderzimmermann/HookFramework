@@ -14,7 +14,7 @@
 
 /**
  * Auto load function.
- * @param $class Class to load.
+ * @param string $class to load.
  * @return void
  */
 function hfautoload($class)
@@ -24,10 +24,10 @@ function hfautoload($class)
 	if ($classes === null)
 	{
 		$classes = array(
-			'hook\\commit\\base' => '/Commit/Base.php',
+			'hook\\commit\\data\\base' => '/Commit/Data/Base.php',
 			'hook\\commit\\data' => '/Commit/Data.php',
-			'hook\\commit\\commitinfo' => '/Commit/CommitInfo.php',
-			'hook\\commit\\commitobject' => '/Commit/CommitObject.php',
+			'hook\\commit\\data\\info' => '/Commit/Data/Info.php',
+			'hook\\commit\\data\\object' => '/Commit/Data/Object.php',
 			'hook\\commit\\parser' => '/Commit/Parser.php',
 			'hook\\commit\\diff\\lines' => '/Commit/Diff/Lines.php',
 			'hook\\commit\\diff\\property' => '/Commit/Diff/Property.php',
@@ -43,10 +43,10 @@ function hfautoload($class)
 			'hook\\core\\usage' => '/Core/Usage.php',
 			'hook\\filter\\filter' => '/Filter/Filter.php',
 			'hook\\filter\\objectfilter' => '/Filter/ObjectFilter.php',
-			'hook\\listener\\info' => '/Listener/Info.php',
-			'hook\\listener\\infoabstract' => '/Listener/InfoAbstract.php',
-			'hook\\listener\\object' => '/Listener/Object.php',
-			'hook\\listener\\objectabstract' => '/Listener/ObjectAbstract.php',
+			'hook\\listener\\abstractinfo' => '/Listener/AbstractInfo.php',
+			'hook\\listener\\abstractobject' => '/Listener/AbstractObject.php',
+			'hook\\listener\\infointerface' => '/Listener/InfoInterface.php',
+			'hook\\listener\\objectinterface' => '/Listener/ObjectInterface.php',
 			'hook\\listener\\loader' => '/Listener/Loader.php'
 		);
 	} // if

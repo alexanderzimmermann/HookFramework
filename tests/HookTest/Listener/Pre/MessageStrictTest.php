@@ -14,7 +14,7 @@
 
 namespace HookTest\Listener\Pre;
 
-use Hook\Commit\CommitInfo;
+use Hook\Commit\Data\Info;
 
 use Example\Pre\MessageStrict;
 
@@ -30,15 +30,15 @@ require_once __DIR__ . '/../../../../Repositories/Example/Pre/MessageStrict.php'
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
 class MessageStrictTest extends \PHPUnit_Framework_TestCase
 {
 	/**
-	 * Test object Message.
-	 * @var Message
+	 * Test object message.
+	 * @var MessageStrict
 	 */
 	private $oMessage;
 
@@ -62,7 +62,7 @@ class MessageStrictTest extends \PHPUnit_Framework_TestCase
 		$sUser    = 'zora';
 		$sDate    = '2008-01-10 12:12:12';
 		$sComment = '';
-		$oInfo    = new CommitInfo('666-1', 666, $sUser, $sDate, $sComment);
+		$oInfo    = new Info('666-1', 666, $sUser, $sDate, $sComment);
 
 		$this->oMessage->processAction($oInfo);
 
@@ -89,7 +89,7 @@ class MessageStrictTest extends \PHPUnit_Framework_TestCase
 		$sUser    = 'zora';
 		$sDate    = '2008-01-10 12:12:12';
 		$sComment = '* Fix';
-		$oInfo    = new CommitInfo('666-1', 666, $sUser, $sDate, $sComment);
+		$oInfo    = new Info('666-1', 666, $sUser, $sDate, $sComment);
 
 		$this->oMessage->processAction($oInfo);
 
@@ -161,7 +161,7 @@ class MessageStrictTest extends \PHPUnit_Framework_TestCase
 	{
 		$sUser = 'zora';
 		$sDate = '2008-01-10 12:12:12';
-		$oInfo = new CommitInfo('666-1', 666, $sUser, $sDate, $sComment);
+		$oInfo = new Info('666-1', 666, $sUser, $sDate, $sComment);
 
 		$this->oMessage->processAction($oInfo);
 
@@ -180,7 +180,7 @@ class MessageStrictTest extends \PHPUnit_Framework_TestCase
 		$sUser    = 'zora';
 		$sDate    = '2008-01-10 12:12:12';
 		$sComment = '* This is a correct comment sentence.';
-		$oInfo    = new CommitInfo('666-1', 666, $sUser, $sDate, $sComment);
+		$oInfo    = new Info('666-1', 666, $sUser, $sDate, $sComment);
 
 		$this->oMessage->processAction($oInfo);
 

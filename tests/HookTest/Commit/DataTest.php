@@ -35,7 +35,7 @@ require_once __DIR__ . '/DataHelperExtensions.php';
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -68,9 +68,9 @@ class DataTest extends \PHPUnit_Framework_TestCase
 		$aInfos['rev']      = 74;
 		$aInfos['user']     = 'Zabu';
 		$aInfos['datetime'] = '2008-12-30 12:23:45';
-		$aInfos['message']  = '* Eine Nachricht fuer die Tests.';
+		$aInfos['message']  = '* A message for this tests.';
 
-		$this->oData->createCommitInfo($aInfos);
+		$this->oData->createInfo($aInfos);
 
 		// A file object.
 		$aParams = array(
@@ -78,6 +78,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 					'rev'    => 74,
 					'action' => 'U',
 					'item'   => 'file.txt',
+					'real'   => 'file.txt',
 					'isdir'  => false,
 					'props'  => array(),
 					'lines'  => array()
@@ -85,7 +86,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 
 		$oObject = $this->oData->createObject($aParams);
 
-		$this->assertEquals('Hook\Commit\CommitObject', get_class($oObject), 'Not object CommitObject');
+		$this->assertEquals('Hook\Commit\Data\Object', get_class($oObject), 'Not object Object');
 		$this->assertEquals('74-1', $oObject->getTransaction(), 'Txn wrong');
 		$this->assertEquals('U', $oObject->getAction(), 'Action wrong');
 		$this->assertEquals('file.txt', $oObject->getObjectPath(), 'objectpath wrong');
@@ -102,9 +103,9 @@ class DataTest extends \PHPUnit_Framework_TestCase
 		$aInfos['rev']      = 74;
 		$aInfos['user']     = 'Zabu';
 		$aInfos['datetime'] = '2008-12-30 12:23:45';
-		$aInfos['message']  = '* Eine Nachricht fuer die Tests.';
+		$aInfos['message']  = '* A message for this tests.';
 
-		$this->oData->createCommitInfo($aInfos);
+		$this->oData->createInfo($aInfos);
 
 		// A directory object.
 		$aParams = array(
@@ -112,6 +113,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 					'rev'    => 74,
 					'action' => 'U',
 					'item'   => '/path',
+					'real'   => '/path',
 					'isdir'  => true,
 					'props'  => array(),
 					'lines'  => array()
@@ -119,7 +121,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 
 		$oObject = $this->oData->createObject($aParams);
 
-		$this->assertEquals('Hook\Commit\CommitObject', get_class($oObject), 'class not CommitObject');
+		$this->assertEquals('Hook\Commit\Data\Object', get_class($oObject), 'class not Object');
 		$this->assertEquals('/path', $oObject->getObjectPath(), 'objectpath wrong');
 	} // function
 
@@ -134,9 +136,9 @@ class DataTest extends \PHPUnit_Framework_TestCase
 		$aInfos['rev']      = 74;
 		$aInfos['user']     = 'Zabu';
 		$aInfos['datetime'] = '2008-12-30 12:23:45';
-		$aInfos['message']  = '* Eine Nachricht fuer die Tests.';
+		$aInfos['message']  = '* A message for this tests.';
 
-		$this->oData->createCommitInfo($aInfos);
+		$this->oData->createInfo($aInfos);
 
 		// A directory object.
 		$aParams = array(
@@ -144,6 +146,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 					'rev'    => 74,
 					'action' => 'U',
 					'item'   => '/path',
+					'real'   => '/path',
 					'isdir'  => true,
 					'props'  => array(),
 					'lines'  => array()
@@ -153,6 +156,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 
 		// A file object.
 		$aParams['item']   = '/path/file_1.php';
+		$aParams['real']   = '/path/file_1.php';
 		$aParams['action'] = 'A';
 		$aParams['isdir']  = false;
 
@@ -160,6 +164,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 
 		// A file object.
 		$aParams['item'] = '/path/file_2.php';
+		$aParams['real'] = '/path/file_2.php';
 
 		$this->oData->createObject($aParams);
 
@@ -185,9 +190,9 @@ class DataTest extends \PHPUnit_Framework_TestCase
 		$aInfos['rev']      = 111;
 		$aInfos['user']     = 'Zabu';
 		$aInfos['datetime'] = '2008-12-30 12:23:45';
-		$aInfos['message']  = '* Eine Nachricht fuer die Tests.';
+		$aInfos['message']  = '* A message for this tests.';
 
-		$this->oData->createCommitInfo($aInfos);
+		$this->oData->createInfo($aInfos);
 
 		// A directory object.
 		$aParams = array(
@@ -195,6 +200,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 					'rev'    => 111,
 					'action' => 'U',
 					'item'   => '/path',
+					'real'   => '/path',
 					'isdir'  => true,
 					'props'  => array(),
 					'lines'  => array()
@@ -203,11 +209,13 @@ class DataTest extends \PHPUnit_Framework_TestCase
 
 		// A file object.
 		$aParams['item']   = '/path/file_1.php';
+		$aParams['real']   = '/path/file_1.php';
 		$aParams['action'] = 'A';
 		$this->oData->createObject($aParams);
 
 		// A file object.
 		$aParams['item']   = '/path/file_2.php';
+		$aParams['real']   = '/path/file_2.php';
 		$this->oData->createObject($aParams);
 
 		$oListener = new DataHelperDirs();
@@ -231,9 +239,9 @@ class DataTest extends \PHPUnit_Framework_TestCase
 		$aInfos['rev']      = 111;
 		$aInfos['user']     = 'Zabu';
 		$aInfos['datetime'] = '2008-12-30 12:23:45';
-		$aInfos['message']  = '* Eine Nachricht fuer die Tests.';
+		$aInfos['message']  = '* A message for this tests.';
 
-		$this->oData->createCommitInfo($aInfos);
+		$this->oData->createInfo($aInfos);
 
 		// A directory object.
 		$aParams = array(
@@ -241,6 +249,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 					'rev'    => 111,
 					'action' => 'U',
 					'item'   => '/path/file_0.php',
+					'real'   => '/path/file_0.php',
 					'isdir'  => false,
 					'props'  => array(),
 					'lines'  => array()
@@ -251,12 +260,14 @@ class DataTest extends \PHPUnit_Framework_TestCase
 		// A file object
 		$aParams['action'] = 'A';
 		$aParams['item']   = '/path/file_1.php';
+		$aParams['real']   = '/path/file_1.php';
 
 		$this->oData->createObject($aParams);
 
 		// A file object
 		$aParams['action'] = 'D';
 		$aParams['item']   = '/path/file_2.php';
+		$aParams['real']   = '/path/file_2.php';
 
 		$this->oData->createObject($aParams);
 
@@ -281,9 +292,9 @@ class DataTest extends \PHPUnit_Framework_TestCase
 		$aInfos['rev']      = 111;
 		$aInfos['user']     = 'Zabu';
 		$aInfos['datetime'] = '2008-12-30 12:23:45';
-		$aInfos['message']  = '* Eine Nachricht fuer die Tests.';
+		$aInfos['message']  = '* A message for this tests.';
 
-		$this->oData->createCommitInfo($aInfos);
+		$this->oData->createInfo($aInfos);
 
 		// A file object
 		$aParams = array(
@@ -291,6 +302,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
 					'rev'    => 111,
 					'action' => 'U',
 					'item'   => '/path/file_0.txt',
+					'real'   => '/path/file_0.txt',
 					'isdir'  => false,
 					'props'  => array(),
 					'lines'  => array()
@@ -301,18 +313,21 @@ class DataTest extends \PHPUnit_Framework_TestCase
 		// A file object
 		$aParams['action'] = 'A';
 		$aParams['item']   = '/path/file_1.php';
+		$aParams['real']   = '/path/file_1.php';
 
 		$this->oData->createObject($aParams);
 
 		// A file object
 		$aParams['action'] = 'A';
 		$aParams['item']   = '/path/file_1.phtml';
+		$aParams['real']   = '/path/file_1.phtml';
 
 		$this->oData->createObject($aParams);
 
 		// A file object
 		$aParams['action'] = 'D';
 		$aParams['item']   = '/path/file_2.phtml';
+		$aParams['real']   = '/path/file_2.phtml';
 
 		$this->oData->createObject($aParams);
 
@@ -331,19 +346,19 @@ class DataTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	public function testCreateCommitInfo()
+	public function testCreateInfo()
 	{
 		$aInfos['txn']      = '74-1';
 		$aInfos['rev']      = 74;
 		$aInfos['user']     = 'Zabu';
 		$aInfos['datetime'] = '2008-12-30 12:23:45';
-		$aInfos['message']  = '* Eine Nachricht fuer die Tests.';
+		$aInfos['message']  = '* A message for this tests.';
 
-		$this->oData->createCommitInfo($aInfos);
+		$this->oData->createInfo($aInfos);
 
-		$oInfo = $this->oData->getCommitInfo();
+		$oInfo = $this->oData->getInfo();
 
-		$this->assertEquals('Hook\Commit\CommitInfo', get_class($oInfo), 'wrong class');
+		$this->assertEquals('Hook\Commit\Data\Info', get_class($oInfo), 'wrong class');
 		$this->assertEquals($aInfos['txn'], $oInfo->getTransaction(), 'txn wrong');
 		$this->assertEquals($aInfos['rev'], $oInfo->getRevision(), 'rev wrong');
 		$this->assertEquals($aInfos['user'], $oInfo->getUser(), 'user wrong');

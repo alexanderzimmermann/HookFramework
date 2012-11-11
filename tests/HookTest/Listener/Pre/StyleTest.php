@@ -14,8 +14,8 @@
 
 namespace HookTest\Listener\Pre;
 
-use Hook\Commit\CommitInfo;
-use Hook\Commit\CommitObject;
+use Hook\Commit\Data\Info;
+use Hook\Commit\Data\Object;
 
 use Example\Pre\Style;
 
@@ -31,7 +31,7 @@ require_once __DIR__ . '/../../../../Repositories/Example/Pre/Style.php';
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -54,21 +54,15 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen des Style Listener mit einer falschen Datei.
+	 * Test the style listener with a "wrong" file.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function testListenerStyleWithErrorFile()
 	{
-		// Testdatei aus SVN, wenn diese nicht existiert Test skippen.
 		$sFile = __DIR__ . '/_files/parse-error_file1.php';
 
-		if (file_exists($sFile) === false)
-		{
-			$this->markTestSkipped('File ' . $sFile . ' not found!');
-		} // if
-
-		// Ist Pear Paket phpcs und der PEAR Standard zum Testen installiert?
+		// Is PEAR Package phpcs and the PEAR Standard for test installed.
 		$aOutput = array();
 		exec('phpcs --standard=PEAR ' . __FILE__, $aOutput);
 
@@ -86,31 +80,32 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 			} // if
 		} // if
 
-		// Wenn alles Ok, dann Test starten.
-		$sUser = 'testuser';
+		// PEAR is installed, then run style test.
+		$sUser = 'Indira';
 		$sDate = '2008-12-30 12:22:23';
-		$sMsg  = '* Kommentar zu diesem Commit';
-		$oInfo = new CommitInfo('666-1', 666, $sUser, $sDate, $sMsg);
+		$sMsg  = '* Comment to this commit';
+		$oInfo = new Info('666-1', 666, $sUser, $sDate, $sMsg);
 
 		$aParams = array(
 					'txn'    => '666-1',
 					'rev'    => 666,
 					'action' => 'U',
 					'item'   => $sFile,
+					'real'   => $sFile,
 					'isdir'  => false,
 					'props'  => array(),
 					'lines'  => null,
 					'info'   => $oInfo
 				   );
 
-		$oObject  = new CommitObject($aParams);
+		$oObject  = new Object($aParams);
 		$sTmpPath = $oObject->getTmpObjectPath();
 
 		copy($sFile, $sTmpPath);
 
 		$this->oStyleListener->processAction($oObject);
 
-		// Aufraeumen.
+		// Clean up.
 		unlink($sTmpPath);
 
 		$aData = $oObject->getErrorLines();
@@ -128,45 +123,40 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen des Style Listener mit einer perfekten Datei.
+	 * Test the style listener with a "perfect" file.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 * @depends testListenerStyleWithErrorFile
 	 */
 	public function testListenerStyleWithCorrectFile()
 	{
-		// Testdatei aus SVN, wenn diese nicht existiert Test skippen.
 		$sFile = __DIR__ . '/_files/correct_file1.php';
 
-		if (file_exists($sFile) === false)
-		{
-			$this->markTestSkipped('File ' . $sFile . ' not found!');
-		} // if
-
-		$sUser = 'testuser';
+		$sUser = 'Indira';
 		$sDate = '2008-12-30 12:22:23';
-		$sMsg  = '* Kommentar zu diesem Commit';
-		$oInfo = new CommitInfo('666-1', 666, $sUser, $sDate, $sMsg);
+		$sMsg  = '* Comment to this commit';
+		$oInfo = new Info('666-1', 666, $sUser, $sDate, $sMsg);
 
 		$aParams = array(
 					'txn'    => '666-1',
 					'rev'    => 666,
 					'action' => 'U',
 					'item'   => $sFile,
+					'real'   => $sFile,
 					'isdir'  => false,
 					'props'  => array(),
 					'lines'  => null,
 					'info'   => $oInfo
 				   );
 
-		$oObject  = new CommitObject($aParams);
+		$oObject  = new Object($aParams);
 		$sTmpPath = $oObject->getTmpObjectPath();
 
 		copy($sFile, $sTmpPath);
 
 		$this->oStyleListener->processAction($oObject);
 
-		// Aufraeumen.
+		// Clean up.
 		unlink($sTmpPath);
 
 		$aData = $oObject->getErrorLines();

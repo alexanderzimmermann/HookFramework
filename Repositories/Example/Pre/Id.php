@@ -14,8 +14,8 @@
 
 namespace Example\Pre;
 
-use Hook\Commit\CommitObject;
-use Hook\Listener\ObjectAbstract;
+use Hook\Commit\Data\Object;
+use Hook\Listener\AbstractObject;
 
 /**
  * Id svn keyword.
@@ -29,11 +29,11 @@ use Hook\Listener\ObjectAbstract;
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class Id extends ObjectAbstract
+class Id extends AbstractObject
 {
 	/**
 	 * Listener Name.
@@ -60,11 +60,11 @@ class Id extends ObjectAbstract
 
 	/**
 	 * Execute the action.
-	 * @param CommitObject $oObject Directory / File object.
+	 * @param Object $oObject Directory / File object.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	public function processAction(CommitObject $oObject)
+	public function processAction(Object $oObject)
 	{
 		$sAction     = $oObject->getAction();
 		$aProperties = $oObject->getChangedProperties();

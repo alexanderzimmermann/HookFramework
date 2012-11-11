@@ -17,10 +17,10 @@ namespace Hook\Core;
 use Hook\Core\Repository;
 use Hook\Core\Svn;
 use Hook\Commit\Data;
-use Hook\Commit\CommitObject;
+use Hook\Commit\Data\Object;
 use Hook\Commit\Parser;
-use Hook\Listener\InfoAbstract;
-use Hook\Listener\ObjectAbstract;
+use Hook\Listener\AbstractInfo;
+use Hook\Listener\AbstractObject;
 
 /**
  * Main class for the Hook Framework.
@@ -30,7 +30,7 @@ use Hook\Listener\ObjectAbstract;
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -145,7 +145,7 @@ class Hook
 		$this->oLog = Log::getInstance();
 		$this->parseIniFile();
 
-		// Log initialisieren, wird auch fuer die anderen Objekte verwendet.
+		// Init log object.
 		$this->oLog->setLogFile($this->aCfg['logfile']);
 		$this->oLog->setLogMode($this->aCfg['logmode']);
 		$this->oLog->writeLog(Log::HF_VARDUMP, 'Argumente', $aArguments);
@@ -325,23 +325,23 @@ class Hook
 
 	/**
 	 * Call Listener for Info.
-	 * @param InfoAbstract $oListener Listener.
+	 * @param AbstractInfo $oListener Listener.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	private function processInfoListener(InfoAbstract $oListener)
+	private function processInfoListener(AbstractInfo $oListener)
 	{
 		// No files, call listener once.
 		$sLog  = 'process info listener ';
 		$sLog .= $oListener->getListenerName();
 		$this->oLog->writeLog(Log::HF_INFO, $sLog);
 
-		$oCommitInfo = $this->oCommitData->getCommitInfo();
+		$oInfo = $this->oCommitData->getInfo();
 
-		$oListener->processAction($oCommitInfo);
+		$oListener->processAction($oInfo);
 
 		$this->oError->setListener($oListener->getListenerName());
-		$this->oError->processActionInfo($oCommitInfo);
+		$this->oError->processActionInfo($oInfo);
 	} // function
 
 	/**
@@ -370,11 +370,11 @@ class Hook
 
 	/**
 	 * Execute Listener.
-	 * @param ObjectAbstract $oListener Listener Object.
+	 * @param AbstractObject $oListener Listener Object.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	private function processObjectListener(ObjectAbstract $oListener)
+	private function processObjectListener(AbstractObject $oListener)
 	{
 		$aObjects = $this->oCommitData->getObjects($oListener);
 
@@ -392,11 +392,11 @@ class Hook
 
 	/**
 	 * Write file to disk.
-	 * @param CommitObject $oObject Object file.
+	 * @param Object $oObject File object.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	private function writeFile(CommitObject $oObject)
+	private function writeFile(Object $oObject)
 	{
 		$sFile    = $oObject->getObjectPath();
 		$sTmpFile = $oObject->getTmpObjectPath();

@@ -14,8 +14,8 @@
 
 namespace Example\Pre;
 
-use Hook\Commit\CommitInfo;
-use Hook\Listener\InfoAbstract;
+use Hook\Commit\Data\Info;
+use Hook\Listener\AbstractInfo;
 
 /**
  * Message Listener.
@@ -25,11 +25,11 @@ use Hook\Listener\InfoAbstract;
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class Message extends InfoAbstract
+class Message extends AbstractInfo
 {
 	/**
 	 * Listener Name.
@@ -49,11 +49,11 @@ class Message extends InfoAbstract
 
 	/**
 	 * Execute the action.
-	 * @param CommitInfo $oInfo Info des Commits.
+	 * @param Info $oInfo Info des Commits.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	public function processAction(CommitInfo $oInfo)
+	public function processAction(Info $oInfo)
 	{
 		// Check message has at least 10 Chars.
 		$sMessage = $oInfo->getMessage();
@@ -63,12 +63,12 @@ class Message extends InfoAbstract
 
 	/**
 	 * Pruefen ob der Text fuer die Meldung den Vorgaben entspricht.
-	 * @param CommitInfo $oInfo    Commit Daten Objekt.
+	 * @param Info $oInfo    Commit Daten Objekt.
 	 * @param string     $sMessage Text zu Commit.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	private function checkMessage(CommitInfo $oInfo, $sMessage)
+	private function checkMessage(Info $oInfo, $sMessage)
 	{
 		$sMessage = trim($sMessage);
 

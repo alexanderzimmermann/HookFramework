@@ -14,8 +14,8 @@
 
 namespace Hook\Core;
 
-use Hook\Commit\CommitInfo;
-use Hook\Commit\CommitObject;
+use Hook\Commit\Data\Info;
+use Hook\Commit\Data\Object;
 
 /**
  * Error Object for the error messages from the listeners and the output.
@@ -25,7 +25,7 @@ use Hook\Commit\CommitObject;
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -93,11 +93,11 @@ class Error
 
 	/**
 	 * Format the info listener error messages.
-	 * @param CommitInfo $oInfo Commit Info Object.
+	 * @param Info $oInfo Commit Info Object.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	public function processActionInfo(CommitInfo $oInfo)
+	public function processActionInfo(Info $oInfo)
 	{
 		$aLines = $oInfo->getErrorLines();
 
@@ -119,11 +119,11 @@ class Error
 
 	/**
 	 * Format the object listener error messages.
-	 * @param CommitObject $oObject Actual File Object that is processed.
+	 * @param Object $oObject Actual File Object that is processed.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	public function processActionObject(CommitObject $oObject)
+	public function processActionObject(Object $oObject)
 	{
 		$aLines = $oObject->getErrorLines();
 

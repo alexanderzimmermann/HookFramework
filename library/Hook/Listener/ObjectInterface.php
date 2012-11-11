@@ -9,12 +9,12 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
- * @since      File available since Release 1.0.0
+ * @since      File available since Release 2.1.0
  */
 
 namespace Hook\Listener;
 
-use Hook\Commit\CommitObject;
+use Hook\Commit\Data\Object;
 
 /**
  * Interface for Object Listener.
@@ -24,11 +24,11 @@ use Hook\Commit\CommitObject;
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
- * @since      Interface available since Release 1.0.0
+ * @since      Interface available since Release 2.1.0
  */
-interface Object
+interface ObjectInterface
 {
 	/**
 	 * Return listener name.
@@ -85,9 +85,9 @@ interface Object
 
 	/**
 	 * Execute the action.
-	 * @param CommitObject $oObject Directory / File-object.
+	 * @param Object $oObject Directory / File-object.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	public function processAction(CommitObject $oObject);
+	public function processAction(Object $oObject);
 } // interface

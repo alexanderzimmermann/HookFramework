@@ -27,7 +27,7 @@ use Hook\Commit\Parser\Parser as DiffParser;
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -81,6 +81,7 @@ class Parser
 		$iRev        = $oArguments->getRevision();
 		$this->oData = new Data();
 
+		// Only start has limited information.
 		if ($this->oArguments->getMainType() === 'start')
 		{
 			$aInfos['txn']      = $sTxn;
@@ -88,22 +89,23 @@ class Parser
 			$aInfos['user']     = $oArguments->getUser();
 			$aInfos['datetime'] = date('Y-m-d H:i:s', time());
 			$aInfos['message']  = 'No Message in Start Hook';
-			$this->oData->createCommitInfo($aInfos);
+			$this->oData->createInfo($aInfos);
 
 			return;
 		} // if
 
-		$this->getCommitInfo();
+		// Parse info from commit.
+		$this->parseInfo($this->oSvn->getInfo());
 
 		$aDiffLines = $this->oSvn->getCommitDiff();
-		$aChanged   = $this->oSvn->getCommitChanged();
 
-		$this->parseItems($aChanged);
+		// Parse array with the changed items.
+		$this->parseItems($this->oSvn->getCommitChanged());
 
 		$oParser = new DiffParser($this->aChangedItems, $aDiffLines);
 		$oParser->parse();
 
-		$this->createCommitObjects($oParser->getProperties(), $oParser->getLines());
+		$this->createObjects($oParser->getProperties(), $oParser->getLines());
 	} // function
 
 	/**
@@ -114,16 +116,6 @@ class Parser
 	public function getCommitDataObject()
 	{
 		return $this->oData;
-	} // function
-
-	/**
-	 * Parse info from commit.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	private function getCommitInfo()
-	{
-		$this->parseCommitInfo($this->oSvn->getCommitInfo());
 	} // function
 
 	/**
@@ -159,7 +151,7 @@ class Parser
 			$sObject       = str_replace($sActionInfo, '', $sObject);
 
 			// Directory or file.
-			// If it is ok, we detect a directory on that / at last postion.
+			// If it is ok, we detect a directory on that / at last position.
 			$bIsDir = false;
 			$sItem  = $sObject;
 			if (substr($sObject, -1) === '/')
@@ -168,10 +160,13 @@ class Parser
 				$sItem  = substr($sObject, 0, -1);
 			} // if
 
+			$sRealPath = $this->getRealPath($sObject);
+
 			$aTmp = array(
 					 'item'   => $sObject,
 					 'action' => $sObjectAction,
-					 'isdir'  => $bIsDir
+					 'isdir'  => $bIsDir,
+					 'real'   => $sRealPath
 					);
 
 			$this->aChangedItems[] = $sItem;
@@ -186,7 +181,7 @@ class Parser
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	private function createCommitObjects(array $aProperties, array $aLines)
+	private function createObjects(array $aProperties, array $aLines)
 	{
 		// Values for all items.
 		$sTxn = $this->oArguments->getTransaction();
@@ -195,30 +190,26 @@ class Parser
 		$aObjects = array();
 		foreach ($this->aChangedData as $iFor => $aData)
 		{
-			$aParams = array(
-						'txn'    => $sTxn,
-						'rev'    => $iRev,
-						'action' => $aData['action'],
-						'item'   => $aData['item'],
-						'isdir'  => $aData['isdir'],
-						'props'  => array(),
-						'lines'  => null
-					   );
+			$aData['txn']    = $sTxn;
+			$aData['rev']    = $iRev;
+			$aData['props']  = array();
+			$aData['lines']  = null;
 
 			if (true === isset($aProperties[$iFor]))
 			{
-				$aParams['props'] = $aProperties[$iFor];
+				$aData['props'] = $aProperties[$iFor];
 			} // if
 
 			if (true === isset($aLines[$iFor]))
 			{
-				$aParams['lines'] = $aLines[$iFor];
+				$aData['lines'] = $aLines[$iFor];
 			} // if
 
-			$aObjects[] = $this->oData->createObject($aParams);
+			$aObjects[] = $this->oData->createObject($aData);
 		} // foreach
 
-		$this->oData->getCommitInfo()->setObjects($aObjects);
+		// Set the commited objects for info listener.
+		$this->oData->getInfo()->setObjects($aObjects);
 	} // function
 
 	/**
@@ -227,10 +218,11 @@ class Parser
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	private function parseCommitInfo(array $aData)
+	private function parseInfo(array $aData)
 	{
-		// Vorbelegen.
-		$aInfos                  = array();
+		// Set defaults.
+		$aInfos                  = array
+();
 		$aInfos['txn']           = $this->oArguments->getTransaction();
 		$aInfos['rev']           = $this->oArguments->getRevision();
 		$aInfos['user']          = '';
@@ -238,10 +230,10 @@ class Parser
 		$aInfos['messagelength'] = 0;
 		$aInfos['message']       = '';
 
-		// Diese Elemente in dieser Reihenfolge.
-		$aPropertys = array(
-					   'user', 'datetime', 'messagelength', 'message'
-					  );
+		// This elements in this order.
+		$aProperties = array(
+						'user', 'datetime', 'messagelength', 'message'
+					   );
 
 		$iMax = count($aData);
 
@@ -254,15 +246,15 @@ class Parser
 		for ($iFor = 0; $iFor < $iMax; $iFor++)
 		{
 			$sData = $aData[$iFor];
-			if ($aPropertys[$iFor] === 'message')
+			if ($aProperties[$iFor] === 'message')
 			{
 				$aData[$iFor] = $this->parseMessage($sData);
 			} // if
 
-			$aInfos[$aPropertys[$iFor]] = trim($aData[$iFor]);
+			$aInfos[$aProperties[$iFor]] = trim($aData[$iFor]);
 		} // for
 
-		$this->oData->createCommitInfo($aInfos);
+		$this->oData->createInfo($aInfos);
 	} // function
 
 	/**
@@ -287,5 +279,34 @@ class Parser
 		} // for
 
 		return $sMessage;
+	} // function
+
+	/**
+	 * Real path (without the common dirs "trunk" and "branches").
+	 * @param string $sObject Path of object.
+	 * @return string
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	private function getRealPath($sObject)
+	{
+		// Real path (without the common dirs "trunk" and "branches").
+		$aPath = explode('/', $sObject);
+
+		array_shift($aPath);
+
+		// Trunk.
+		if ($aPath[0])
+		{
+			array_shift($aPath);
+		}
+		else if (('branches' === $aPath[0]) && ('tags' === $aPath[0]))
+		{
+			array_shift($aPath);
+			array_shift($aPath);
+		} // if
+
+		$sObject = implode('/', $aPath);
+
+		return $sObject;
 	} // function
 } // class

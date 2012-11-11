@@ -12,8 +12,8 @@
 
 namespace HookTest\Listener\Post;
 
-use Hook\Commit\CommitInfo;
-use Hook\Commit\CommitObject;
+use Hook\Commit\Data\Info;
+use Hook\Commit\Data\Object;
 
 use Example\Post\Mailing;
 
@@ -29,7 +29,7 @@ require_once __DIR__ . '/../../../../Repositories/Example/Post/Mailing.php';
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -74,7 +74,7 @@ class MailingTest extends \PHPUnit_Framework_TestCase
 		$sDate = '2008-12-30 14:56:23';
 		$sText = '* Test comment for the Unit Tests.';
 
-		$oInfo = new CommitInfo('666-1', 666, $sUser, $sDate, $sText);
+		$oInfo = new Info('666-1', 666, $sUser, $sDate, $sText);
 
 		// Test data for files.
 		$aParams = array(
@@ -82,6 +82,7 @@ class MailingTest extends \PHPUnit_Framework_TestCase
 					'rev'    => 666,
 					'action' => '',
 					'item'   => '',
+					'real'   => '',
 					'isdir'  => false,
 					'props'  => array(),
 					'lines'  => array(),
@@ -92,38 +93,44 @@ class MailingTest extends \PHPUnit_Framework_TestCase
 		$aObjects = array();
 
 		$aParams['action'] = 'U';
-		$aParams['item']   = '/hookframework/Core/Commit/Base.php';
-		$aObjects[]        = new CommitObject($aParams);
+		$aParams['item']   = 'hookframework/trunk/Core/Commit/Base.php';
+		$aParams['real']   = 'Core/Commit/Base.php';
+		$aObjects[]        = new Object($aParams);
 
 		$aParams['action'] = 'U';
-		$aParams['item']   = '/hookframework/Core/Commit/CommitObject.php';
-		$aObjects[]        = new CommitObject($aParams);
+		$aParams['item']   = 'hookframework/trunk/Core/Commit/Object.php';
+		$aParams['real']   = 'Core/Commit/Object.php';
+		$aObjects[]        = new Object($aParams);
 
 		$aParams['action'] = 'A';
-		$aParams['item']   = '/hookframework/doc/hooktemplates/';
+		$aParams['item']   = 'hookframework/trunk/doc/hooktemplates/';
+		$aParams['real']   = 'doc/hooktemplates/';
 		$aParams['isdir']  = true;
-		$aObjects[]        = new CommitObject($aParams);
+		$aObjects[]        = new Object($aParams);
 
 		$aParams['action'] = 'A';
-		$aParams['item']   = '/hookframework/doc/hooktemplates/pre-commit';
+		$aParams['item']   = 'hookframework/trunk/doc/hooktemplates/pre-commit';
+		$aParams['real']   = 'doc/hooktemplates/pre-commit';
 		$aParams['isdir']  = false;
-		$aObjects[]        = new CommitObject($aParams);
+		$aObjects[]        = new Object($aParams);
 
 		$aParams['action'] = 'D';
-		$aParams['item']   = '/hookframework/tmp//newfolder/testfile.txt';
+		$aParams['item']   = 'hookframework/trunk/tmp//newfolder/testfile.txt';
+		$aParams['real']   = 'tmp//newfolder/testfile.txt';
 		$aParams['isdir']  = false;
-		$aObjects[]        = new CommitObject($aParams);
+		$aObjects[]        = new Object($aParams);
 
 		$aParams['action'] = 'D';
-		$aParams['item']   = '/hookframework/tmp//newfolder/';
+		$aParams['item']   = 'hookframework/trunk/tmp//newfolder/';
+		$aParams['real']   = 'tmp//newfolder/';
 		$aParams['isdir']  = true;
-		$aObjects[]        = new CommitObject($aParams);
+		$aObjects[]        = new Object($aParams);
 
 		$oInfo->setObjects($aObjects);
 
 		$sMail = $this->oMailingListener->processAction($oInfo);
 
-		$sDir = '/hookframework/';
+		$sDir = 'hookframework/trunk/';
 
 		$sExpected  = 'Date Time : 2008-12-30 14:56:23' . "\n\n";
 		$sExpected .= 'User      : duchess' . "\n\n";
@@ -137,7 +144,7 @@ class MailingTest extends \PHPUnit_Framework_TestCase
 		$sExpected .= 'Deleted : 2' . "\n";
 		$sExpected .= "\n";
 		$sExpected .= $sDir . 'Core/Commit/Base.php (updated)' . "\n";
-		$sExpected .= $sDir . 'Core/Commit/CommitObject.php (updated)' . "\n";
+		$sExpected .= $sDir . 'Core/Commit/Object.php (updated)' . "\n";
 		$sExpected .= $sDir . 'doc/hooktemplates/ (new)' . "\n";
 		$sExpected .= $sDir . 'doc/hooktemplates/pre-commit (new)' . "\n";
 		$sExpected .= $sDir . 'tmp//newfolder/testfile.txt (deleted)' . "\n";
@@ -158,11 +165,14 @@ class MailingTest extends \PHPUnit_Framework_TestCase
 		$sDate = '2008-12-30 14:56:23';
 		$sText = '* Test comment for the Unit Tests.';
 
-		$oInfo = new CommitInfo('666-1', 666, $sUser, $sDate, $sText);
+		$oInfo = new Info('666-1', 666, $sUser, $sDate, $sText);
 
 		// Test data for files.
-		$aPath[] = '/hookframework/Core/Commit/Base.php';
-		$aPath[] = '/hookframework/Core/Commit/CommitObject.php';
+		$aPath[] = 'hookframework/trunk/Core/Commit/Base.php';
+		$aPath[] = 'hookframework/trunk/Core/Commit/Object.php';
+		$aReal[] = 'hookframework/trunk/Core/Commit/Base.php';
+		$aReal[] = 'hookframework/trunk/Core/Commit/Object.php';
+
 
 		// Create file objects.
 		$aParams = array(
@@ -170,6 +180,7 @@ class MailingTest extends \PHPUnit_Framework_TestCase
 					'rev'    => 666,
 					'action' => 'U',
 					'item'   => $aPath[0],
+					'real'   => $aReal[0],
 					'isdir'  => false,
 					'props'  => array(),
 					'lines'  => array(),
@@ -177,16 +188,17 @@ class MailingTest extends \PHPUnit_Framework_TestCase
 				   );
 
 		$aObjects   = array();
-		$aObjects[] = new CommitObject($aParams);
+		$aObjects[] = new Object($aParams);
 
 		$aParams['item'] = $aPath[1];
-		$aObjects[]      = new CommitObject($aParams);
+		$aParams['real'] = $aReal[1];
+		$aObjects[]      = new Object($aParams);
 
 		$oInfo->setObjects($aObjects);
 
 		$sMail = $this->oMailingListener->processAction($oInfo);
 
-		$sDir = '/hookframework/';
+		$sDir = 'hookframework/trunk/';
 
 		$sExpected  = 'Date Time : 2008-12-30 14:56:23' . "\n\n";
 		$sExpected .= 'User      : duchess' . "\n\n";
@@ -198,7 +210,7 @@ class MailingTest extends \PHPUnit_Framework_TestCase
 		$sExpected .= 'Updated : 2' . "\n";
 		$sExpected .= "\n";
 		$sExpected .= $sDir . 'Core/Commit/Base.php (updated)' . "\n";
-		$sExpected .= $sDir . 'Core/Commit/CommitObject.php (updated)' . "\n";
+		$sExpected .= $sDir . 'Core/Commit/Object.php (updated)' . "\n";
 
 		$this->assertEquals($sExpected, $sMail);
 	} // function

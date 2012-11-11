@@ -26,7 +26,7 @@ require_once __DIR__ . '/../../Bootstrap.php';
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -103,7 +103,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testErrorInfo()
 	{
-		// Create objects for CommitInfo and CommitObject.
+		// Create objects for Info and Object.
 		$aFunctions = array(
 					   'getObjectPath', 'getErrorLines'
 					  );
@@ -113,10 +113,10 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 		$aErrorInfo = explode("\n", $sErrorInfo);
 
 		$aArguments = array(
-					   '666-1', 666, 'alexander', '21.12.2008', 'Test'
+					   '666-1', 666, 'Duchess', '21.12.2008', 'Test'
 					  );
 
-		$oInfo = $this->getMock('Hook\Commit\CommitInfo', $aFunctions, $aArguments);
+		$oInfo = $this->getMock('Hook\Commit\Data\Info', $aFunctions, $aArguments);
 		$oInfo->expects($this->any())
 			  ->method('getObjectPath')
 			  ->will($this->returnValue('/path/to/a/file/in/svn.ext'));
@@ -145,12 +145,12 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testErrorObject()
 	{
-		// Create objects for CommitInfo and CommitObject.
+		// Create objects for Info and Object.
 		$aArguments = array(
-					   '666-1', 666, 'alexander', '21.12.2008', 'Test'
+					   '666-1', 666, 'Duchess', '21.12.2008', 'Test'
 					  );
 
-		$oInfo = $this->getMock('Hook\Commit\CommitInfo', array(), $aArguments);
+		$oInfo = $this->getMock('Hook\Commit\Data\Info', array(), $aArguments);
 
 		// Commit Object Objekt.
 		$sFile        = __DIR__ . '/_files/error_lines_object.txt';
@@ -167,6 +167,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 					 'rev'    => 666,
 					 'action' => 'U',
 					 'item'   => '/path/to/file',
+					 'real'   => '/path/to/file',
 					 'isdir'  => false,
 					 'info'   => $oInfo,
 					 'props'  => array(),
@@ -174,7 +175,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 					)
 				   );
 
-		$oObject = $this->getMock('Hook\Commit\CommitObject', $aFunctions, $aParams);
+		$oObject = $this->getMock('Hook\Commit\Data\Object', $aFunctions, $aParams);
 		$oObject->expects($this->any())
 				->method('getObjectPath')
 				->will($this->returnValue('/path/to/a/file/in/svn.txt'));
@@ -206,12 +207,12 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testErrorObjectTwoObjects()
 	{
-		// Create objects for CommitInfo and CommitObject.
+		// Create objects for Info and Object.
 		$aArguments = array(
 					   '666-1', 666, 'alexander', '21.12.2008', 'Test'
 					  );
 
-		$oInfo = $this->getMock('Hook\Commit\CommitInfo', array(), $aArguments);
+		$oInfo = $this->getMock('Hook\Commit\Data\Info', array(), $aArguments);
 
 		// Commit Object.
 		$sFile        = __DIR__ . '/_files/error_lines_object.txt';
@@ -228,6 +229,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 					 'rev'    => 666,
 					 'action' => 'U',
 					 'item'   => '/path/to/file',
+					 'real'   => '/path/to/file',
 					 'isdir'  => false,
 					 'info'   => $oInfo,
 					 'props'  => array(),
@@ -235,7 +237,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 					)
 				   );
 
-		$oObject = $this->getMock('Hook\Commit\CommitObject', $aFunctions, $aParams);
+		$oObject = $this->getMock('Hook\Commit\Data\Object', $aFunctions, $aParams);
 		$oObject->expects($this->any())
 				->method('getObjectPath')
 				->will($this->returnValue('/path/to/a/file/in/svn.txt'));
@@ -247,7 +249,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 		$this->oError->processActionObject($oObject);
 
 		// Simulate a 2nd file.
-		$oObject = $this->getMock('Hook\Commit\CommitObject', $aFunctions, $aParams);
+		$oObject = $this->getMock('Hook\Commit\Data\Object', $aFunctions, $aParams);
 		$oObject->expects($this->any())
 				->method('getObjectPath')
 				->will($this->returnValue('/path/to/a/file/in/info.txt'));

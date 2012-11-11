@@ -14,10 +14,10 @@
 
 namespace Hook\Commit;
 
-use Hook\Commit\CommitInfo;
-use Hook\Commit\CommitObject;
+use Hook\Commit\Data\Info;
+use Hook\Commit\Data\Object;
 use Hook\Filter\Filter;
-use Hook\Listener\ObjectAbstract;
+use Hook\Listener\AbstractObject;
 
 /**
  * Data in the transaction.
@@ -27,7 +27,7 @@ use Hook\Listener\ObjectAbstract;
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -35,9 +35,9 @@ class Data
 {
 	/**
 	 * Commit Information.
-	 * @var CommitInfo
+	 * @var Info
 	 */
-	private $oCommitInfo;
+	private $oInfo;
 
 	/**
 	 * All directories and file objects. (Multi dimension Array).
@@ -62,48 +62,47 @@ class Data
 	/**
 	 * Add an object.
 	 * @param array $aParams Params for the commit object.
-	 * @return CommitObject
+	 * @return Object
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function createObject(array $aParams)
 	{
-		$aParams['info'] = $this->oCommitInfo;
-		$oCommitObject   = new CommitObject($aParams);
-		$sObjectAction   = $aParams['action'];
+		$aParams['info'] = $this->oInfo;
+		$oObject         = new Object($aParams);
 
 		if ($aParams['isdir'] === true)
 		{
-			$this->aObjects[$sObjectAction]['DIRS'][] = $oCommitObject;
+			$this->aObjects[$aParams['action']]['DIRS'][] = $oObject;
 		}
 		else
 		{
 			// Determine Files after extensions.
 			$sExt = $this->determineFileExtension($aParams['item']);
 
-			$this->aObjects[$sObjectAction]['FILES']['ALL'][] = $oCommitObject;
-			$this->aObjects[$sObjectAction]['FILES'][$sExt][] = $oCommitObject;
+			$this->aObjects[$aParams['action']]['FILES']['ALL'][] = $oObject;
+			$this->aObjects[$aParams['action']]['FILES'][$sExt][] = $oObject;
 		} // if
 
-		return $oCommitObject;
+		return $oObject;
 	} // function
 
 	/**
 	 * Return the commit info object.
-	 * @return CommitInfo
+	 * @return Info
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	public function getCommitInfo()
+	public function getInfo()
 	{
-		return $this->oCommitInfo;
+		return $this->oInfo;
 	} // function
 
 	/**
-	 * Objekte nach Aktion und Extension zurueck geben.
-	 * @param ObjectAbstract $oListener Listener Objekt.
+	 * Return the objects depending on the action.
+	 * @param AbstractObject $oListener Listener Objekt.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	public function getObjects(ObjectAbstract $oListener)
+	public function getObjects(AbstractObject $oListener)
 	{
 		$aRegister    = $oListener->register();
 		$aActionTypes = $aRegister['fileaction'];
@@ -112,13 +111,13 @@ class Data
 
 		$aObjects = array();
 
-		// Wenn die beiden Arrays leer sind, dann gibts auch keine Daten.
+		// If both arrays are empty, then there is no data, maybe just property.
 		if ((empty($aActionTypes) === true) && (empty($aExtensions) === true))
 		{
 			return $aObjects;
 		} // if
 
-		// Wenn einer der Arrays leer ist der andere nicht dann auf ALL setzen.
+		// If one of the arrays is empty, then the other not set to all.
 		if ((empty($aActionTypes) === true) && (empty($aExtensions) === false))
 		{
 			$aActionTypes = array(
@@ -126,12 +125,13 @@ class Data
 							);
 		} // if
 
+		// If extensions is empty, then we want all files.
 		if ((empty($aActionTypes) === false) && (empty($aExtensions) === true))
 		{
 			$aExtensions = array('ALL');
 		} // if
 
-		// Nach den gewuenschten Objekten suchen.
+		// Search for the requested objects.
 		foreach ($aActionTypes as $iIndex => $sAction)
 		{
 			if (isset($this->aObjects[$sAction]) === true)
@@ -145,7 +145,7 @@ class Data
 					} // if
 				} // foreach
 
-				// Verzeichnisse hinzufuegen falls erforderlich.
+				// Add directories if required.
 				if ($bWithDirs === true)
 				{
 					$aAddDirs = $this->aObjects[$sAction]['DIRS'];
@@ -154,13 +154,13 @@ class Data
 			} // if
 		} // foreach
 
-		// Liste der Dateien leer? Dann leer zurueck geben.
+		// List of files empty? Then return empty.
 		if (empty($aObjects) === true)
 		{
 			return $aObjects;
 		} // if
 
-		// Filter des Listener beruecksichtigen.
+		// Now recognize the filter of the listener.
 		$oFilter  = new Filter($aObjects);
 		$aObjects = $oFilter->getFilteredFiles($oListener->getObjectFilter());
 
@@ -168,15 +168,15 @@ class Data
 	} // function
 
 	/**
-	 * File Extension ermitteln.
-	 * @param string $sFile Datei fuer die die Erweiterung ermittelt wird.
+	 * Determine file extensions.
+	 * @param string $sFile File to determine extension for.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	private function determineFileExtension($sFile)
 	{
-		// Ersten Punkt von hinten suchen. Wenn kein Punkt gefunden wird,
-		// sollte es eine Datei ohne Erweiterung sein.
+		// Search first point, starting from end of filename.
+		// If no point is found, its a file without extension.
 		$iPos       = strrpos($sFile, '.');
 		$sExtension = '';
 
@@ -190,14 +190,14 @@ class Data
 	} // function
 
 	/**
-	 * Commit Info Objekt erstellen.
-	 * @param array $aInfos Commit Infos.
+	 * Create commit info object.
+	 * @param array $aInfos Commit Information.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	public function createCommitInfo(array $aInfos)
+	public function createInfo(array $aInfos)
 	{
-		$this->oCommitInfo = new CommitInfo(
+		$this->oInfo = new Info(
 									$aInfos['txn'],
 									$aInfos['rev'],
 									$aInfos['user'],

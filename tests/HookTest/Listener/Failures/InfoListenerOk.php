@@ -14,8 +14,8 @@
 
 namespace HookTest\Listener\Failures;
 
-use Hook\Commit\CommitInfo;
-use Hook\Listener\InfoAbstract;
+use Hook\Commit\Data\Info;
+use Hook\Listener\AbstractInfo;
 
 /**
  * Listener Info Ok.
@@ -25,11 +25,11 @@ use Hook\Listener\InfoAbstract;
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class InfoListenerOk extends InfoAbstract
+class InfoListenerOk extends AbstractInfo
 {
 	/**
 	 * Listener Name.
@@ -49,11 +49,11 @@ class InfoListenerOk extends InfoAbstract
 
 	/**
 	 * Process action.
-	 * @param CommitInfo $oInfo Info des Commits.
+	 * @param Info $oInfo Info des Commits.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	public function processAction(CommitInfo $oInfo)
+	public function processAction(Info $oInfo)
 	{
 	} // function
 } // class

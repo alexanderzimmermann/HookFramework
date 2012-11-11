@@ -14,8 +14,8 @@
 
 namespace HookTest\Core\Commit;
 
-use Hook\Commit\CommitInfo;
-use Hook\Commit\CommitObject;
+use Hook\Commit\Data\Info;
+use Hook\Commit\Data\Object;
 
 require_once __DIR__ . '/../../Bootstrap.php';
 
@@ -27,7 +27,7 @@ require_once __DIR__ . '/../../Bootstrap.php';
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -35,15 +35,15 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Commit info object.
-	 * @var CommitInfo
+	 * @var Info
 	 */
-	private $oCommitInfo;
+	private $oInfo;
 
 	/**
 	 * Commit object.
-	 * @var CommitObject
+	 * @var Object
 	 */
-	private $oCommitObject;
+	private $oObject;
 
 	/**
 	 * Set up method.
@@ -56,20 +56,21 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 		$sDate = '2008-12-30 12:34:56';
 		$sMsg  = '* Eine Testnachricht fuer die Tests';
 
-		$this->oCommitInfo = new CommitInfo('74-1', 74, $sUser, $sDate, $sMsg);
+		$this->oInfo = new Info('74-1', 74, $sUser, $sDate, $sMsg);
 
 		$aParams = array(
 					'txn'    => '74-1',
 					'rev'    => 74,
 					'action' => 'U',
 					'item'   => '/path/to/file.txt',
+					'real'   => '/path/to/file.txt',
 					'isdir'  => false,
 					'props'  => array(),
 					'lines'  => array(),
-					'info'   => $this->oCommitInfo
+					'info'   => $this->oInfo
 				   );
 
-		$this->oCommitObject = new CommitObject($aParams);
+		$this->oObject = new Object($aParams);
 	} // function
 
 	/**
@@ -79,7 +80,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetAction()
 	{
-		$this->assertEquals('U', $this->oCommitObject->getAction());
+		$this->assertEquals('U', $this->oObject->getAction());
 	} // function
 
 	/**
@@ -89,7 +90,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetIsDir()
 	{
-		$this->assertFalse($this->oCommitObject->getIsDir());
+		$this->assertFalse($this->oObject->getIsDir());
 	} // function
 
 	/**
@@ -100,7 +101,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	public function testGetObjectPath()
 	{
 		$sPath = '/path/to/file.txt';
-		$this->assertEquals($sPath, $this->oCommitObject->getObjectPath());
+		$this->assertEquals($sPath, $this->oObject->getObjectPath());
 	} // function
 
 	/**
@@ -108,10 +109,10 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	public function testGetCommitInfo()
+	public function testGetInfo()
 	{
-		$oObject = $this->oCommitObject->getCommitInfo();
-		$this->assertEquals($this->oCommitInfo, $oObject);
+		$oObject = $this->oObject->getInfo();
+		$this->assertEquals($this->oInfo, $oObject);
 	} // function
 
 	/**
@@ -122,6 +123,6 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	public function testGetTmpObjectPath()
 	{
 		$sPath = '/tmp/74-1-_path_to_file.txt';
-		$this->assertEquals($sPath, $this->oCommitObject->getTmpObjectPath());
+		$this->assertEquals($sPath, $this->oObject->getTmpObjectPath());
 	} // function
 } // class

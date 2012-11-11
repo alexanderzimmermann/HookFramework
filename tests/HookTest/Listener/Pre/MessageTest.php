@@ -14,7 +14,7 @@
 
 namespace HookTest\Listener\Pre;
 
-use Hook\Commit\CommitInfo;
+use Hook\Commit\Data\Info;
 
 use Example\Pre\Message;
 
@@ -30,7 +30,7 @@ require_once __DIR__ . '/../../../../Repositories/Example/Pre/Message.php';
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -62,7 +62,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
 		$sUser    = 'testuser';
 		$sDate    = '2008-01-10 12:12:12';
 		$sComment = '';
-		$oInfo    = new CommitInfo('666-1', 666, $sUser, $sDate, $sComment);
+		$oInfo    = new Info('666-1', 666, $sUser, $sDate, $sComment);
 
 		$this->oMessage->processAction($oInfo);
 
@@ -141,7 +141,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
 	{
 		$sUser = 'testuser';
 		$sDate = '2008-01-10 12:12:12';
-		$oInfo = new CommitInfo('666-1', 666, $sUser, $sDate, $sMessage);
+		$oInfo = new Info('666-1', 666, $sUser, $sDate, $sMessage);
 
 		$this->oMessage->processAction($oInfo);
 

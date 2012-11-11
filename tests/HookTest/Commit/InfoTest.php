@@ -14,8 +14,8 @@
 
 namespace HookTest\Core\Commit;
 
-use Hook\Commit\CommitInfo;
-use Hook\Commit\CommitObject;
+use Hook\Commit\Data\Info;
+use Hook\Commit\Data\Object;
 
 require_once __DIR__ . '/../../Bootstrap.php';
 
@@ -27,7 +27,7 @@ require_once __DIR__ . '/../../Bootstrap.php';
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -35,9 +35,9 @@ class InfoTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Commit Info Object.
-	 * @var CommitInfo
+	 * @var Info
 	 */
-	private $oCommitInfo;
+	private $oInfo;
 
 	/**
 	 * Set up method.
@@ -46,11 +46,11 @@ class InfoTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function setUp()
 	{
-		$sUser = 'Benutzer';
+		$sUser = 'Mila';
 		$sDate = '2008-12-30 12:34:56';
-		$sMsg  = '* Eine Testnachricht fuer die Tests';
+		$sMsg  = '* A test message for the tests';
 
-		$this->oCommitInfo = new CommitInfo('74-1', 74, $sUser, $sDate, $sMsg);
+		$this->oInfo = new Info('74-1', 74, $sUser, $sDate, $sMsg);
 	} // function
 
 	/**
@@ -60,8 +60,8 @@ class InfoTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetUser()
 	{
-		$sExpected = 'Benutzer';
-		$this->assertEquals($sExpected, $this->oCommitInfo->getUser());
+		$sExpected = 'Mila';
+		$this->assertEquals($sExpected, $this->oInfo->getUser());
 	} // function
 
 	/**
@@ -72,7 +72,7 @@ class InfoTest extends \PHPUnit_Framework_TestCase
 	public function testGetDateTime()
 	{
 		$sExpected = '2008-12-30 12:34:56';
-		$this->assertEquals($sExpected, $this->oCommitInfo->getDateTime());
+		$this->assertEquals($sExpected, $this->oInfo->getDateTime());
 	} // function
 
 	/**
@@ -82,8 +82,8 @@ class InfoTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetMessage()
 	{
-		$sExpected = '* Eine Testnachricht fuer die Tests';
-		$this->assertEquals($sExpected, $this->oCommitInfo->getMessage());
+		$sExpected = '* A test message for the tests';
+		$this->assertEquals($sExpected, $this->oInfo->getMessage());
 	} // function
 
 	/**
@@ -98,17 +98,18 @@ class InfoTest extends \PHPUnit_Framework_TestCase
 					'rev'    => 74,
 					'action' => 'U',
 					'item'   => '/path/to/file',
+					'real'   => '/path/to/file',
 					'isdir'  => false,
 					'props'  => array(),
 					'lines'  => array(),
-					'info'   => $this->oCommitInfo
+					'info'   => $this->oInfo
 				   );
 
-		$oObject = new CommitObject($aParams);
+		$oObject = new Object($aParams);
 
-		$this->oCommitInfo->setObjects(array($oObject));
+		$this->oInfo->setObjects(array($oObject));
 
-		$aObjects = $this->oCommitInfo->getObjects();
+		$aObjects = $this->oInfo->getObjects();
 
 		$this->assertTrue(is_array($aObjects), 'no array');
 		$this->assertEquals(1, count($aObjects), 'count aObjects not 1');

@@ -22,7 +22,7 @@ namespace Hook\Filter;
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -47,7 +47,7 @@ class ObjectFilter
 	private $aWhitelistedDirectories = array();
 
 	/**
-	 * Files that are exceptions in a directoy.
+	 * Files that are exceptions in a directory.
 	 * @var array
 	 */
 	private $aWhitelistedFiles = array();
@@ -89,7 +89,7 @@ class ObjectFilter
 
 	/**
 	 * Add a file to be filtered and should not processed.
-	 * @param string $sFile Dateiname der gefiltert wird (inkl. Dir).
+	 * @param string $sFile Filename that is filtered (incl. Dir).
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -112,7 +112,7 @@ class ObjectFilter
 	 */
 	public function addFileToWhitelist($sFile)
 	{
-		// Filefilter overwrites whitelist.
+		// File filter overwrites white list.
 		if (in_array($sFile, $this->aFiles) === false)
 		{
 			if (in_array($sFile, $this->aWhitelistedFiles) === false)
@@ -138,7 +138,7 @@ class ObjectFilter
 			$sDirectory .= '/';
 		} // if
 
-		// Directoryfilter overwrites whitelist.
+		// Directory filter overwrites white list.
 		if (false === in_array($sDirectory, $this->aDirectories))
 		{
 			if (false === in_array($sDirectory, $this->aWhitelistedDirectories))
@@ -180,7 +180,7 @@ class ObjectFilter
 	} // function
 
 	/**
-	 * Returns liste of allowed files.
+	 * Returns list of allowed files.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */

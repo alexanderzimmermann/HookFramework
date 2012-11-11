@@ -14,8 +14,8 @@
 
 namespace Example\Post;
 
-use Hook\Commit\CommitInfo;
-use Hook\Listener\InfoAbstract;
+use Hook\Commit\Data\Info;
+use Hook\Listener\AbstractInfo;
 
 /**
  * Mailing Listener.
@@ -25,11 +25,11 @@ use Hook\Listener\InfoAbstract;
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class Mailing extends InfoAbstract
+class Mailing extends AbstractInfo
 {
 	/**
 	 * Listener Name.
@@ -39,7 +39,7 @@ class Mailing extends InfoAbstract
 
 	/**
 	 * Commit info object.
-	 * @var CommitInfo
+	 * @var Info
 	 */
 	private $oInfo;
 
@@ -55,16 +55,16 @@ class Mailing extends InfoAbstract
 
 	/**
 	 * Execute the action.
-	 * @param CommitInfo $oInfo Info des Commits.
+	 * @param Info $oInfo Info des Commits.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	public function processAction(CommitInfo $oInfo)
+	public function processAction(Info $oInfo)
 	{
 		$this->oInfo = $oInfo;
 
-		$sMailBody  = $this->getCommitInfoMailHead();
-		$sMailBody .= $this->getCommitObjectsMailBody();
+		$sMailBody  = $this->getInfoMailHead();
+		$sMailBody .= $this->getObjectsMailBody();
 
 		// Mailen.
 		$sHeader  = 'From: webmaster@example.com' . "\r\n";
@@ -82,7 +82,7 @@ class Mailing extends InfoAbstract
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	private function getCommitInfoMailHead()
+	private function getInfoMailHead()
 	{
 		$sHead  = 'Date Time : ' . $this->oInfo->getDateTime() . "\n\n";
 		$sHead .= 'User      : ' . $this->oInfo->getUser() . "\n";
@@ -99,7 +99,7 @@ class Mailing extends InfoAbstract
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	private function getCommitObjectsMailBody()
+	private function getObjectsMailBody()
 	{
 		$aAdded   = array();
 		$aUpdated = array();

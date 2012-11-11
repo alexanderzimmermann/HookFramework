@@ -1,6 +1,6 @@
 <?php
 /**
- * Klasse fuer die Informationen die commited wurden.
+ * Class for the common information of a commit (User, Text, Date).
  * @category   Core
  * @package    Commit
  * @subpackage Main
@@ -9,56 +9,58 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
- * @since      File available since Release 1.0.0
+ * @since      File available since Release 2.1.0
  */
 
-namespace Hook\Commit;
+namespace Hook\Commit\Data;
+
+use Hook\Commit\Data\Base;
 
 /**
- * Klasse fuer die Informationen die commited wurden.
+ * Class for the common information of a commit (User, Text, Date).
  * @category   Core
  * @package    Commit
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
- * @since      Class available since Release 1.0.0
+ * @since      Class available since Release 2.1.0
  */
-class CommitInfo extends Base
+class Info extends Base
 {
 	/**
-	 * Benutzername.
+	 * Username.
 	 * @var string
 	 */
 	private $sUser;
 
 	/**
-	 * Datum Zeit.
+	 * Date time.
 	 * @var string
 	 */
 	private $sDateTime;
 
 	/**
-	 * Textbemerkung des Commits.
+	 * Text message of commit.
 	 * @var string
 	 */
 	private $sMessage;
 
 	/**
-	 * Liste der Objekte.
+	 * Lists of objects of this commit.
 	 * @var array
 	 */
 	private $aObjects;
 
 	/**
 	 * Constructor.
-	 * @param string $sTxn      Transaction, wenn Pre.
-	 * @param string $iRev      Revision (falls vorh.).
-	 * @param string $sUser     Benutzername des Commits.
-	 * @param string $sDateTime Datum Uhrzeit des Commits.
-	 * @param string $sMessage  Anmerkung zum Commit.
+	 * @param string $sTxn      Transaction, if it is a pre commit.
+	 * @param string $iRev      Revision (if available).
+	 * @param string $sUser     Username of commit.
+	 * @param string $sDateTime Date time of commit.
+	 * @param string $sMessage  Text message of commit.
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function __construct($sTxn, $iRev, $sUser, $sDateTime, $sMessage)
@@ -71,8 +73,8 @@ class CommitInfo extends Base
 	} // function
 
 	/**
-	 * Setzen der Liste der Objekte des Commits.
-	 * @param array $aObjects Liste der Objekte.
+	 * Sets the list of commited objects.
+	 * @param array $aObjects List of objects.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -85,7 +87,7 @@ class CommitInfo extends Base
 	} // function
 
 	/**
-	 * Benutzer zurueck geben.
+	 * Return user.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -95,7 +97,7 @@ class CommitInfo extends Base
 	} // function
 
 	/**
-	 * Datum Zeit zurueck geben.
+	 * Return Date time.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -105,7 +107,7 @@ class CommitInfo extends Base
 	} // function
 
 	/**
-	 * Textbemerkung zum Commit zurueck geben.
+	 * Return text message of commit.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -115,7 +117,7 @@ class CommitInfo extends Base
 	} // function
 
 	/**
-	 * Liste der Objekte zurueck geben.
+	 * List of objects of commit.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */

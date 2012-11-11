@@ -9,10 +9,12 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
- * @since      File available since Release 1.0.0
+ * @since      File available since Release 2.1.0
  */
 
 namespace Hook\Listener;
+
+use Hook\Listener\InfoInterface;
 
 /**
  * Abstract class for Object Listener.
@@ -22,11 +24,11 @@ namespace Hook\Listener;
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
- * @since      Class available since Release 1.0.0
+ * @since      Class available since Release 2.1.0
  */
-abstract class InfoAbstract implements Info
+abstract class AbstractInfo implements InfoInterface
 {
 	/**
 	 * Listener Name.
@@ -35,7 +37,7 @@ abstract class InfoAbstract implements Info
 	protected $sListener = 'Default Listener Name';
 
 	/**
-	 * Listenern Name zurueck liefern.
+	 * Returns the listener name for identification.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */

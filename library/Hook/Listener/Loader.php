@@ -36,7 +36,7 @@ use Hook\Core\Log;
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -225,11 +225,11 @@ class Loader
 
 	/**
 	 * Register values for info listener and check it.
-	 * @param InfoAbstract $oListener Name des Listener Objekts.
-	 * @return Listener
+	 * @param AbstractInfo $oListener Name des Listener Objekts.
+	 * @return boolean
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	private function registerListenersInfo(InfoAbstract $oListener)
+	private function registerListenersInfo(AbstractInfo $oListener)
 	{
 		$sRegister = $oListener->register();
 		$sListener = $oListener->getListenerName();
@@ -263,11 +263,11 @@ class Loader
 
 	/**
 	 * Register values for object listener and check it.
-	 * @param ObjectAbstract $oListener Name des Listener Objekts.
+	 * @param AbstractObject $oListener Name des Listener Objekts.
 	 * @return boolean
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	private function registerListenersObject(ObjectAbstract $oListener)
+	private function registerListenersObject(AbstractObject $oListener)
 	{
 		$aRegister = $oListener->register();
 		$sListener = $oListener->getListenerName();
@@ -348,7 +348,7 @@ class Loader
 						$aListener[] = $sListener;
 					} // if
 				}
-				catch (Exception $oException)
+				catch (\Exception $oException)
 				{
 					$this->sError .= $oException->getMessage() . PHP_EOL
 								  . $oException->getTraceAsString() . PHP_EOL;
@@ -388,15 +388,15 @@ class Loader
 		$aImplements = class_implements($sClass);
 		$aParents    = class_parents($sClass);
 
-		if ((isset($aImplements['Hook\\Listener\Info']) === true) &&
-			(isset($aParents['Hook\\Listener\InfoAbstract']) === true))
+		if ((isset($aImplements['Hook\\Listener\InfoInterface']) === true) &&
+			(isset($aParents['Hook\\Listener\AbstractInfo']) === true))
 		{
 			$this->aListenerInfo[] = new $sClass;
 			return true;
 		} // if
 
-		if ((isset($aImplements['Hook\\Listener\Object']) === true) &&
-			(isset($aParents['Hook\\Listener\ObjectAbstract']) === true))
+		if ((isset($aImplements['Hook\\Listener\ObjectInterface']) === true) &&
+			(isset($aParents['Hook\\Listener\AbstractObject']) === true))
 		{
 			$this->aListenerObject[] = new $sClass;
 			return true;

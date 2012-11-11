@@ -14,8 +14,8 @@
 
 namespace HookTest\Listener\Pre;
 
-use Hook\Commit\CommitInfo;
-use Hook\Commit\CommitObject;
+use Hook\Commit\Data\Info;
+use Hook\Commit\Data\Object;
 
 use Example\Pre\Syntax;
 
@@ -31,7 +31,7 @@ require_once __DIR__ . '/../../../../Repositories/Example/Pre/Syntax.php';
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -39,10 +39,14 @@ class SyntaxTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * Test object Syntax Listener.
-	 * @var Message
+	 * @var Syntax
 	 */
 	private $oSyntaxListener;
 
+	/**
+	 * Temporary path.
+	 * @var string
+	 */
 	private $sTmpPath;
 
 	/**
@@ -78,23 +82,24 @@ class SyntaxTest extends \PHPUnit_Framework_TestCase
 		// Test file from SVN.
 		$sFile = __DIR__ . '/_files/parse-error_file1.php';
 
-		$sUser = 'enya';
+		$sUser = 'Enya';
 		$sDate = '2008-12-30 12:22:23';
 		$sMsg  = '* Comment to this commit';
-		$oInfo = new CommitInfo('666-1', 666, $sUser, $sDate, $sMsg);
+		$oInfo = new Info('666-1', 666, $sUser, $sDate, $sMsg);
 
 		$aParams = array(
 					'txn'    => '666-1',
 					'rev'    => 666,
 					'action' => 'U',
 					'item'   => $sFile,
+					'real'   => $sFile,
 					'isdir'  => false,
 					'props'  => array(),
 					'lines'  => null,
 					'info'   => $oInfo
 				   );
 
-		$oObject        = new CommitObject($aParams);
+		$oObject        = new Object($aParams);
 		$this->sTmpPath = $oObject->getTmpObjectPath();
 
 		copy($sFile, $this->sTmpPath);
@@ -120,20 +125,21 @@ class SyntaxTest extends \PHPUnit_Framework_TestCase
 		$sUser = 'enya';
 		$sDate = '2008-12-30 12:22:23';
 		$sMsg  = '* Comment to this commit';
-		$oInfo = new CommitInfo('666-1', 666, $sUser, $sDate, $sMsg);
+		$oInfo = new Info('666-1', 666, $sUser, $sDate, $sMsg);
 
 		$aParams = array(
 					'txn'    => '666-1',
 					'rev'    => 666,
 					'action' => 'U',
 					'item'   => $sFile,
+					'real'   => $sFile,
 					'isdir'  => false,
 					'props'  => array(),
 					'lines'  => null,
 					'info'   => $oInfo
 				   );
 
-		$oObject        = new CommitObject($aParams);
+		$oObject        = new Object($aParams);
 		$this->sTmpPath = $oObject->getTmpObjectPath();
 
 		copy($sFile, $this->sTmpPath);

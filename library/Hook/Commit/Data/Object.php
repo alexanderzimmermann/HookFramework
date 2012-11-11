@@ -1,6 +1,6 @@
 <?php
 /**
- * Klasse fuer die Objekte die commited wurden.
+ * Class for an object within a commit.
  * @category   Core
  * @package    Commit
  * @subpackage Main
@@ -9,55 +9,63 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
- * @since      File available since Release 1.0.0
+ * @since      File available since Release 2.1.0
  */
 
-namespace Hook\Commit;
+namespace Hook\Commit\Data;
+
+use Hook\Commit\Data\Base;
+use Hook\Commit\Diff\Lines;
 
 /**
- * Klasse fuer die Objekte die commited wurden.
+ * Class for an object within a commit.
  *
- * Der Inhalt der Datei steht nicht in der Klasse, aus Performancegruenden wird
- * dieser nur geholt wenn die Daten benoetigt werden. Das wird durch die
- * Listener bestimmt.
+ * The content of the commited file is not stored in this class.
+ * Its only used when a listener needs this data.
  * @category   Core
  * @package    Commit
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 1.0.1
+ * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
- * @since      Class available since Release 1.0.0
+ * @since      Class available since Release 2.1.0
  */
-class CommitObject extends Base
+class Object extends Base
 {
 	/**
-	 * Objektaktion (A, U, D).
+	 * Object action (A, U, D).
 	 * @var string
 	 */
 	private $sAction;
 
 	/**
-	 * Verzeichnis oder Datei.
+	 * Directory or file.
 	 * @var boolean
 	 */
 	private $bIsDir;
 
 	/**
-	 * Objektpfad.
+	 * Complete object path.
 	 * @var string
 	 */
 	private $sObjectPath;
 
 	/**
-	 * Commit Info Objekt.
-	 * @var CommitInfo
+	 * Complete object path.
+	 * @var string
 	 */
-	private $oCommitInfo;
+	private $sRealPath;
 
 	/**
-	 * Temporärer Pfad zum Objekt.
+	 * Commit info object.
+	 * @var Info
+	 */
+	private $oInfo;
+
+	/**
+	 * Temporary path to object.
 	 * @var string
 	 */
 	private $sTmpObjectPath;
@@ -92,11 +100,12 @@ class CommitObject extends Base
 		$this->sAction            = $aParams['action'];
 		$this->bIsDir             = $aParams['isdir'];
 		$this->sObjectPath        = $aParams['item'];
-		$this->oCommitInfo        = $aParams['info'];
+		$this->sRealPath          = $aParams['real'];
+		$this->oInfo              = $aParams['info'];
 		$this->aChangedProperties = $aParams['props'];
 		$this->oChangedLines      = $aParams['lines'];
 
-		// Verzeichnispfad umwandeln.
+		// Convert path to a file that will be stored on a temporary place.
 		if ($aParams['isdir'] === false)
 		{
 			$sPath = str_replace('/', '_', $aParams['item']);
@@ -107,7 +116,7 @@ class CommitObject extends Base
 	} // function
 
 	/**
-	 * Aktion zurueck geben.
+	 * Return action.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -117,7 +126,7 @@ class CommitObject extends Base
 	} // function
 
 	/**
-	 * Ist das Objekt ein Verzeichnis.
+	 * Returns if object is a directory.
 	 * @return boolean
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -127,7 +136,7 @@ class CommitObject extends Base
 	} // function
 
 	/**
-	 * Pfad zu der Datei zurueck geben.
+	 * Return the complete path of the file in version control system.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -137,17 +146,27 @@ class CommitObject extends Base
 	} // function
 
 	/**
-	 * Das Commit Info Objekt zurueck geben.
-	 * @return CommitInfo
+	 * Return the real path to file without parts like trunk, branches/1.0.
+	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	public function getCommitInfo()
+	public function getRealPath()
 	{
-		return $this->oCommitInfo;
+		return $this->sRealPath;
 	} // function
 
 	/**
-	 * Temporaeren Pfad zur Datei zurueck geben.
+	 * Returns the info object of the commit.
+	 * @return Info
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function getInfo()
+	{
+		return $this->oInfo;
+	} // function
+
+	/**
+	 * Returns temporary path of file.
 	 * @return string
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
