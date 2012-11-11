@@ -44,15 +44,15 @@ class Style extends AbstractObject
 	 */
 	public function register()
 	{
-		$sFilterDirectory = 'trunk/tmp/filter/filter_directory/';
+		$sFilterDirectory = 'tmp/filter/filter_directory/';
 		$sWhiteListFile   = $sFilterDirectory . 'filter_file_whitelist.php';
 
-		// Filter fuer den Style.
+		// Filter for style.
 		$this->oObjectFilter->addDirectoryToFilter($sFilterDirectory);
 		$this->oObjectFilter->addFileToWhitelist($sWhiteListFile);
 
-		// Testdateien ignorieren.
-		$sBaseFolder     = 'trunk/tmp/newfolder1/newfolder1_1/';
+		// Ignore test files.
+		$sBaseFolder     = 'tmp/newfolder1/newfolder1_1/';
 		$sParseErrorFile = $sBaseFolder . 'parse-error_file1.php';
 		$this->oObjectFilter->addFileToFilter($sParseErrorFile);
 
@@ -88,12 +88,12 @@ class Style extends AbstractObject
 			return;
 		} // if
 
-		// Fehler oder Warnings.
+		// Error or warning.
 		$iResult = $this->determineErrorWarnings($aLines);
 
 		if (($iResult & 1) === 1)
 		{
-			// Leerzeile am Schluss und am Anfang entfernen.
+			// Trim empty lines at start and end.
 			unset($aLines[0]);
 			unset($aLines[1]);
 			unset($aLines[2]);
@@ -103,12 +103,12 @@ class Style extends AbstractObject
 	} // function
 
 	/**
-	 * Fehler oder Warnings.
+	 * Error or Warnings.
 	 *
-	 * Ergebnis kommt als Bit zurueck.
-	 * 1 = Fehler
+	 * Result comes back as a bit.
+	 * 1 = Errors
 	 * 2 = Warnings
-	 * @param array $aLines Zeilen aus phpcs Command.
+	 * @param array $aLines Lines from phpcs command.
 	 * @return integer
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
