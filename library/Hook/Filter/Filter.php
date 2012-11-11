@@ -94,7 +94,7 @@ class Filter
 		$this->aWhiteDirs   = $oObjectFilter->getWhiteListDirectories();
 		$this->aWhiteFiles  = $oObjectFilter->getWhiteListFiles();
 
-		// If all is emtpy then return all.
+		// If all is empty then return all.
 		if ((true === empty($this->aDirectories)) &&
 			(true === empty($this->aFiles)) &&
 			(true === empty($this->aWhiteFiles)) &&
