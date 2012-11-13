@@ -62,9 +62,9 @@ class Message extends AbstractInfo
 	} // function
 
 	/**
-	 * Pruefen ob der Text fuer die Meldung den Vorgaben entspricht.
-	 * @param Info $oInfo    Commit Daten Objekt.
-	 * @param string     $sMessage Text zu Commit.
+	 * Check that the message text matches the companies rules.
+	 * @param Info   $oInfo    Commit data object.
+	 * @param string $sMessage Text of commit.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
@@ -74,34 +74,34 @@ class Message extends AbstractInfo
 
 		if ($sMessage === '')
 		{
-			$sErrorMessage  = 'Bitte einen Kommentar angeben und den';
-			$sErrorMessage .= ' Kommentar bitte wie folgt einleiten:' . "\n";
-			$sErrorMessage .= '+ Wenn etwas neues hinzugefuegt wird.' . "\n";
-			$sErrorMessage .= '- Wenn etwas entfernt wird.' . "\n";
-			$sErrorMessage .= '* Bei Aenduerungen der Datei.' . "\n";
+			$sErrorMessage  = 'Please provide a comment to this commit ';
+			$sErrorMessage .= ' and use it as follows:' . "\n";
+			$sErrorMessage .= '+ If something new is added.' . "\n";
+			$sErrorMessage .= '- If something is deleted.' . "\n";
+			$sErrorMessage .= '* If something is changed.' . "\n";
 
 			$oInfo->addError($sErrorMessage);
 
 			return;
 		} // if
 
-		// Wird Kommentar mit +, - oder * eingeleitet?
+		// Is the commit started with +, - or * ?
 		if (preg_match('/^[\*+\-]+ /i', $sMessage) === 0)
 		{
-			$sErrorMessage  = 'Kommentar bitte wie folgt einleiten:' . "\n";
-			$sErrorMessage .= '+ Wenn etwas neues hinzugefuegt wird.' . "\n";
-			$sErrorMessage .= '- Wenn etwas entfernt wird.' . "\n";
-			$sErrorMessage .= '* Bei Aenduerungen der Datei.' . "\n";
+			$sErrorMessage  = 'Please start the comment as follows:' . "\n";
+			$sErrorMessage .= '+ If something new is added.' . "\n";
+			$sErrorMessage .= '- If something is deleted.' . "\n";
+			$sErrorMessage .= '* If something is changed.' . "\n";
 
 			$oInfo->addError($sErrorMessage);
 		} // if
 
 		$sMessage = preg_replace('/^[\*+\-]+ /i', '', $sMessage);
 
-		// Ist der Kommentar wenigstens 10 Zeichen lang?
+		// Is the text at least 10 signs?
 		if (strlen($sMessage) < 10)
 		{
-			$sErrorMessage = 'Der Kommentar sollte aussagekraeftig sein!';
+			$sErrorMessage = 'The comment should be more precisely!';
 			$oInfo->addError($sErrorMessage);
 		} // if
 	} // function
