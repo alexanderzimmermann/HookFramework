@@ -5,7 +5,7 @@ Subversion Hooks
 
 Hooks are invoked every time a commit into the subversion repository is checked in. Hooks simply
 are shell scripts. For safety all paths and system variables are not available. The hook scripts
-are stored in the ``/hooks`` directory in every repository.
+are stored in the ``hooks`` directory in every repository.
 
 By default there are seven hook scripts available, but are deactivated (extension .template). In
 the following table is explained when which hook script is invoked.

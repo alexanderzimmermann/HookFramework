@@ -35,3 +35,4 @@ For info listener its `Info` and `InfoAbstract`.
 
 For object listener its `Object` and `ObjectAbstract`.
 
+.. _`main hook name`: http://pear.php.net/manual/en/pyrus.php

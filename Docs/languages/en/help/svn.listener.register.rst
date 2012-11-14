@@ -1,13 +1,19 @@
 .. _svn.listener.register:
 
-Register Processing the listener
-================================
+Register the listener
+=====================
 
-The register function is called for each listener and tells the hook framework which data objects
- should be shipped to the process Action.
+The register function is called for each listener and tells the hook framework for which sub action
+this listener should take care of and or which data objects should be shipped to the process Action.
+
+Depending on the listener type the information is passed to the
+:ref:`processAction <svn.listener.process>` method.
+
+In the register method you can also implement some filter rules.
+See :ref:`Filter <svn.listener.filter>` (next topic) for detailed information.
 
 Example
-^^^^^^^
+-------
 
 .. rubric:: Using the class cache pattern
 
@@ -19,7 +25,6 @@ This example uses Apache with the following .htaccess:
    	/**
    	 * Register the action.
    	 * @return array
-   	 * @author Alexander Zimmermann <alex@azimmermann.com>
    	 */
    	public function register()
    	{
@@ -35,16 +40,21 @@ This example uses Apache with the following .htaccess:
 
 
 Action
-------
+~~~~~~
+This are the valid values for the action array index.
 
 * commit
 * lock
 * unlock
 * revprop-change
 
-Fileaction
-----------
+.. code-block:: php
 
+   'commit';
+
+
+Fileaction
+~~~~~~~~~~
 In each commit new files are identified with an ``A``, updated files with an ``U``. Deleted files
 are identified with a ``D``.
 
@@ -52,9 +62,13 @@ are identified with a ``D``.
 * U
 * D
 
-extensions
-----------
+.. code-block:: php
 
+   array('A', 'U');
+
+
+extensions
+~~~~~~~~~~
 Tell the hook framework what type of file the listener should take care of. Use upper case to
  identify the file type.
 
@@ -64,8 +78,7 @@ Tell the hook framework what type of file the listener should take care of. Use 
 
 
 withdirs
---------
-
-Set this switch wether to *true* if you want to use the listener also for directories. Set this
+~~~~~~~~
+Set this switch whether to *true* if you want to use the listener also for directories. Set this
  to *false* if you don't need the directory names.
 

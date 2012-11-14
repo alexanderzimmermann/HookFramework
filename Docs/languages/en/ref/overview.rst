@@ -4,18 +4,13 @@
 Overview
 ********
 
-Hook Framework 2 is an open source framework for helping php developers build subversion hooks
-using *PHP* 5.3+.
+Hook Framework is an open source framework for helping php developers build subversion hooks
+using `PHP` 5.3+ as scripting language rather then shell scripting.
 
-.. note::
+We use `PHPUnit`_ to test the code as a Continuous Integration service.
 
-    *HF2* is not backward compatible with *HF1*, because of the new features in PHP 5.3+ implemented by
-    the framework, and due to major rewrites of many components.
+See :ref:`listener <svn.listener.introduction>`
 
-We use `PHPUnit`_ to test the code s a Continuous Integration service.
-
-See :doc:`listener <svn.listener.introduction>`
 
 .. _`PHPUnit`: http://www.phpunit.de
-
-
+.. _`PHP`: http://www.php.net

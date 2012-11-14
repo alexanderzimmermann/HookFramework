@@ -5,7 +5,7 @@ Install the Hookframework
 
 .. _tutorial.installation.intro.hf:
 
-Prerequisits
+Requirements
 ------------
 
 * The hook framework needs PHP 5.3 or higher to be on the same server where subversion is installed. Direct access to the subversion commands must be granted.
@@ -15,8 +15,8 @@ Prerequisits
 Optional
 ~~~~~~~~
 
-In order to run listener that use other software, you need to install this software they use. The hook framework includes a listener that needs the [[PHP_CodeSniffer|http://pear.php.net/package/PHP_CodeSniffer]] installed.
-Another listener mails the changes to a given address, so that you need a mail server for this listener.
+In order to run listener that use other software, you need to install this software they use. The example repository includes a listener that needs the [[PHP_CodeSniffer|http://pear.php.net/package/PHP_CodeSniffer]] installed.
+Another listener mails the changes to a given address, so you need the mail function for php configured.
 
 To run the unit tests PHPUnit 3.5 or higher is recommended.
 
@@ -29,7 +29,7 @@ Configuration file
 ~~~~~~~~~~~~~~~~~~
 
 * Copy or rename the ``config-dist.ini`` file to ``config.ini``
-* Adjust the path for the subversion executables (mostly ``/usr/bin/`` will fit) to get access to the subversion commands (svn, svnlook).
+* Adjust the path for the subversion executable (mostly ``/usr/bin/`` will fit) to get access to the subversion commands (svn, svnlook).
 * Set the ``logfile`` path where you want to have the logging. Be sure the file is writeable to PHP.
 
 Insert the hook framework in the subversion event hooks

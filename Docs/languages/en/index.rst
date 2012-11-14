@@ -11,11 +11,12 @@
    tutorials/quickstart.svn
    help/svn.listener.introduction
    help/svn.listener.structure
-   help/svn.listener.filter
+   help/svn.listener.directory
    help/svn.listener.info
    help/svn.listener.object
-   help/svn.listener.process
    help/svn.listener.register
+   help/svn.listener.filter
+   help/svn.listener.process
    help/svn.repositories.introduction
    help/svn.repositories.configuration
    help/svn.repositories.structure
@@ -33,10 +34,7 @@
     * :doc:`ref/overview`
     * :doc:`ref/installation`
 
-|UserGuide|
------------
-
-|LearningHookFramework|
+|Tutorials|
 -----------------------
 
     * :doc:`tutorials/quickstart.svn`
@@ -49,8 +47,8 @@
 Hooks
 ^^^^^
 
-        * :doc:`help/svn.subversion.hooks`
-        * :doc:`help/svn.subversion.hooks.implementation`
+    * :doc:`help/svn.subversion.hooks`
+    * :doc:`help/svn.subversion.hooks.implementation`
 
 
 .. _svn.listener:
@@ -58,21 +56,23 @@ Hooks
 Listener
 ^^^^^^^^
 
-        * :doc:`help/svn.listener.introduction`
-        * :doc:`help/svn.listener.register`
-        * :doc:`help/svn.listener.info`
-        * :doc:`help/svn.listener.object`
-        * :doc:`help/svn.listener.process`
+    * :doc:`help/svn.listener.introduction`
+    * :doc:`help/svn.listener.directory`
+    * :doc:`help/svn.listener.info`
+    * :doc:`help/svn.listener.object`
+    * :doc:`help/svn.listener.register`
         * :doc:`help/svn.listener.filter`
+    * :doc:`help/svn.listener.process`
+
 
 .. _svn.repositories:
 
 Repositories
 ^^^^^^^^^^^^
 
-        * :doc:`help/svn.repositories.introduction`
-        * :doc:`help/svn.repositories.structure`
-        * :doc:`help/svn.repositories.configuration`
+    * :doc:`help/svn.repositories.introduction`
+    * :doc:`help/svn.repositories.structure`
+    * :doc:`help/svn.repositories.configuration`
 
 .. _core.copyright:
 

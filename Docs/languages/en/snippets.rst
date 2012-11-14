@@ -5,12 +5,8 @@
 
 .. |IntroductiontoHookFramework| replace:: Introduction to Hook Framework 2
 
-.. |UserGuide| replace:: User Guide
+.. |Tutorials| replace:: Tutorials
 
-.. |LearningHookFramework| replace:: Learning Hook Framework 2
-
-.. |HookFrameworkReference| replace:: Hook Framework 2 Reference
-
-.. |HookServiceReference| replace:: Services for Hook Framework 2 Reference
+.. |HookFrameworkReference| replace:: Reference
 
 .. |IndicesAndTables| replace:: Indices and tables

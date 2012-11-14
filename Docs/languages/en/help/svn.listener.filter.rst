@@ -22,7 +22,7 @@ hookframework/branches/2.1/library/Hook/Core/Hook.php will also be library/Hook/
    hookframework/tags/2.1.0/library/Hook/Core/Hook.php     =>   library/Hook/Core/Hook.php
 
 
-Filter Types
+Filter Rules
 ~~~~~~~~~~~~
 
 With this 4 functions, files can be

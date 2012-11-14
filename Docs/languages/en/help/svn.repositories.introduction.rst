@@ -10,7 +10,7 @@ Introduction
 Convention of repository name
 -----------------------------
 
-The repository folder name should correspond to that, created on the subversion server. F
+The repository folder name should correspond to that, created on the subversion server.
 
 If you, for example, checkout your working copy with http://svn.example.com/Example then your
 folder is just ``*Example*``.
