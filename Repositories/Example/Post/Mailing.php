@@ -140,22 +140,19 @@ class Mailing extends AbstractInfo
 		if (empty($aAdded) === false)
 		{
 			$sMailBody .= 'Added   : ' . count($aAdded) . "\n";
-
-			$sFileListAdded = implode("\n", $aAdded);
+			$sMailBody .= implode("\n", $aAdded) . "\n";
 		} // if
 
 		if (empty($aUpdated) === false)
 		{
 			$sMailBody .= 'Updated : ' . count($aUpdated) . "\n";
-
-			$sFileListUpdated = implode("\n", $aUpdated);
+			$sMailBody .= implode("\n", $aUpdated) . "\n";
 		} // if
 
 		if (empty($aDeleted) === false)
 		{
 			$sMailBody .= 'Deleted : ' . count($aDeleted) . "\n";
-
-			$sFileListDeleted = implode("\n", $aDeleted);
+			$sMailBody .= implode("\n", $aDeleted) . "\n";
 		} // if
 
 		$sMailBody .= "\n" . $sFileList;
