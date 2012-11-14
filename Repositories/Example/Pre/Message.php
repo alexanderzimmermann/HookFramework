@@ -75,7 +75,7 @@ class Message extends AbstractInfo
 		if ($sMessage === '')
 		{
 			$sErrorMessage  = 'Please provide a comment to this commit ';
-			$sErrorMessage .= ' and use it as follows:' . "\n";
+			$sErrorMessage .= 'and use it as follows:' . "\n";
 			$sErrorMessage .= '+ If something new is added.' . "\n";
 			$sErrorMessage .= '- If something is deleted.' . "\n";
 			$sErrorMessage .= '* If something is changed.' . "\n";

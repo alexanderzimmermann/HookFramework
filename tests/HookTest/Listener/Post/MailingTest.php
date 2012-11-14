@@ -140,8 +140,14 @@ class MailingTest extends \PHPUnit_Framework_TestCase
 		$sExpected .= 'Directories, Fileinformations:' . "\n";
 		$sExpected .= str_repeat('-', 40) . "\n";
 		$sExpected .= 'Added   : 2' . "\n";
+		$sExpected .= 'hookframework/trunk/doc/hooktemplates/' . "\n";
+		$sExpected .= 'hookframework/trunk/doc/hooktemplates/pre-commit' . "\n";
 		$sExpected .= 'Updated : 2' . "\n";
+		$sExpected .= 'hookframework/trunk/Core/Commit/Base.php' . "\n";
+		$sExpected .= 'hookframework/trunk/Core/Commit/Object.php' . "\n";
 		$sExpected .= 'Deleted : 2' . "\n";
+		$sExpected .= 'hookframework/trunk/tmp//newfolder/testfile.txt' . "\n";
+		$sExpected .= 'hookframework/trunk/tmp//newfolder/' . "\n";
 		$sExpected .= "\n";
 		$sExpected .= $sDir . 'Core/Commit/Base.php (updated)' . "\n";
 		$sExpected .= $sDir . 'Core/Commit/Object.php (updated)' . "\n";
@@ -208,6 +214,8 @@ class MailingTest extends \PHPUnit_Framework_TestCase
 		$sExpected .= 'Directories, Fileinformations:' . "\n";
 		$sExpected .= str_repeat('-', 40) . "\n";
 		$sExpected .= 'Updated : 2' . "\n";
+		$sExpected .= 'hookframework/trunk/Core/Commit/Base.php' . "\n";
+		$sExpected .= 'hookframework/trunk/Core/Commit/Object.php' . "\n";
 		$sExpected .= "\n";
 		$sExpected .= $sDir . 'Core/Commit/Base.php (updated)' . "\n";
 		$sExpected .= $sDir . 'Core/Commit/Object.php (updated)' . "\n";

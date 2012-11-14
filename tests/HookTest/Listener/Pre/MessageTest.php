@@ -53,13 +53,13 @@ class MessageTest extends \PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen des Kommentar Listener Strict wenn kein Kommentar vorhanden ist.
+	 * Test the comment listener strict, if no comment is given.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function testMessageStrictNoMessage()
 	{
-		$sUser    = 'testuser';
+		$sUser    = 'Ilana';
 		$sDate    = '2008-01-10 12:12:12';
 		$sComment = '';
 		$oInfo    = new Info('666-1', 666, $sUser, $sDate, $sComment);
@@ -68,11 +68,10 @@ class MessageTest extends \PHPUnit_Framework_TestCase
 
 		$aResult = $oInfo->getErrorLines();
 
-		$sMessage  = 'Bitte einen Kommentar angeben und den ';
-		$sMessage .= 'Kommentar bitte wie folgt einleiten:' . "\n";
-		$sMessage .= '+ Wenn etwas neues hinzugefuegt wird.' . "\n";
-		$sMessage .= '- Wenn etwas entfernt wird.' . "\n";
-		$sMessage .= '* Bei Aenduerungen der Datei.' . "\n";
+		$sMessage  = 'Please provide a comment to this commit and use it as follows:' . "\n";
+		$sMessage .= '+ If something new is added.' . "\n";
+		$sMessage .= '- If something is deleted.' . "\n";
+		$sMessage .= '* If something is changed.' . "\n";
 
 		$aExpected = array($sMessage);
 
@@ -86,40 +85,40 @@ class MessageTest extends \PHPUnit_Framework_TestCase
 	 */
 	public static function getComments()
 	{
-		$sExpectedMessage  = 'Kommentar bitte wie folgt einleiten:' . "\n";
-		$sExpectedMessage .= '+ Wenn etwas neues hinzugefuegt wird.' . "\n";
-		$sExpectedMessage .= '- Wenn etwas entfernt wird.' . "\n";
-		$sExpectedMessage .= '* Bei Aenduerungen der Datei.' . "\n";
+		$sExpectedMessage  = 'Please start the comment as follows:' . "\n";
+		$sExpectedMessage .= '+ If something new is added.' . "\n";
+		$sExpectedMessage .= '- If something is deleted.' . "\n";
+		$sExpectedMessage .= '* If something is changed.' . "\n";
 
-		$sExpectedMessage2 = 'Der Kommentar sollte aussagekraeftig sein!';
+		$sExpectedMessage2 = 'The comment should be more precisely!';
 
 		return array(
 				array(
-				 '* Testkommentar',
+				 '* Test comment',
 				 array()
 				),
 				array(
-				 '+ Testkommentar',
+				 '+ Test comment',
 				 array()
 				),
 				array(
-				 '- Testkommentar',
+				 '- Test comment',
 				 array()
 				),
 				array(
-				 '- Änderungen Testkommentar',
+				 '- Changes test comment',
 				 array()
 				),
 				array(
-				 'Testkommentar',
+				 'Test comment',
 				 array($sExpectedMessage)
 				),
 				array(
-				 '*Testkommentar',
+				 '*Test comment',
 				 array($sExpectedMessage)
 				),
 				array(
-				 '* Test mit Sonderzeichen: abr?\195?\188cken ^^',
+				 '* Test with special characters: abr?\195?\188cken ^^',
 				 array()
 				),
 				array(
@@ -130,16 +129,16 @@ class MessageTest extends \PHPUnit_Framework_TestCase
 	} // function
 
 	/**
-	 * Testen des Kommentar Listener.
-	 * @param string $sMessage    Commit Text Meldung.
-	 * @param array  $aErrorLines Zeilen Fehlermeldungen.
+	 * Test message comment listener.
+	 * @param string $sMessage    Commit text message.
+	 * @param array  $aErrorLines Lines with error messages.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 * @dataProvider getComments
 	 */
 	public function testMessage($sMessage, array $aErrorLines)
 	{
-		$sUser = 'testuser';
+		$sUser = 'Ilana';
 		$sDate = '2008-01-10 12:12:12';
 		$oInfo = new Info('666-1', 666, $sUser, $sDate, $sMessage);
 
