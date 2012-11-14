@@ -68,7 +68,7 @@ class Property
 
 	/**
 	 * Set the value.
-	 * @param string $sNewValue Wert.
+	 * @param string $sNewValue Value.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
