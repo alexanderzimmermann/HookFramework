@@ -12,12 +12,29 @@ Depending on the listener type the information is passed to the
 In the register method you can also implement some filter rules.
 See :ref:`Filter <svn.listener.filter>` (next topic) for detailed information.
 
-Example
--------
+Example info listener
+---------------------
 
-.. rubric:: Using the class cache pattern
+Example to register a info listener for the specified subaction.
 
-This example uses Apache with the following .htaccess:
+.. code-block:: php
+   :linenos:
+
+   	/**
+   	 * Register the action.
+   	 * @return string
+   	 */
+   	public function register()
+   	{
+   		return 'commit';
+   	} // function
+
+
+Example object listener
+-----------------------
+
+Example to register a object listener for the specified subaction and tell which files this listener
+requests.
 
 .. code-block:: php
    :linenos:
