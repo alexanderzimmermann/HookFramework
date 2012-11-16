@@ -58,14 +58,7 @@ interface InfoInterface
 	 * <li>revprop-change</li>
 	 * <li>unlock</li>
 	 * <li><b>On start</b></li>
-	 * <li>start-commit</li>
-	 * </ul>
-	 *
-	 * Values for <i>fileaction:</i>
-	 * <ul
-	 * <li>A Added</li>
-	 * <li>U Updated</li>
-	 * <li>D Deleted</li>
+	 * <li>commit</li>
 	 * </ul>
 	 *
 	 * Values for <i>extensions:</i>

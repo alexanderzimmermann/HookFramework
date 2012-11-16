@@ -66,7 +66,7 @@ interface ObjectInterface
 	 * <li>revprop-change</li>
 	 * <li>unlock</li>
 	 * <li><b>On start</b></li>
-	 * <li>start-commit</li>
+	 * <li>commit</li>
 	 * </ul>
 	 *
 	 * Values for <i>fileaction:</i>
