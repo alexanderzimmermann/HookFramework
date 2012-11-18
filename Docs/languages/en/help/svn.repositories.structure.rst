@@ -3,23 +3,28 @@
 Structure in the Repositories
 =============================
 
-It is often desirable to use a purely *PHP*-based configuration file. The following code illustrates how easily this
-can be accomplished:
+It is often desirable to use a purely *PHP*-based configuration file. The following code illustrates
+how easily this can be accomplished:
 
 .. code-block:: text
 
     Repositories/
         /Example
             /logs
+                common.log
             /Post
+                Mailing.php
+                Diff.php
             /Pre
+                Id.php
+                Style.php
+                Syntax.php
             /Start
+                User.php
             config.ini
         /Example2
-            /logs
-            /Post
             /Pre
-            /Start
+                Style.php
+                Syntax.php
             config.ini
 
-.. _`subversion`: http://subversion.apache.org/

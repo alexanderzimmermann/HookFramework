@@ -9,8 +9,9 @@
    ref/overview
    ref/installation
    tutorials/quickstart.svn
+   help/svn.subversion.hooks
+   help/svn.subversion.hooks.implementation
    help/svn.listener.introduction
-   help/svn.listener.structure
    help/svn.listener.directory
    help/svn.listener.info
    help/svn.listener.object
@@ -18,11 +19,9 @@
    help/svn.listener.filter
    help/svn.listener.process
    help/svn.repositories.introduction
-   help/svn.repositories.configuration
    help/svn.repositories.structure
-   help/svn.subversion.hooks
-   help/svn.subversion.hooks.implementation
-   help/svn.subversion.hooks.table
+   help/svn.repositories.configuration
+
    ref/copyrights
    ref/requirements
    ref/project.structure
@@ -61,7 +60,7 @@ Listener
     * :doc:`help/svn.listener.info`
     * :doc:`help/svn.listener.object`
     * :doc:`help/svn.listener.register`
-        * :doc:`help/svn.listener.filter`
+    * :doc:`help/svn.listener.filter`
     * :doc:`help/svn.listener.process`
 
 
