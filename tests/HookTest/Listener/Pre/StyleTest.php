@@ -68,7 +68,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 
 		if (true === empty($aOutput))
 		{
-			$this->markTestSkipped('phpcs not installed!');
+			$this->markTestSkipped('phpcs or pear standard not installed!');
 		} // if
 
 		if (count($aOutput) === 1)
