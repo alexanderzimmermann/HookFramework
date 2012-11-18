@@ -1,0 +1,40 @@
+<?php
+/**
+ * Autoload function.
+ * @category   Core
+ * @package    Main
+ * @subpackage Main
+ * @author     Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    SVN: $Id:$
+ * @link       http://www.azimmermann.com/
+ * @since      File available since Release 2.1.0
+ */
+
+/**
+ * Auto load function.
+ * @param string $sClass Class to load.
+ * @return void
+ */
+function hfautoload($sClass)
+{
+	static $aClasses = null;
+
+	if ($aClasses === null)
+	{
+		$aClasses = array(
+			___CLASSLIST___
+		);
+	} // if
+
+	$sClassName = strtolower($sClass);
+
+	if (isset($aClasses[$sClassName]))
+	{
+		require __DIR__ . $aClasses[$sClassName];
+	} // if
+} // function
+
+// Register spl auto load.
+spl_autoload_register('hfautoload');
