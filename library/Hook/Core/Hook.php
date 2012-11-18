@@ -167,7 +167,7 @@ class Hook
 	 */
 	protected function parseIniFile()
 	{
-		$sPath      = dirname(__FILE__) . '/../';
+		$sPath      = __DIR__ . '/../../../';
 		$this->aCfg = parse_ini_file($sPath . 'config.ini');
 	} // function
 
@@ -324,27 +324,6 @@ class Hook
 	} // function
 
 	/**
-	 * Call Listener for Info.
-	 * @param AbstractInfo $oListener Listener.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	private function processInfoListener(AbstractInfo $oListener)
-	{
-		// No files, call listener once.
-		$sLog  = 'process info listener ';
-		$sLog .= $oListener->getListenerName();
-		$this->oLog->writeLog(Log::HF_INFO, $sLog);
-
-		$oInfo = $this->oCommitData->getInfo();
-
-		$oListener->processAction($oInfo);
-
-		$this->oError->setListener($oListener->getListenerName());
-		$this->oError->processActionInfo($oInfo);
-	} // function
-
-	/**
 	 * Call Listener.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -366,6 +345,27 @@ class Hook
 			$this->aListenerFiles = array();
 			$this->processObjectListener($this->aListener['object'][$iFor]);
 		} // for
+	} // function
+
+	/**
+	 * Call Listener for Info.
+	 * @param AbstractInfo $oListener Listener.
+	 * @return void
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	private function processInfoListener(AbstractInfo $oListener)
+	{
+		// No files, call listener once.
+		$sLog  = 'process info listener ';
+		$sLog .= $oListener->getListenerName();
+		$this->oLog->writeLog(Log::HF_INFO, $sLog);
+
+		$oInfo = $this->oCommitData->getInfo();
+
+		$oListener->processAction($oInfo);
+
+		$this->oError->setListener($oListener->getListenerName());
+		$this->oError->processActionInfo($oInfo);
 	} // function
 
 	/**

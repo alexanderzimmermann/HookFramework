@@ -15,6 +15,7 @@
 namespace HookTest\Core;
 
 use Hook\Core\Arguments;
+use Hook\Core\Config;
 use Hook\Listener\Loader;
 
 require_once __DIR__ . '/../../Bootstrap.php';
@@ -68,10 +69,13 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
 				   ->method('getSubActions')
 				   ->will($this->returnValue(array('commit')));
 
-		$sTestDir = TEST_SVN_REPOSITORY;
+		// Just the instance.
+		$oConfig = new Config;
+
 		$sTestDir = __DIR__ . '/../Listener/';
 
 		$oLoader = new Loader($oArguments);
+		$oLoader->setConfiguration($oConfig);
 		$oLoader->setPath($sTestDir);
 		$oLoader->init();
 
@@ -160,7 +164,12 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
 		$oArguments = new Arguments($aArguments);
 		$this->assertTrue($oArguments->argumentsOk(), 'Arguments not ok.');
 
+		// Just the instance.
+		$oConfig = new Config;
+		$oConfig->loadConfigFile(__DIR__ . '/_files/config.ini');
+
 		$oLoader = new Loader($oArguments);
+		$oLoader->setConfiguration($oConfig);
 		$oLoader->setPath(TEST_SVN_REPOSITORY . 'Example/');
 
 		$oLoader->init();

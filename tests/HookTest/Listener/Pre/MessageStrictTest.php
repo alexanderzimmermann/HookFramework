@@ -68,7 +68,7 @@ class MessageStrictTest extends \PHPUnit_Framework_TestCase
 
 		$aResult = $oInfo->getErrorLines();
 
-		$sMessage  = 'Please provide a comment for the commit';
+		$sMessage  = 'Please provide a comment for the commit' . "\n";
 		$sMessage .= 'The comment should be like:' . "\n";
 		$sMessage .= '+ If you add something.' . "\n";
 		$sMessage .= '- If you delete something.' . "\n";

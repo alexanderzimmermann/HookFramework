@@ -31,44 +31,6 @@ use Hook\Commit\Data\Info;
 interface InfoInterface
 {
 	/**
-	 * Return listener name.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function getListenerName();
-
-	/**
-	 * Register the action and the file actions and file types that are needed.
-	 *
-	 * Example
-	 * <pre>
-	 * return 'commit';
-	 * </pre>
-	 *
-	 * Values for <i>action:</i>
-	 * <ul>
-	 * <li><b>On post</b></li>
-	 * <li>commit</li>
-	 * <li>lock</li>
-	 * <li>revprop-change</li>
-	 * <li>unlock</li>
-	 * <li><b>On pre</b></li>
-	 * <li>commit</li>
-	 * <li>lock</li>
-	 * <li>revprop-change</li>
-	 * <li>unlock</li>
-	 * <li><b>On start</b></li>
-	 * <li>commit</li>
-	 * </ul>
-	 *
-	 * Values for <i>extensions:</i>
-	 * PHP, C, TXT, CSS, usw.
-	 * @return string
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function register();
-
-	/**
 	 * Execute the action.
 	 * @param Info $oInfo Info des Commits.
 	 * @return void

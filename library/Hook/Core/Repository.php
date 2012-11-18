@@ -111,8 +111,12 @@ class Repository
 			$sDirectory = $this->sPath . 'Example/';
 		} // if
 
+		$oConfig = new Config();
+		$oConfig->loadConfigFile($sDirectory . 'config.ini');
+
 		// Parse listener in directory.
 		$oLoader = new Loader($this->oArguments);
+		$oLoader->setConfiguration($oConfig);
 		$oLoader->setPath($sDirectory);
 		$oLoader->init();
 		$this->aListener = $oLoader->getListener();

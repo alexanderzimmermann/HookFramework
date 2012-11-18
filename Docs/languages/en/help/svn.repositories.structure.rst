@@ -14,10 +14,12 @@ can be accomplished:
             /Post
             /Pre
             /Start
+            config.ini
         /Example2
             /logs
             /Post
             /Pre
             /Start
+            config.ini
 
 .. _`subversion`: http://subversion.apache.org/

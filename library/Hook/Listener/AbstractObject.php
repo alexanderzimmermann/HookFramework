@@ -29,13 +29,19 @@ use Hook\Listener\ObjectInterface;
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 2.1.0
  */
-abstract class AbstractObject implements ObjectInterface
+abstract class AbstractObject implements ListenerInterface, ObjectInterface
 {
 	/**
 	 * Listener Name.
 	 * @var string
 	 */
 	protected $sListener = 'Default Listener Name';
+
+	/**
+	 * Configuration array.
+	 * @var array
+	 */
+	protected $aCfg = array();
 
 	/**
 	 * Object Filter.
@@ -50,6 +56,16 @@ abstract class AbstractObject implements ObjectInterface
 	public function __construct()
 	{
 		$this->oObjectFilter = new ObjectFilter();
+	} // function
+
+	/**
+	 * Set the configuration for the listener.
+	 * @param array $aCfg Configuration array for this listener.
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function setConfiguration(array $aCfg)
+	{
+		$this->aCfg = $aCfg;
 	} // function
 
 	/**

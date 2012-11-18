@@ -28,13 +28,19 @@ use Hook\Listener\InfoInterface;
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 2.1.0
  */
-abstract class AbstractInfo implements InfoInterface
+abstract class AbstractInfo implements ListenerInterface, InfoInterface
 {
 	/**
 	 * Listener Name.
 	 * @var string
 	 */
 	protected $sListener = 'Default Listener Name';
+
+	/**
+	 * Configuration array.
+	 * @var array
+	 */
+	protected $aCfg = array();
 
 	/**
 	 * Returns the listener name for identification.
@@ -44,5 +50,15 @@ abstract class AbstractInfo implements InfoInterface
 	public function getListenerName()
 	{
 		return $this->sListener;
+	} // function
+
+	/**
+	 * Set the configuration for the listener.
+	 * @param array $aCfg Configuration array for this listener.
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function setConfiguration(array $aCfg)
+	{
+		$this->aCfg = $aCfg;
 	} // function
 } // class

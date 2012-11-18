@@ -16,6 +16,7 @@ namespace Hook\Listener;
 
 use \DirectoryIterator;
 use Hook\Core\Arguments;
+use Hook\Core\Config;
 use Hook\Core\Log;
 
 /**
@@ -47,6 +48,12 @@ class Loader
 	 * @var Arguments
 	 */
 	private $oArguments;
+
+	/**
+	 * Configuration object with config from repository.
+	 * @var Config
+	 */
+	private $oConfig;
 
 	/**
 	 * Path to the listener.
@@ -97,6 +104,15 @@ class Loader
 		$this->aListenerFiles  = array();
 		$this->aListenerInfo   = array();
 		$this->aListenerObject = array();
+	} // function
+
+	/**
+	 * Sets the configuration
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function setConfiguration(Config $oConfig)
+	{
+		$this->oConfig = $oConfig;
 	} // function
 
 	/**
@@ -391,14 +407,14 @@ class Loader
 		if ((isset($aImplements['Hook\\Listener\InfoInterface']) === true) &&
 			(isset($aParents['Hook\\Listener\AbstractInfo']) === true))
 		{
-			$this->aListenerInfo[] = new $sClass;
+			$this->aListenerInfo[] = $this->createClass($sClass, $sListener);
 			return true;
 		} // if
 
 		if ((isset($aImplements['Hook\\Listener\ObjectInterface']) === true) &&
 			(isset($aParents['Hook\\Listener\AbstractObject']) === true))
 		{
-			$this->aListenerObject[] = new $sClass;
+			$this->aListenerObject[] = $this->createClass($sClass, $sListener);
 			return true;
 		} // if
 
@@ -410,5 +426,27 @@ class Loader
 		$this->sError .= $sError;
 
 		return false;
+	} // function
+
+	/**
+	 * Create the listener.
+	 * @param string $sClass    Class name of listener.
+	 * @param string $sListener Name of the listener (File, Class).
+	 * @return ListenerInterface
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	protected function createClass($sClass, $sListener)
+	{
+		$oClass = new $sClass;
+
+		$sMain = $this->oArguments->getMainType();
+		$aCfg  = $this->oConfig->getConfiguration(ucfirst($sMain), $sListener);
+
+		if (false !== $aCfg)
+		{
+			$oClass->setConfiguration($aCfg);
+		} // if
+
+		return $oClass;
 	} // function
 } // class

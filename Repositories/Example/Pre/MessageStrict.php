@@ -74,7 +74,7 @@ class MessageStrict extends AbstractInfo
 
 		if ($sMessage === '')
 		{
-			$sErrorMessage  = 'Please provide a comment for the commit';
+			$sErrorMessage  = 'Please provide a comment for the commit' . "\n";
 			$sErrorMessage .= 'The comment should be like:' . "\n";
 			$sErrorMessage .= '+ If you add something.' . "\n";
 			$sErrorMessage .= '- If you delete something.' . "\n";
