@@ -44,20 +44,26 @@ class Style extends AbstractObject
 	 */
 	public function register()
 	{
-		$sFilterDirectory = 'tmp/filter/filter_directory/';
-		$sWhiteListFile   = $sFilterDirectory . 'filter_file_whitelist.php';
+		// Set filter stuff from configuration.
+		foreach ($this->aCfg['Filter']['Directory'] as $sDirectory)
+		{
+			$this->oObjectFilter->addDirectoryToFilter($sDirectory);
+		} // foreach
 
-		// Filter for style.
-		$this->oObjectFilter->addDirectoryToFilter($sFilterDirectory);
-		$this->oObjectFilter->addFileToWhitelist($sWhiteListFile);
+		foreach ($this->aCfg['Filter']['Files'] as $sFile)
+		{
+			$this->oObjectFilter->addFileToFilter($sFile);
+		} // foreach
 
-		// Ignore test files.
-		$sBaseFolder     = 'tmp/newfolder1/newfolder1_1/';
-		$sParseErrorFile = $sBaseFolder . 'parse-error_file1.php';
-		$this->oObjectFilter->addFileToFilter($sParseErrorFile);
+		foreach ($this->aCfg['Filter']['WhitelistDirectories'] as $sDirectory)
+		{
+			$this->oObjectFilter->addDirectoryToWhitelist($sDirectory);
+		} // foreach
 
-		$sParseErrorFile = $sBaseFolder . 'parse-error_file2.php';
-		$this->oObjectFilter->addFileToFilter($sParseErrorFile);
+		foreach ($this->aCfg['Filter']['WhitelistFiles'] as $sFile)
+		{
+			$this->oObjectFilter->addFileToWhitelist($sFile);
+		} // foreach
 
 		return array(
 				'action'     => 'commit',
@@ -77,8 +83,11 @@ class Style extends AbstractObject
 	 */
 	public function processAction(Object $oObject)
 	{
+		$sStandard = $this->aCfg['Standard'];
+		$sTabwidth = $this->aCfg['Style']['LineLength'];
+
 		$aLines    = array();
-		$sCommand  = 'phpcs --standard=PEAR --tab-width=4 ';
+		$sCommand  = 'phpcs --standard=' . $sStandard . ' --tab-width=' . $sTabwidth . ' ';
 		$sCommand .= $oObject->getTmpObjectPath();
 
 		exec($sCommand, $aLines);

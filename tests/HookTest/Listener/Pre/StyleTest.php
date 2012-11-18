@@ -44,13 +44,63 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 	private $oStyleListener;
 
 	/**
+	 * Configuration array.
+	 * @var array
+	 */
+	private $aCfg;
+
+	/**
 	 * SetUp operations.
 	 * @return void
 	 * @author Alexander Zimmermann <alex@zimmemann.com>
 	 */
 	protected function setUp()
 	{
+		$aCfg = array(
+				 'Filter'   => array(
+								'Directory'            => array(
+														   0 => 'Filter/Filtered/',
+														  ),
+								'Files'                => array(
+														   0 => 'Filter/NotFiltered/FilteredFile.php',
+														  ),
+								'WhitelistDirectories' => array(
+														   0 => 'Filter/Filtered/Whitelist/',
+														  ),
+								'WhitelistFiles'       => array(
+														   0 => 'Filter/Filtered/WhiteFile.php',
+														  ),
+							   ),
+				 'Standard' => 'PEAR',
+				 'Style'    => array (
+								'LineLength' => '4',
+							   ),
+				);
+
+		$this->aCfg = $aCfg;
+
 		$this->oStyleListener = new Style();
+		$this->oStyleListener->setConfiguration($aCfg);
+	} // function
+
+	/**
+	 * Test that the filters are stored correctly.
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function testHandleFilter()
+	{
+		// Set configuration,register and process the listener.
+		$this->oStyleListener->register();
+
+		$oFilter = $this->oStyleListener->getObjectFilter();
+
+		// Shorter.
+		$aCfg = $this->aCfg['Filter'];
+
+		$this->assertSame($aCfg['Directory'], $oFilter->getFilteredDirectories(), 'Directory');
+		$this->assertSame($aCfg['Files'], $oFilter->getFilteredFiles(), 'Files');
+		$this->assertSame($aCfg['WhitelistDirectories'], $oFilter->getWhiteListDirectories(), 'WhitelistDirectories');
+		$this->assertSame($aCfg['WhitelistFiles'], $oFilter->getWhiteListFiles(), 'WhitelistFiles');
 	} // function
 
 	/**
