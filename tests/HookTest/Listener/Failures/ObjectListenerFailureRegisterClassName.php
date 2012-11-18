@@ -1,6 +1,6 @@
 <?php
 /**
- * Failure Register Klassenname ungleich Dateiname.
+ * Failure Register class name differs file name.
  * @category   Hook
  * @package    Listener
  * @subpackage Failures
@@ -18,7 +18,7 @@ use Hook\Commit\Data\Object;
 use Hook\Listener\AbstractObject;
 
 /**
- * Failure Register Klassenname ungleich Dateiname.
+ * Failure Register class name differs file name.
  * @category   Hook
  * @package    Listener
  * @subpackage Failures

@@ -35,7 +35,7 @@ class InfoListenerFailureTypeValue extends AbstractInfo
 	 * Listener Name.
 	 * @var string
 	 */
-	protected $sListener = 'Test Listener falscher register Wert.';
+	protected $sListener = 'Test listener with wrong register value.';
 
 	/**
 	 * Register the action.

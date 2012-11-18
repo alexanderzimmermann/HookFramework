@@ -35,7 +35,7 @@ class InfoListenerFailureTypeEmpty extends AbstractInfo
 	 * Listener Name.
 	 * @var string
 	 */
-	protected $sListener = 'Test Listener register Wert leer';
+	protected $sListener = 'Test listener register value empty';
 
 	/**
 	 * Register the action.

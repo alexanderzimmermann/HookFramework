@@ -1,6 +1,6 @@
 <?php
 /**
- * Failure Register Werte vom falschen Typ 2.
+ * Failure Register values with wrong type 2.
  * @category   Hook
  * @package    Listener
  * @subpackage Failures
@@ -18,7 +18,7 @@ use Hook\Commit\Data\Object;
 use Hook\Listener\AbstractObject;
 
 /**
- * Failure Register Werte vom falschen Typ 2.
+ * Failure Register values with wrong type 2.
  * @category   Hook
  * @package    Listener
  * @subpackage Failures
@@ -35,7 +35,7 @@ class ObjectListenerFailureRegisterValues2 extends AbstractObject
 	 * Listener Name.
 	 * @var string
 	 */
-	protected $sListener = 'Test Object Listener Failure Register Values leer.';
+	protected $sListener = 'Test Object Listener Failure Register Values empty.';
 
 	/**
 	 * Register the action.

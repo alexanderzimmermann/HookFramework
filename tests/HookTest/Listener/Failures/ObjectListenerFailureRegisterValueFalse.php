@@ -1,6 +1,6 @@
 <?php
 /**
- * Failure Register Array hat falschen Wert comit.
+ * * Failure Register Array has wrong value comit.
  * @category   Hook
  * @package    Listener
  * @subpackage Failures
@@ -18,7 +18,7 @@ use Hook\Commit\Data\Object;
 use Hook\Listener\AbstractObject;
 
 /**
- * Failure Register Array hat falschen Wert comit.
+ * Failure Register Array has wrong value comit.
  * @category   Hook
  * @package    Listener
  * @subpackage Failures

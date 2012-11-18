@@ -1,6 +1,6 @@
 <?php
 /**
- * Failure Register Werte leer.
+ * Failure Register values empty.
  * @category   Hook
  * @package    Listener
  * @subpackage Failures
@@ -18,7 +18,7 @@ use Hook\Commit\Data\Object;
 use Hook\Listener\AbstractObject;
 
 /**
- * Failure Register Werte leer.
+ * Failure Register values empty.
  * @category   Hook
  * @package    Listener
  * @subpackage Failures

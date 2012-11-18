@@ -19,10 +19,6 @@ use Hook\Listener\AbstractObject;
 
 /**
  * Object Listener Ok.
- *
- * Der Befehl svnlook propget /var/svn/pbdev svn:keywords
- * /trunk/application/core/controllers/ErrorController.php
- * liefert "Id" zurück, somit kann man prüfen ob das Property gesetzt ist.
  * @category   Hook
  * @package    Listener
  * @subpackage Failures
