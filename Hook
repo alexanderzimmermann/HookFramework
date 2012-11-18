@@ -55,7 +55,7 @@ $aPath = array(
 		  get_include_path()
 		 );
 set_include_path(implode(PATH_SEPARATOR, $aPath));
-var_dump(get_include_path());
+
 // Include autoloader.
 require_once 'library/Hook/Autoload.php';
 
