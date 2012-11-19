@@ -9,8 +9,6 @@ using `PHP` 5.3+ as scripting language rather then shell scripting.
 
 We use `PHPUnit`_ to test the code as a Continuous Integration service.
 
-See :ref:`listener <svn.listener.introduction>`
-
 
 .. _`PHPUnit`: http://www.phpunit.de
 .. _`PHP`: http://www.php.net

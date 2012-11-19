@@ -14,6 +14,25 @@ handle *PHP* scripts correctly in a command line. Some features require addition
 In most cases the framework can be used without them, although performance may suffer or ancillary
 features may not be fully functional.
 
+.. note::
+
+   Actually the only operating system that the hook framework is tested on is Linux.
+
+Overview
+^^^^^^^^^^
+
+.. include:: requirements.php.extensions.table.rst
+
+
+
+.. _requirements.subversion:
+
+Subversion
+^^^^^^^^^^
+
+First of all you need a subversion server running with already created repositories.
+The Hook Framework recommends subversion 1.4 or later.
+
 .. _requirements.version:
 
 PHP Version
@@ -39,4 +58,4 @@ it is available but will function properly if it is not. Many components will au
 if they are available to optimize performance but will execute code with similar functionality in the component
 itself if the extensions are unavailable.
 
-.. include:: requirements.php.extensions.table.rst
+

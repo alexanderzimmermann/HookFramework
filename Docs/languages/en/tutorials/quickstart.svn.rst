@@ -1,76 +1,90 @@
-.. _tutorials.installation.intro:
+.. _tutorials.quickstart.intro:
 
-Install the Hookframework
-=========================
+Quick start
+===========
 
-.. _tutorial.installation.intro.hf:
+If all the :doc:`requirements <../ref/requirements>` fit to your system then you are 4 steps away from
+a running system.
 
-Requirements
-------------
+.. code-block:: text
 
-* The hook framework needs PHP 5.3 or higher to be on the same server where subversion is installed. Direct access to the subversion commands must be granted.
-* The hook framework is a CLI application. So there is no need for a webserver, but the PHP CLI should be configured (i. e. error_log).
-* Subversion 1.6 or higher.
+   $ sudo svnadmin create /var/svn/Example
 
-Optional
-~~~~~~~~
+   $ git clone git://github.com/alexanderzimmermann/HookFramework.git
 
-In order to run listener that use other software, you need to install this software they use. The example repository includes a listener that needs the [[PHP_CodeSniffer|http://pear.php.net/package/PHP_CodeSniffer]] installed.
-Another listener mails the changes to a given address, so you need the mail function for php configured.
+   $ cd HookFramework
 
-To run the unit tests PHPUnit 3.5 or higher is recommended.
+   $ sudo ./install.sh /var/svn/Example
 
-Install and configure the hook framework
-----------------------------------------
+The output should look like
 
-Just copy the directories Core and Listener to a directory you want them to reside. Be sure that the folders and files are executable by the PHP CLI. For example in ``/opt/hookframework/``.
+.. code-block:: text
 
-Configuration file
-~~~~~~~~~~~~~~~~~~
+   Copy hook files to target /var/svn/Install/hooks
 
-* Copy or rename the ``config-dist.ini`` file to ``config.ini``
-* Adjust the path for the subversion executable (mostly ``/usr/bin/`` will fit) to get access to the subversion commands (svn, svnlook).
-* Set the ``logfile`` path where you want to have the logging. Be sure the file is writeable to PHP.
+   Replace default path /path/to/hookframework/ with /home/YOURUSERNAME/Projekte/Test/HookFramework/
 
-Insert the hook framework in the subversion event hooks
--------------------------------------------------------
+   Copy example listener /home/YOURUSERNAME/Projekte/Test/HookFramework/ to Repositories/Install
 
-Every repository in subversion has a directory ``hooks``. In this directory are template files for each event, like pre-commit.tmpl, post-commit.tmpl and so on.
-Rename the hook event you want to use the hook framework with by removing the ``.tmpl``.
-Edit the event hook file and put the command instead of all other example code. Except the variable assigning ($REPOST, $TXN, etc.).
-Under this assigning place the command ``/opt/hookframework/Hook "$REPOS" "$TXN" pre-commit >&2 || exit 1``
-
-For the start-commit event use ``/opt/hookframework/Hook "$REPOS" "$USER" start-commit >&2 || exit 1``
-For the post-commit event use ``/opt/hookframework/Hook "$REPOS" "$REV" post-commit >&2 || exit 1``
-
-See the list of possible [[hook events for subversion]].
-
-*Example for configuring the pre-commit file*
-
-.. code-block:: console
-
-	$: cp /opt/hookframework/Docs/svn-templates/pre-commit.tmpl /var/svn/YourSubversionRepository/hooks/pre-commit
-	$: vim /var/svn/YourSubversionRepository/hooks/pre-commit
+   Done.
 
 
-A sample file could look like this:
 
-.. code-block:: bash
+Test the installation
+---------------------
+A little test is, just change a file and commit it with no message. A dialog of your IDE should
+appear to tell that the commit failed and returns error lines.
 
-	#!/bin/sh
-	# PRE-COMMIT HOOK
-	#
-	# The pre-commit hook is invoked before a Subversion txn is
-	# committed.  Subversion runs this hook by invoking a program
-	# (script, executable, binary, etc.) named 'pre-commit' (for which
-	# this file is a template), with the following ordered arguments:
-	#
-	#   [1] REPOS-PATH   (the path to this repository)
-	#   [2] TXN          (the name of the txn about to be committed)
+Example from PhpStorm.
 
-	REPOS="$1"
-	TXN="$2"
+.. code-block:: text
 
-	/opt/hookframework/Hook "$REPOS" "$TXN" pre-commit >&2 || exit 1
-
-	exit 0
+   svn: E165001: Commit failed (details follow):
+   svn: E165001: Commit blocked by pre-commit hook (exit code 1) with output:
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   Strict Commit Message
+   ================================================================================
+   Please provide a comment for the commit
+   The comment should be like:
+   + If you add something.
+   - If you delete something.
+   * If you changed something.
+   Commit Message
+   ================================================================================
+   Please provide a comment to this commit and use it as follows:
+   + If something new is added.
+   - If something is deleted.
+   * If something is changed.
+   trunk/Filter/NotFiltered/SyntaxError.php
+   --------------------------------------------------------------------------------
+   Style Guide
+   ================================================================================
+   FOUND 18 ERROR(S) AND 1 WARNING(S) AFFECTING 5 LINE(S)
+   --------------------------------------------------------------------------------
+     6 | WARNING | PHP version not specified
+     6 | ERROR   | Missing @category tag in file comment
+     6 | ERROR   | Missing @package tag in file comment
+     6 | ERROR   | Missing @author tag in file comment
+     6 | ERROR   | Missing @license tag in file comment
+     6 | ERROR   | Missing @link tag in file comment
+    12 | ERROR   | Missing @category tag in class comment
+    12 | ERROR   | Missing @package tag in class comment
+    12 | ERROR   | Missing @author tag in class comment
+    12 | ERROR   | Missing @license tag in class comment
+    12 | ERROR   | Missing @link tag in class comment
+    20 | ERROR   | Missing @return tag in function comment
+    21 | ERROR   | Public method name "SyntaxError::_construct" must not be
+       |         | prefixed with an underscore
+    23 | ERROR   | Constants must be uppercase; expected THIS but found This
+    23 | ERROR   | Constants must be uppercase; expected WILL but found will
+    23 | ERROR   | Constants must be uppercase; expected CAUSE but found cause
+    23 | ERROR   | Constants must be uppercase; expected A but found a
+    23 | ERROR   | Constants must be uppercase; expected SYNTAX but found syntax
+    23 | ERROR   | Constants must be uppercase; expected ERROR but found error
+   --------------------------------------------------------------------------------
+   Time: 0 seconds, Memory: 3.25Mb
+   Syntax check
+   ================================================================================
+   Errors parsing /tmp/10-i-trunk_Filter_NotFiltered_SyntaxError.php
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   svn: E175002: MERGE of '/svn/Example/trunk/Filter/NotFiltered': 409 Conflict (http://localhost)
