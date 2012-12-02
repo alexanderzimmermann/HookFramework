@@ -73,7 +73,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 							   ),
 				 'Standard' => 'PEAR',
 				 'Style'    => array (
-								'LineLength' => '4',
+								'TabWidth' => '4',
 							   ),
 				);
 
@@ -81,6 +81,35 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 
 		$this->oStyleListener = new Style();
 		$this->oStyleListener->setConfiguration($aCfg);
+	} // function
+
+	/**
+	 * Check that the pear package PHP_CodeSniffer is available and the "standard" is installed.
+	 *
+	 * If not mark the test skipped.
+	 * @return array
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	protected function checkCodeSniffer()
+	{
+		$aOutput = array();
+		exec('phpcs --standard=' . $this->aCfg['Standard'] . ' ' . __FILE__, $aOutput);
+
+		if (true === empty($aOutput))
+		{
+			$this->markTestSkipped('phpcs or pear standard not installed!');
+		} // if
+
+		if (count($aOutput) === 1)
+		{
+			$sMsg = 'ERROR: the "PEAR" coding standard is not installed.';
+			if (substr($aOutput[0], 0, 50) === $sMsg)
+			{
+				$this->markTestSkipped('PEAR Standard not installed!');
+			} // if
+		} // if
+
+		return $aOutput;
 	} // function
 
 	/**
@@ -113,22 +142,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 		$sFile = __DIR__ . '/_files/parse-error_file1.php';
 
 		// Is PEAR Package phpcs and the PEAR Standard for test installed.
-		$aOutput = array();
-		exec('phpcs --standard=PEAR ' . __FILE__, $aOutput);
-
-		if (true === empty($aOutput))
-		{
-			$this->markTestSkipped('phpcs or pear standard not installed!');
-		} // if
-
-		if (count($aOutput) === 1)
-		{
-			$sMsg = 'ERROR: the "PEAR" coding standard is not installed.';
-			if (substr($aOutput[0], 0, 50) === $sMsg)
-			{
-				$this->markTestSkipped('PEAR Standard not installed!');
-			} // if
-		} // if
+		$this->checkCodeSniffer();
 
 		// PEAR is installed, then run style test.
 		$sUser = 'Indira';
@@ -180,6 +194,9 @@ class StyleTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testListenerStyleWithCorrectFile()
 	{
+		// Is PEAR Package phpcs and the PEAR Standard for test installed.
+		$this->checkCodeSniffer();
+
 		$sFile = __DIR__ . '/_files/correct_file1.php';
 
 		$sUser = 'Indira';

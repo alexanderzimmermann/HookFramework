@@ -71,7 +71,7 @@ class IdTest extends \PHPUnit_Framework_TestCase
 	public function testAddActionOk()
 	{
 		// Mock the property object.
-		$oProperty = $this->getMock('Hook\Commit\Diff\Property', array(), array('svn:keywords'));
+		$oProperty = $this->getMock('Hook\Commit\Data\Diff\Property', array(), array('svn:keywords'));
 		$oProperty->expects($this->any())
 				  ->method('getOldValue')
 				  ->will($this->returnValue(''));
@@ -111,7 +111,7 @@ class IdTest extends \PHPUnit_Framework_TestCase
 	public function testAddActionAndNoKeyword()
 	{
 		// Mock the property object.
-		$oProperty = $this->getMock('Hook\Commit\Diff\Property', array(), array('tag'));
+		$oProperty = $this->getMock('Hook\Commit\Data\Diff\Property', array(), array('tag'));
 		$oProperty->expects($this->any())
 				  ->method('getOldValue')
 				  ->will($this->returnValue(''));
@@ -153,7 +153,7 @@ class IdTest extends \PHPUnit_Framework_TestCase
 	public function testAddActionAndKeyword()
 	{
 		// Mock the property object.
-		$oProperty = $this->getMock('Hook\Commit\Diff\Property', array(), array('svn:keywords'));
+		$oProperty = $this->getMock('Hook\Commit\Data\Diff\Property', array(), array('svn:keywords'));
 		$oProperty->expects($this->any())
 				  ->method('getOldValue')
 				  ->will($this->returnValue(''));
@@ -198,7 +198,7 @@ class IdTest extends \PHPUnit_Framework_TestCase
 	public function testUpdateActionOk()
 	{
 		// Mock the property object.
-		$oProperty = $this->getMock('Hook\Commit\Diff\Property', array(), array('svn:keywords'));
+		$oProperty = $this->getMock('Hook\Commit\Data\Diff\Property', array(), array('svn:keywords'));
 		$oProperty->expects($this->any())
 				  ->method('getOldValue')
 				  ->will($this->returnValue(''));
@@ -238,7 +238,7 @@ class IdTest extends \PHPUnit_Framework_TestCase
 	public function testUpdateActionAndNoKeyword()
 	{
 		// Mock the property object.
-		$oProperty = $this->getMock('Hook\Commit\Diff\Property', array(), array('tag'));
+		$oProperty = $this->getMock('Hook\Commit\Data\Diff\Property', array(), array('tag'));
 		$oProperty->expects($this->any())
 				  ->method('getOldValue')
 				  ->will($this->returnValue(''));
@@ -278,7 +278,7 @@ class IdTest extends \PHPUnit_Framework_TestCase
 	public function testUpdateActionAndKeyword()
 	{
 		// Mock the property object.
-		$oProperty = $this->getMock('Hook\Commit\Diff\Property', array(), array('svn:keywords'));
+		$oProperty = $this->getMock('Hook\Commit\Data\Diff\Property', array(), array('svn:keywords'));
 		$oProperty->expects($this->any())
 				  ->method('getOldValue')
 				  ->will($this->returnValue(''));

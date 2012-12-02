@@ -118,7 +118,8 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
 							   'Example\Pre\MessageStrict', 'Example\Pre\Message',
 							  ),
 				  'object' => array(
-							   'Example\Pre\Style', 'Example\Pre\Id', 'Example\Pre\Syntax'
+							   'Example\Pre\Style', 'Example\Pre\Id', 'Example\Pre\Syntax',
+							   'Example\Pre\StyleIncrement'
 							  )
 				 )
 				),
@@ -166,7 +167,7 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
 
 		// Just the instance.
 		$oConfig = new Config;
-		$oConfig->loadConfigFile(__DIR__ . '/_files/config.ini');
+		$oConfig->loadConfigFile(__DIR__ . '/_files/test-config.ini');
 
 		$oLoader = new Loader($oArguments);
 		$oLoader->setConfiguration($oConfig);
@@ -190,9 +191,8 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
 			$iMax = count($aListener['info']);
 			for ($iFor = 0; $iFor < $iMax; $iFor++)
 			{
-				$sExpected  = $aExpected['info'][$iFor];
 				$sClassName = get_class($aListener['info'][$iFor]);
-				$this->assertEquals($sExpected, $sClassName, $sMsg . $iFor);
+				$this->assertTrue(in_array($sClassName, $aExpected['info'], $sMsg . $iFor));
 			} // for
 		} // if
 
@@ -209,9 +209,8 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
 			$iMax = count($aListener['object']);
 			for ($iFor = 0; $iFor < $iMax; $iFor++)
 			{
-				$sExpected  = $aExpected['object'][$iFor];
 				$sClassName = get_class($aListener['object'][$iFor]);
-				$this->assertEquals($sExpected, $sClassName, $sMsg . $iFor);
+				$this->assertTrue(in_array($sClassName, $aExpected['object'], $sMsg . $iFor));
 			} // for
 		} // if
 	} // function

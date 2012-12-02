@@ -14,6 +14,8 @@
 
 namespace Hook\Commit\Parser;
 
+use Hook\Commit\Parser\Lines;
+
 /**
  * Parser for the differences of the whole commit.
  *
@@ -49,7 +51,7 @@ class Parser
 	private $sLinesHead;
 
 	/**
-	 * Head for propert changes.
+	 * Head for property changes.
 	 * @var string
 	 */
 	private $sPropertyHead;
@@ -67,10 +69,10 @@ class Parser
 	private $aLines = array();
 
 	/**
-	 * Parsed Lines.
+	 * Multi dimension Array with the diff line objects of each file.
 	 * @var array
 	 */
-	private $aParsedLines = array();
+	private $aDiffLines = array();
 
 	/**
 	 * Constructor.
@@ -104,6 +106,7 @@ class Parser
 
 		foreach ($this->aLines as $iLine => $sLine)
 		{
+			// Lines head is 67 signs of = line.
 			if ($sLine === $this->sLinesHead)
 			{
 				$this->handle($iOffset, $aLines, array($bLines, $bProperties));
@@ -114,6 +117,7 @@ class Parser
 				$aLines      = array();
 			} // if
 
+			// Property head is 67 signs of _ line.
 			if ($sLine === $this->sPropertyHead)
 			{
 				$this->handle($iOffset, $aLines, array($bLines, $bProperties));
@@ -154,12 +158,14 @@ class Parser
 				array_pop($aLines);
 			} // if
 
-			// Lines were a change lines block.
+			// Parse the changed lines block.
 			if (true === $aBlock[0])
 			{
-				$this->oLines->parse($iOffset, $aLines);
+				$this->oLines->parse($aLines);
+				$this->aDiffLines[$iOffset] = $this->oLines->getLines();
 			} // if
 
+			// Parse the properties lines block.
 			if (true === $aBlock[1])
 			{
 				$this->oProperties->parse($iOffset, $aLines);
@@ -169,6 +175,8 @@ class Parser
 
 	/**
 	 * Determine the file of the changed lines / properties.
+	 *
+	 * Example line: Added: trunk/Core/Commit/CommitBase.php
 	 * @param string $sLine The line of the changed lines / properties.
 	 * @return integer
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -189,7 +197,7 @@ class Parser
 	 */
 	public function getLines()
 	{
-		return $this->oLines->getLines();
+		return $this->aDiffLines;
 	} // function
 
 	/**

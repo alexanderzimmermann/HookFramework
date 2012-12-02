@@ -12,7 +12,7 @@
  * @since      File available since Release 1.0.0
  */
 
-namespace Hook\Commit\Diff;
+namespace Hook\Commit\Data\Diff;
 
 /**
  * Property class for the commit objects.

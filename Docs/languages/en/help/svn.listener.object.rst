@@ -114,39 +114,7 @@ The *Property object* provides therefore also the function ``getOldValue``.
 
 getChangedLines()
 ~~~~~~~~~~~~~~~~~
-Returns the raw difference lines of the commit in an Array.
 
-Example of changed lines, already convert to a whole text.
-
-.. code-block:: text
-
-   Modified: hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file1.php
-   ===================================================================
-   --- hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file1.php	2008-12-20 19:20:59 UTC (rev 140)
-   +++ hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file1.php	2009-01-03 12:11:06 UTC (txn 140-1)
-   @@ -5,7 +5,7 @@
-     * @package    Test
-     * @subpackage Newfolder
-     * @author     Alexander Zimmermann <alex@azimmermann.com>
-   - * @version    SVN: $Id: $
-   + * @version    SVN: $Id$
-     */
-
-    /**
-   @@ -34,4 +34,13 @@
-    	public function init()
-    	{
-    	} // function
-   +
-   +	/**
-   +	 * Hinzufuegen.
-   +	 * @return void
-   +	 * @author Alexander Zimmermann <alex@azimmermann.com>
-   +	 */
-   +	public function addItem()
-   +	{
-   +	} // function
-    } // class
 
 
 

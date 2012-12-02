@@ -1,0 +1,23 @@
+Modified: trunk/Filter/NotFiltered/NonPsr2File.php
+===================================================================
+--- trunk/Filter/NotFiltered/NonPsr2File.php	2012-11-29 17:19:30 UTC (rev 16)
++++ trunk/Filter/NotFiltered/NonPsr2File.php	2012-11-29 17:44:23 UTC (txn 16-g)
+@@ -1,14 +1,14 @@
+ <?php
+-class psr2
++class Psr2
+ {
+- var $file;
++ protected $file;
+
+  function construct()
+  {
+-   $this->file = \'\';
++   $this->file;
+  }
+
+- function loadFile()
++ public function loadFile()
+  {
+    // Load yourself.
+   $this->file = file(__FILE__);

@@ -184,8 +184,7 @@ class Loader
 		{
 			if (true === $oFile->isFile())
 			{
-				if (false !== strpos($oFile->getFilename(), 'php'))
-				// if ('php' === $oFile->getExtension())
+				if ('php' === $oFile->getExtension())
 				{
 					$aListener[] = $oFile->getPathname();
 				} // if

@@ -62,19 +62,20 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testLoadConfiguration()
 	{
-		$this->oConfig->loadConfigFile(__DIR__ . '/_files/config.ini');
+		$this->oConfig->loadConfigFile(__DIR__ . '/_files/test-config.ini');
 
-		$aExpected = array(
-					  'Filter' => array(
-								   'Directory' => array('/x/a', '/x/b', '/x/y'),
-								   'File'      => array('/x/y/file.php'),
-								   'Whitelist' => array('/x/z/file.php')
-								  ),
-					  'Standard'  => 'HF',
-					  'Style'     => array('LineLength' => '4')
-					 );
+		$aExp = array(
+				 'Filter' => array(
+							  'Directory'            => array('Filter/Filtered/', 'Filter/Filtered2/'),
+							  'Files'                => array('Filter/NotFiltered/FilteredFile.php'),
+							  'WhitelistDirectories' => array('Filter/Filtered/Whitelist/'),
+							  'WhitelistFiles'       => array('Filter/Filtered/WhiteFile.php')
+							 ),
+				 'Standard'  => 'PEAR',
+				 'Style'     => array('TabWidth' => '4')
+				);
 
-		$this->assertSame($aExpected, $this->oConfig->getConfiguration('Pre', 'Style'));
+		$this->assertSame($aExp, $this->oConfig->getConfiguration('Pre', 'Style'));
 	} // function
 
 	/**

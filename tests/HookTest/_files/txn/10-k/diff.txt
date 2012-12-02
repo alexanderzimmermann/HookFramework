@@ -1,0 +1,34 @@
+Modified: trunk/Filter/NotFiltered/FilteredFile.php
+===================================================================
+--- trunk/Filter/NotFiltered/FilteredFile.php   2012-11-18 21:16:33 UTC (rev 10)
++++ trunk/Filter/NotFiltered/FilteredFile.php   2012-11-20 20:23:01 UTC (txn 10-k)
+@@ -17,6 +17,8 @@
+
+ namespace Filter\\NotFiltered;
+
++use stdClass;
++
+ /**
+  * This is a filtered simple file.
+  *
+@@ -32,5 +34,19 @@
+  */
+ class FilteredFile
+ {
++      /**
++       * A member var.
++       * @var stdClass
++       */
++      private $oMember;
+
++      /**
++       * Init.
++       * @return void
++       * @author Alexander Zimmermann <alex@azimmermann.com>
++       */
++      public function init()
++      {
++              $this->oMember = new stdClass();
++      } // function
+ } // class
+

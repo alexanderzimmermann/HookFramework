@@ -38,32 +38,45 @@ class Style extends AbstractObject
 	protected $sListener = 'Style Guide';
 
 	/**
+	 * Set the filter stuff.
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	protected function setFilter($aFilter)
+	{
+		// Set filter stuff from configuration.
+		foreach ($aFilter['Directory'] as $sDirectory)
+		{
+			$this->oObjectFilter->addDirectoryToFilter($sDirectory);
+		} // foreach
+
+		foreach ($aFilter['Files'] as $sFile)
+		{
+			$this->oObjectFilter->addFileToFilter($sFile);
+		} // foreach
+
+		foreach ($aFilter['WhitelistDirectories'] as $sDirectory)
+		{
+			$this->oObjectFilter->addDirectoryToWhitelist($sDirectory);
+		} // foreach
+
+		foreach ($aFilter['WhitelistFiles'] as $sFile)
+		{
+			$this->oObjectFilter->addFileToWhitelist($sFile);
+		} // foreach
+	} // function
+
+	/**
 	 * Register the action.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
 	public function register()
 	{
-		// Set filter stuff from configuration.
-		foreach ($this->aCfg['Filter']['Directory'] as $sDirectory)
+		// Check that the configuration is set.
+		if (true === isset($this->aCfg['Filter']))
 		{
-			$this->oObjectFilter->addDirectoryToFilter($sDirectory);
-		} // foreach
-
-		foreach ($this->aCfg['Filter']['Files'] as $sFile)
-		{
-			$this->oObjectFilter->addFileToFilter($sFile);
-		} // foreach
-
-		foreach ($this->aCfg['Filter']['WhitelistDirectories'] as $sDirectory)
-		{
-			$this->oObjectFilter->addDirectoryToWhitelist($sDirectory);
-		} // foreach
-
-		foreach ($this->aCfg['Filter']['WhitelistFiles'] as $sFile)
-		{
-			$this->oObjectFilter->addFileToWhitelist($sFile);
-		} // foreach
+			$this->setFilter($this->aCfg['Filter']);
+		} // if
 
 		return array(
 				'action'     => 'commit',
@@ -84,7 +97,7 @@ class Style extends AbstractObject
 	public function processAction(Object $oObject)
 	{
 		$sStandard = $this->aCfg['Standard'];
-		$sTabwidth = $this->aCfg['Style']['LineLength'];
+		$sTabwidth = $this->aCfg['Style']['TabWidth'];
 
 		$aLines    = array();
 		$sCommand  = 'phpcs --standard=' . $sStandard . ' --tab-width=' . $sTabwidth . ' ';

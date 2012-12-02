@@ -1,0 +1,4 @@
+enya
+2012-11-28 12:03:03 +0100 (Wed, 28 Nov 2012)
+50
++ Changed the random numbers to a member variable.

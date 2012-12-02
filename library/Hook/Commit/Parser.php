@@ -221,8 +221,7 @@ class Parser
 	private function parseInfo(array $aData)
 	{
 		// Set defaults.
-		$aInfos                  = array
-();
+		$aInfos                  = array();
 		$aInfos['txn']           = $this->oArguments->getTransaction();
 		$aInfos['rev']           = $this->oArguments->getRevision();
 		$aInfos['user']          = '';
@@ -295,7 +294,7 @@ class Parser
 		array_shift($aPath);
 
 		// Trunk.
-		if ($aPath[0])
+		if ('trunk' === $aPath[0])
 		{
 			array_shift($aPath);
 		}

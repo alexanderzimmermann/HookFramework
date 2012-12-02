@@ -1,0 +1,53 @@
+Modified: trunk/Filter/Filtered/WhiteFile.php
+===================================================================
+--- trunk/Filter/Filtered/WhiteFile.php	2012-11-28 10:38:59 UTC (rev 11)
++++ trunk/Filter/Filtered/WhiteFile.php	2012-11-28 11:03:03 UTC (txn 11-b)
+@@ -35,10 +35,10 @@
+ class WhiteFile
+ {
+ 	/**
+-	 * A member var.
+-	 * @var stdClass
++	 * List with generated random numbers.
++	 * @var array
+ 	 */
+-	private $oMember;
++	private $aNumbers = array();
+
+ 	/**
+ 	 * Init.
+@@ -47,20 +47,29 @@
+ 	 */
+ 	public function init()
+ 	{
+-		$this->oMember = new stdClass();
+ 	} // function
+
+ 	/**
++	 * Get the random numbers.
++	 * @author Alexander Zimmermann <alex@azimmermann.com>
++	 */
++	public function getRandomNumbers()
++	{
++		return $this->aNumbers;
++	} // function
++
++	/**
+ 	 * Create some random numbers.
+ 	 * @author Alexander Zimmermann <alex@azimmermann.com>
+ 	 */
+ 	protected function createRandomNumbers()
+ 	{
+-		$iMax     = 10;
+-		$aNumbers = array();
++		$iMax           = 10;
++		$this->aNumbers = array();
++
+ 		for ($iFor = 0; $iFor < $iMax; $iFor++)
+ 		{
+-			$aNumbers[] = rand(5, 20);
++			$this->aNumbers[] = rand(5, 20);
+ 		} // for
+ 	} // function
+ } // class
+

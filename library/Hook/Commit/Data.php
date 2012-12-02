@@ -98,7 +98,7 @@ class Data
 
 	/**
 	 * Return the objects depending on the action.
-	 * @param AbstractObject $oListener Listener Objekt.
+	 * @param AbstractObject $oListener Listener Object.
 	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */

@@ -1,0 +1,75 @@
+<?php
+/**
+ * Comment.
+ *
+ * PHP Version 5.3.3
+ *
+ * @category   Category
+ * @package    Package
+ * @subpackage Subpackage
+ * @author     Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    SVN: $Id: WhiteFile.php 12 2012-11-28 11:03:04Z alexander $
+ * @link       http://www.azimmermann.com/
+ * @since      File available since Release 1.0.0
+ */
+
+namespace Filter\Filtered;
+
+use stdClass;
+
+/**
+ * Comment.
+ *
+ * @category   Category
+ * @package    Package
+ * @subpackage Subpackage
+ * @author     Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    Release: 0.0.0
+ * @link       http://www.azimmermann.com/
+ * @since      Class available since Release 1.0.0
+ */
+class WhiteFile
+{
+	/**
+	 * List with generated random numbers.
+	 * @var array
+	 */
+	private $aNumbers = array();
+
+	/**
+	 * Init.
+	 * @return void
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function init()
+	{
+	} // function
+
+	/**
+	 * Get the random numbers.
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	public function getRandomNumbers()
+	{
+		return $this->aNumbers;
+	} // function
+
+	/**
+	 * Create some random numbers.
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	protected function createRandomNumbers()
+	{
+		$iMax           = 10;
+		$this->aNumbers = array();
+
+		for ($iFor = 0; $iFor < $iMax; $iFor++)
+		{
+			$this->aNumbers[] = rand(5, 20);
+		} // for
+	} // function
+} // class

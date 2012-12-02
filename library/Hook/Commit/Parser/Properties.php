@@ -14,7 +14,7 @@
 
 namespace Hook\Commit\Parser;
 
-use Hook\Commit\Diff\Property;
+use Hook\Commit\Data\Diff\Property;
 
 /**
  * Class for parsing the change properties of a commit.

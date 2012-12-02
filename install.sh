@@ -3,6 +3,8 @@
 #
 # Provides a little install script for the hook framework for a fast setup.
 #
+# Usage: [sudo] ./install.sh /var/svn/REPOSITORY-NAME
+#
 
 clear
 

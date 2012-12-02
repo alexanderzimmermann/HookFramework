@@ -100,6 +100,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
 		$oData = $this->setUpCommit($aArguments);
 
+		// Mock Listener.
 		$oListener = new ParserHelper();
 		$aFiles    = $oData->getObjects($oListener);
 
@@ -153,14 +154,8 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals('A', $aFiles[3]->getAction(), 'Action A is wrong.');
 
-		$sFile  = __DIR__ . '/../';
-		$sFile .= '_files/txn/110-1/diff_lines_commitobject.txt';
-
-		$sDiffLines = file_get_contents($sFile);
-		$aDiffLines = explode("\n", $sDiffLines);
-
-		$aActualLines = $aFiles[3]->getChangedLines()->getLines();
-		$this->assertEquals($aDiffLines, $aActualLines, 'Difflines noct correct.');
+		$aActualLines = $aFiles[3]->getChangedParts();
+		$this->assertEquals(2, count($aActualLines), 'Difflines not correct.');
 
 		// Check the properties.
 		$aProperties = $aFiles[3]->getChangedProperties();

@@ -15,7 +15,7 @@
 namespace Hook\Commit\Data;
 
 use Hook\Commit\Data\Base;
-use Hook\Commit\Diff\Lines;
+use Hook\Commit\Data\Diff\Lines;
 
 /**
  * Class for an object within a commit.
@@ -84,9 +84,9 @@ class Object extends Base
 
 	/**
 	 * Changed lines.
-	 * @var Lines
+	 * @var array
 	 */
-	private $oChangedLines;
+	private $aChangedParts;
 
 	/**
 	 * Constructor.
@@ -103,7 +103,7 @@ class Object extends Base
 		$this->sRealPath          = $aParams['real'];
 		$this->oInfo              = $aParams['info'];
 		$this->aChangedProperties = $aParams['props'];
-		$this->oChangedLines      = $aParams['lines'];
+		$this->aChangedParts      = $aParams['lines'];
 
 		// Convert path to a file that will be stored on a temporary place.
 		if ($aParams['isdir'] === false)
@@ -197,11 +197,11 @@ class Object extends Base
 
 	/**
 	 * Return the changed lines.
-	 * @return Lines
+	 * @return array
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	public function getChangedLines()
+	public function getChangedParts()
 	{
-		return $this->oChangedLines;
+		return $this->aChangedParts;
 	} // function
 } // class

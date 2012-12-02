@@ -32,10 +32,33 @@ require_once __DIR__ . '/HookHelper.php';
  */
 class HookTest extends \PHPUnit_Framework_TestCase
 {
+	/**
+	 * Switch for ob start..
+	 * @var boolean
+	 */
+	private $bObStart;
+
+	/**
+	 * Setup.
+	 * @return void
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
+	protected function setUp()
+	{
+		$this->bObStart = false;
+	} // function
+
+	/**
+	 * Tear down.
+	 * @return void
+	 * @author Alexander Zimmermann <alex@azimmermann.com>
+	 */
 	protected function tearDown()
 	{
-		echo ob_get_contents();
-		ob_clean();
+		if (true === $this->bObStart)
+		{
+			ob_end_clean();
+		} // if
 	} // function
 
 	/**
@@ -56,10 +79,12 @@ class HookTest extends \PHPUnit_Framework_TestCase
 
 		// Avoid output.
 		ob_start();
+		$this->bObStart = true;
 		$iExit = $oHook->run();
 
 		$sContent = ob_get_contents();
 		ob_end_clean();
+		$this->bObStart = false;
 
 		$sExpected  = 'Call with the following parameters and order:' . "\n\n";
 		$sExpected .= '$REPOS    Repository path (/var/svn/project)' . "\n";
@@ -108,6 +133,7 @@ class HookTest extends \PHPUnit_Framework_TestCase
 				 );
 
 		ob_start();
+		$this->bObStart = true;
 		$oHook = new HookHelper($aData);
 		$iExit = $oHook->run();
 
@@ -115,6 +141,7 @@ class HookTest extends \PHPUnit_Framework_TestCase
 
 		$sLines = ob_get_contents();
 		ob_end_clean();
+		$this->bObStart = false;
 	} // function
 
 	/**
@@ -135,8 +162,6 @@ class HookTest extends \PHPUnit_Framework_TestCase
 		$iExit = $oHook->run();
 
 		$this->assertEquals(0, $iExit);
-
-		$sLines = ob_get_contents();
 	} // function
 
 	/**

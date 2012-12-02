@@ -4,10 +4,10 @@
 	<property name="php" value="php"/>
 
 	<target name="build"
-	        depends="prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpunit,phpcb,php-documentor"/>
+	        depends="prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpunit,phpcb,php-documentor,sphinx"/>
 
 	<target name="build-parallel"
-	        depends="prepare,lint,tools-parallel,phpunit,phpcb,php-documentor"/>
+	        depends="prepare,lint,tools-parallel,phpunit,phpcb,php-documentor,sphinx"/>
 
 	<target name="tools-parallel"
 	        description="Run tools in parallel">
@@ -64,6 +64,11 @@
 			<arg value="-l" />
 
 			<fileset dir="${basedir}/library/Hook">
+				<include name="**/*.php" />
+				<modified />
+			</fileset>
+
+			<fileset dir="${basedir}/Repositories">
 				<include name="**/*.php" />
 				<modified />
 			</fileset>
@@ -155,6 +160,12 @@
 		<exec executable="phpdoc" logerror="on">
 			<arg
 				line="--title 'HookFramework' -dn Main -dc Core -ct dataprovider,covers -ue on -t build/api -d library/Hook -i *.ini,*.html,*.txt" />
+		</exec>
+	</target>
+
+	<target name="sphinx">
+		<exec executable="make" dir="${basedir}/Docs/" logerror="on">
+			<arg line="html" />
 		</exec>
 	</target>
 

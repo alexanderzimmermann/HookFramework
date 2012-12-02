@@ -55,8 +55,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 	 */
 	private function getData($sTxn)
 	{
-		$sFile    = __DIR__ . '/../../_files/txn/' . $sTxn;
-		$sFile   .= '/changed.txt';
+		$sFile    = __DIR__ . '/../../_files/txn/' . $sTxn . '/changed.txt';
 		$sChanged = file_get_contents($sFile);
 		$aChanged = explode("\n", $sChanged);
 
@@ -71,10 +70,9 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 			} // if
 		} // for
 
-		$sFile  = __DIR__ . '/../../_files/txn/' . $sTxn;
-		$sFile .= '/diff.txt';
-		$sDiff  = file_get_contents($sFile);
-		$aDiff  = explode("\n", $sDiff);
+		$sFile = __DIR__ . '/../../_files/txn/' . $sTxn . '/diff.txt';
+		$sDiff = file_get_contents($sFile);
+		$aDiff = explode("\n", $sDiff);
 
 		$this->oParser = new Parser($aChanged, $aDiff);
 	} // function
@@ -98,7 +96,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 	 * @return void
 	 * @author Alexander Zimmermann <alex@azimmermann.com>
 	 */
-	public function testBinaerDiff()
+	public function testBinaryDiff()
 	{
 		$this->getData('1719-1');
 		$this->oParser->parse();
