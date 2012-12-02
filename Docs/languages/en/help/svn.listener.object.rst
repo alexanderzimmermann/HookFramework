@@ -112,9 +112,71 @@ The *Property object* provides therefore also the function ``getOldValue``.
    } // if
 
 
-getChangedLines()
+getChangedParts()
 ~~~~~~~~~~~~~~~~~
+Returns an Array with all change areas of this file. With this its possible to execute logic that
+depends on the data what exactly was changed. This information is divided in some sub objects.
 
+.. code-block:: php
+
+   $aDiff  = $oObject->getChangedParts();
+
+This is an array of Line Objects. This line object provides some more functions.
+
+.. code-block:: php
+
+   getInfo
+   getRawLines
+   getNewLines
+   getOldLines
+
+The `getInfo` method returns an object with the parsed information that is in an unified diff.
+
+.. code-block:: text
+
+   @@ -32,5 +34,19 @@
+
+   getOldStart        => 32
+   getOldLength       => 5
+
+   getNewStart        => 34
+   getNewLength       => 19
+
+
+The method `getRawLines` returns the raw lines of an unified diff.
+
+.. code-block:: text
+
+   @@ -35,10 +35,10 @@
+    class WhiteFile
+    {
+    	/**
+   -	 * A member var.
+   -	 * @var stdClass
+   +	 * List with generated random numbers.
+   +	 * @var array
+    	 */
+   -	private $oMember;
+   +	private $aNumbers = array();
+
+    	/**
+    	 * Init.
+
+The methods `getOldLines` and `getNewLines` will return only these + and - parts as an array.
+But this array contains the line number this line has in the new file or had in the old file.
+In example above it will looks like this.
+
+.. code-block:: text
+
+   Old lines
+   38 => 	 * A member var.
+   39 => 	 * @var stdClass
+   41 => 	private $oMember;
+
+   New lines
+   38 => 	 * List with generated random numbers.
+   39 => 	 * @var array
+   41 => 	private $aNumbers = array();
 
 
 

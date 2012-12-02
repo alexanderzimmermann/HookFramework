@@ -21,8 +21,16 @@ In the listener you can implement every logic you want, with the commit informat
 * Check the code against a style guide.
 * Check that a commit message is given.
 
-If now some of this checks is not against your `rules` you can avoid the check in within the Start
-and Pre type hooks by using the `addError` or `addErrorLines`.
+If now some of this checks is against your `style guide rules` or logic and you want to prevent the
+check in, only possible in start and pre hooks you can do this by using the functions `addError`
+or `addErrorLines`.
+
+.. text-block:: php
+
+   $oObject->addErrorLines($aLines);
+
+   $oInfo->addError($sErrorMessage);
+
 
 For every listener that is processed those lines will be return to the IDE or console you are
 commit from.
