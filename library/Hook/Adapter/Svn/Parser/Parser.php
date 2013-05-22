@@ -90,7 +90,7 @@ class Parser
 
 		$this->aObjects = $aObjects;
 		$this->aLines   = $aLines;
-	} // function
+	}
 
 	/**
 	 * Parse the diff lines of that commit.
@@ -135,7 +135,7 @@ class Parser
 		$aLines[] = '';
 
 		$this->handle($iOffset, $aLines, array($bLines, $bProperties));
-	} // function
+	}
 
 	/**
 	 * Handle the changes between lines and or properties blocks.
@@ -171,7 +171,7 @@ class Parser
 				$this->oProperties->parse($iOffset, $aLines);
 			} // if
 		} // if
-	} // function
+	}
 
 	/**
 	 * Determine the file of the changed lines / properties.
@@ -188,7 +188,7 @@ class Parser
 		$iOffset = array_search($sFile, $this->aObjects);
 
 		return $iOffset;
-	} // function
+	}
 
 	/**
 	 * Returns the lines objects.
@@ -198,7 +198,7 @@ class Parser
 	public function getLines()
 	{
 		return $this->aDiffLines;
-	} // function
+	}
 
 	/**
 	 * Returns the property objects.
@@ -208,5 +208,5 @@ class Parser
 	public function getProperties()
 	{
 		return $this->oProperties->getProperties();
-	} // function
-} // class
+	}
+}

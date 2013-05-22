@@ -42,7 +42,7 @@ class Properties
 	 */
 	public function __construct()
 	{
-	} // function
+	}
 
 	/**
 	 * Parsing the properties lines.
@@ -103,7 +103,7 @@ class Properties
 
 		// Handle the last Value.
 		$this->setValue($oProperty, $bSwitch, $sValue);
-	} // function
+	}
 
 	/**
 	 * Set the collected value.
@@ -126,7 +126,7 @@ class Properties
 		{
 			$oProperty->setOldValue($sValue);
 		} // if
-	} // function
+	}
 
 	/**
 	 * Return the difference properties.
@@ -136,5 +136,5 @@ class Properties
 	public function getProperties()
 	{
 		return $this->aProperties;
-	} // function
-} // class
+	}
+}

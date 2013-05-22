@@ -80,7 +80,7 @@ class Lines
 	public function __construct()
 	{
 		$this->resetContainers();
-	} // function
+	}
 
 	/**
 	 * Parse the lines.
@@ -106,7 +106,7 @@ class Lines
 		$this->aLines = array();
 
 		$this->splitChangedSegments($aLines);
-	} // function
+	}
 
 	/**
 	 * Reset Containers
@@ -117,7 +117,7 @@ class Lines
 		$this->aRaw = array();
 		$this->aNew = array();
 		$this->aOld = array();
-	} // function
+	}
 
 	/**
 	 * Adds a new DiffLines area to the list.
@@ -130,7 +130,7 @@ class Lines
 		$this->oActualLines->setOldLines($this->aOld);
 
 		$this->aLines[] = $this->oActualLines;
-	} // function
+	}
 
 	/**
 	 * Separate the @@ -n,n +n,n @@ segments
@@ -197,7 +197,7 @@ class Lines
 		} // foreach
 
 		$this->addNewArea();
-	} // function
+	}
 
 	/**
 	 * Split change info.
@@ -232,7 +232,7 @@ class Lines
 		$oUnified->setNewLength((int) $aNew[1]);
 
 		return $oUnified;
-	} // function
+	}
 
 	/**
 	 * Return the difference lines.
@@ -242,5 +242,5 @@ class Lines
 	public function getLines()
 	{
 		return $this->aLines;
-	} // function
-} // class
+	}
+}
