@@ -28,101 +28,96 @@ namespace Hook\Core;
  */
 class Config
 {
-	/**
-	 * Configuration Array.
-	 * @var array
-	 */
-	protected $aCfg = array();
+    /**
+     * Configuration Array.
+     * @var array
+     */
+    protected $aCfg = array();
 
-	/**
-	 * Load the configuration file.
-	 * @return boolean
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function loadConfigFile($sFile)
-	{
-		if (false === file_exists($sFile))
-		{
-			return false;;
-		} /// if
+    /**
+     * Load the configuration file.
+     * @param string $sFile Configuration file name.
+     * @return boolean
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function loadConfigFile($sFile)
+    {
+        if (false === file_exists($sFile)) {
 
-		$this->aCfg = parse_ini_file($sFile, true);
+            return false;
+        } /// if
 
-		$this->divideSections();
+        $this->aCfg = parse_ini_file($sFile, true);
 
-		return true;
-	} // function
+        $this->divideSections();
 
-	/**
-	 * Divide sections to main hook and listener name.
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	protected function divideSections()
-	{
-		$aNew = array();
-		foreach ($this->aCfg as $sSection => $mSection)
-		{
-			$aTmp = explode(':', $sSection);
+        return true;
+    } // function
 
-			if (false === isset($aNew[$aTmp[0]]))
-			{
-				$aNew[$aTmp[0]] = array();
-			} // if
+    /**
+     * Divide sections to main hook and listener name.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    protected function divideSections()
+    {
+        $aNew = array();
+        foreach ($this->aCfg as $sSection => $mSection) {
 
-			$this->divideValues($aNew, $aTmp, $mSection);
-		} // foreach
+            $aTmp = explode(':', $sSection);
 
-		$this->aCfg = $aNew;
-	} // function
+            if (false === isset($aNew[$aTmp[0]])) {
+                $aNew[$aTmp[0]] = array();
+            } // if
 
-	/**
-	 * Divide the value lines.
-	 * @param array &$aNew    The new configuration array.
-	 * @param array $aSection The divided section identifier.
-	 * @param       $mSection Values of section.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	protected function divideValues(array &$aNew, array $aSection, $mSection)
-	{
-		// Analyze value.
-		foreach ($mSection as $sIdentifier => $aValues)
-		{
-			// No Point, leave as is and go to next.
-			if (false === strpos($sIdentifier, '.'))
-			{
-				$aNew[$aSection[0]][$aSection[1]][$sIdentifier] = $aValues;
-				continue;
-			} // if
+            $this->divideValues($aNew, $aTmp, $mSection);
+        } // foreach
 
-			$aTmp = explode('.', $sIdentifier);
+        $this->aCfg = $aNew;
+    } // function
 
-			if (false === isset($aNew[$aSection[0]][$aSection[1]][$aTmp[0]]))
-			{
-				$aNew[$aSection[0]][$aSection[1]][$aTmp[0]] = array();
-			} // if
+    /**
+     * Divide the value lines.
+     * @param array &$aNew    The new configuration array.
+     * @param array $aSection The divided section identifier.
+     * @param mixed $mSection Values of section.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    protected function divideValues(array &$aNew, array $aSection, $mSection)
+    {
+        // Analyze value.
+        foreach ($mSection as $sIdentifier => $aValues) {
+            // No Point, leave as is and go to next.
+            if (false === strpos($sIdentifier, '.')) {
+                $aNew[$aSection[0]][$aSection[1]][$sIdentifier] = $aValues;
+                continue;
+            } // if
 
-			$aNew[$aSection[0]][$aSection[1]][$aTmp[0]][$aTmp[1]] = $aValues;
-		} // foreach
-	} // function
+            $aTmp = explode('.', $sIdentifier);
 
-	/**
-	 * Get the data for the listener.
-	 * @param string $sMain     Main hook identifier.
-	 * @param string $sListener Listener class name.
-	 * @return string|array|false
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function getConfiguration($sMain, $sListener)
-	{
-		if (true === isset($this->aCfg[$sMain]))
-		{
-			if (true === isset($this->aCfg[$sMain][$sListener]))
-			{
-				return $this->aCfg[$sMain][$sListener];
-			} // if
-		} // if
+            if (false === isset($aNew[$aSection[0]][$aSection[1]][$aTmp[0]])) {
+                $aNew[$aSection[0]][$aSection[1]][$aTmp[0]] = array();
+            } // if
 
-		return false;
-	} // function
+            $aNew[$aSection[0]][$aSection[1]][$aTmp[0]][$aTmp[1]] = $aValues;
+        } // foreach
+    } // function
+
+    /**
+     * Get the data for the listener.
+     * @param string $sMain     Main hook identifier.
+     * @param string $sListener Listener class name.
+     * @return string|array|boolean
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function getConfiguration($sMain, $sListener)
+    {
+        if (true === isset($this->aCfg[$sMain])) {
+            if (true === isset($this->aCfg[$sMain][$sListener])) {
+                return $this->aCfg[$sMain][$sListener];
+            } // if
+        } // if
+
+        return false;
+    } // function
 } // class
