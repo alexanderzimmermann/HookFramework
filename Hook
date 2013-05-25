@@ -51,9 +51,9 @@ use Hook\Core\Hook;
 $sRoot = realpath(dirname(__FILE__) . '/');
 
 $aPath = array(
-		  $sRoot,
-		  get_include_path()
-		 );
+          $sRoot,
+          get_include_path()
+         );
 set_include_path(implode(PATH_SEPARATOR, $aPath));
 
 // Include autoloader.
