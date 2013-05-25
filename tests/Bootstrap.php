@@ -5,9 +5,8 @@
  * @package    Main
  * @subpackage Help
  * @author     Alexander Zimmermann <alex@zimmemann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
@@ -25,31 +24,30 @@ require_once 'PHPUnit/Runner/Version.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 require_once 'PHPUnit/Util/Filter.php';
 
-/**
-	Set Error Reporting to E_ALL | E_STRICT.
+/*
+    Set Error Reporting to E_ALL | E_STRICT.
 */
 
 error_reporting(E_ALL | E_STRICT);
 
 /*
-	Determine the root directories of the framework.
+    Determine the root directories of the framework.
 */
 
 $sRoot      = dirname(__DIR__) . '/';
 $sRootTests = __DIR__ . '/';
 
 /*
-	Prepend the Framework Core/ and tests/ directories to the
-	include_path. This allows the tests to run out of the box and helps prevent
-	loading other copies of the framework code and tests that would supersede
-	this copy.
+    Prepend the Framework Core/ and tests/ directories to the include_path.
+    This allows the tests to run out of the box and helps prevent loading other
+    copies of the framework code and tests that would supersede this copy.
 */
 
 $aPath = array(
-		  $sRoot,
-		  $sRootTests,
-		  get_include_path()
-		 );
+    $sRoot,
+    $sRootTests,
+    get_include_path()
+);
 set_include_path(implode(PATH_SEPARATOR, $aPath));
 
 /**
@@ -60,30 +58,27 @@ define('TEST_SVN_BIN', __DIR__ . '/HookTest//_files/bin/');
 define('TEST_SVN_EXAMPLE', __DIR__ . '/HookTest/_files/Example/');
 define('TEST_SVN_REPOSITORY', __DIR__ . '/../Repositories/');
 
-/**
-	Create Log instance.
+/*
+    Create Log instance and clear the file.
 */
 
 $sFile = 'config.ini';
-if (false === file_exists($sFile))
-{
-	$sFile = 'config-dist.ini';
-} // if
+if (false === file_exists($sFile)) {
+    $sFile = 'config-dist.ini';
+}
 
 $aCfg = parse_ini_file($sRootTests . $sFile);
 $oLog = Log::getInstance();
 
-if (false === isset($aCfg['logfile']))
-{
-	$aCfg['logfile'] = __DIR__ . '/common-test.log';
-} // if
+if (false === isset($aCfg['logfile'])) {
+    $aCfg['logfile'] = __DIR__ . '/common-test.log';
+}
 
 exec('echo > ' . $aCfg['logfile']);
 
-if (false === isset($aCfg['logmode']))
-{
-	$aCfg['logmode'] = Log::HF_VARDUMP;
-} // if
+if (false === isset($aCfg['logmode'])) {
+    $aCfg['logmode'] = Log::HF_VARDUMP;
+}
 
 $oLog->setLogFile($aCfg['logfile']);
 $oLog->setLogMode($aCfg['logmode']);
