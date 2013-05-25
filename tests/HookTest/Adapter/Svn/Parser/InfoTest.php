@@ -107,4 +107,24 @@ class InfoTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($oInfo, $oExpected);
     }
+
+    /**
+     * Test missing commit message
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testMissingCommitMessage()
+    {
+        $aData     = array('alexander', '2009-01-03 13:11:06 +0100 (Sat, 03 Jan 2009)');
+        $oExpected = new InfoObject(
+            '74-1',
+            '74',
+            'alexander',
+            '2009-01-03 13:11:06 +0100 (Sat, 03 Jan 2009)',
+            ''
+        );
+
+        $oInfo = $this->oInfo->parse($aData, '74-1', '74');
+
+        $this->assertEquals($oInfo, $oExpected);
+    }
 }

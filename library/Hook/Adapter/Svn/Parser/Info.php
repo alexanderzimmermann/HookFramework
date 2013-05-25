@@ -38,12 +38,12 @@ class Info
      * @return InfoObject
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function parse(array $aData, $sTxn, $sRev)
+    public function parse(array $aData, $sTxn, $iRev)
     {
         // Set defaults.
         $aInfo             = array();
         $aInfo['txn']      = $sTxn;
-        $aInfo['rev']      = $sRev;
+        $aInfo['rev']      = $iRev;
         $aInfo['user']     = '';
         $aInfo['datetime'] = '';
         $aInfo['message']  = '';
