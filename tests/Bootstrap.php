@@ -50,13 +50,24 @@ $aPath = array(
 );
 set_include_path(implode(PATH_SEPARATOR, $aPath));
 
+// For simple access on files.
+define('TEST_DIR', $sRootTests);
+
 /**
  * Define Example SVN directory and subversion test binary.
  */
 
 define('TEST_SVN_BIN', __DIR__ . '/HookTest//_files/bin/');
-define('TEST_SVN_EXAMPLE', __DIR__ . '/HookTest/_files/Example/');
+define('TEST_SVN_EXAMPLE', __DIR__ . '/HookTest/_files/ExampleSvn/');
 define('TEST_SVN_REPOSITORY', __DIR__ . '/../Repositories/');
+
+/**
+ * Define Example GIT directory and git test binary.
+ */
+
+define('TEST_GIT_BIN', __DIR__ . '/HookTest//_files/bin/');
+define('TEST_GIT_EXAMPLE', __DIR__ . '/HookTest/_files/ExampleGit/');
+define('TEST_GIT_REPOSITORY', __DIR__ . '/../Repositories/');
 
 /*
     Create Log instance and clear the file.
