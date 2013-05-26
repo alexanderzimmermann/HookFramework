@@ -32,156 +32,154 @@ require_once __DIR__ . '/HookHelper.php';
  */
 class HookTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * Switch for ob start..
-	 * @var boolean
-	 */
-	private $bObStart;
+    /**
+     * Switch for ob start..
+     * @var boolean
+     */
+    private $bObStart;
 
-	/**
-	 * Setup.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	protected function setUp()
-	{
-		$this->bObStart = false;
-	} // function
+    /**
+     * Setup.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    protected function setUp()
+    {
+        $this->bObStart = false;
+    } // function
 
-	/**
-	 * Tear down.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	protected function tearDown()
-	{
-		if (true === $this->bObStart)
-		{
-			ob_end_clean();
-		} // if
-	} // function
+    /**
+     * Tear down.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    protected function tearDown()
+    {
+        if (true === $this->bObStart) {
+            ob_end_clean();
+        } // if
+    } // function
 
-	/**
-	 * Test usage output.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function testHookUsage()
-	{
-		$aData = array(
-				  0 => '/var/local/svn/hooks/Hook',
-				  1 => TEST_SVN_EXAMPLE,
-				  2 => 'phoebe',
-				  3 => 'pre-commit'
-				 );
+    /**
+     * Test usage output.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testHookUsage()
+    {
+        $aData = array(
+            0 => '/var/local/svn/hooks/Hook',
+            1 => TEST_SVN_EXAMPLE,
+            2 => 'phoebe',
+            3 => 'pre-commit'
+        );
 
-		$oHook = new HookHelper($aData);
+        $oHook = new HookHelper($aData);
 
-		// Avoid output.
-		ob_start();
-		$this->bObStart = true;
-		$iExit = $oHook->run();
+        // Avoid output.
+        ob_start();
+        $this->bObStart = true;
+        $iExit          = $oHook->run();
 
-		$sContent = ob_get_contents();
-		ob_end_clean();
-		$this->bObStart = false;
+        $sContent = ob_get_contents();
+        ob_end_clean();
+        $this->bObStart = false;
 
-		$sExpected  = 'Call with the following parameters and order:' . "\n\n";
-		$sExpected .= '$REPOS    Repository path (/var/svn/project)' . "\n";
-		$sExpected .= '$TXN      Transaction (74-1)' . "\n";
-		$sExpected .= 'Hook      start-commit, pre-commit, post-commit' . "\n";
-		$sExpected .= "\n";
-		$sExpected .= 'Example: ';
-		$sExpected .= '/var/svn/hk/Hook $REPOS $TXN pre-commit' . "\n";
+        $sExpected = 'Call with the following parameters and order:' . "\n\n";
+        $sExpected .= '$REPOS    Repository path (/var/svn/project)' . "\n";
+        $sExpected .= '$TXN      Transaction (74-1)' . "\n";
+        $sExpected .= 'Hook      start-commit, pre-commit, post-commit' . "\n";
+        $sExpected .= "\n";
+        $sExpected .= 'Example: ';
+        $sExpected .= '/path/to/hookframework/Hook $REPOS $TXN pre-commit' . "\n";
 
-		$this->assertEquals(1, $iExit, 'Exit code false.');
-		$this->assertEquals($sExpected, $sContent, 'Message not as expected.');
-	} // function
+        $this->assertEquals(1, $iExit, 'Exit code false.');
+        $this->assertEquals($sExpected, $sContent, 'Message not as expected.');
+    } // function
 
-	/**
-	 * Test start hook.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function testHookStart()
-	{
-		$aData = array(
-				  0 => '/var/local/svn/hooks/Hook',
-				  1 => TEST_SVN_EXAMPLE,
-				  2 => 'testuser12',
-				  3 => 'start-commit'
-				 );
+    /**
+     * Test start hook.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testHookStart()
+    {
+        $aData = array(
+            0 => '/var/local/svn/hooks/Hook',
+            1 => TEST_SVN_EXAMPLE,
+            2 => 'testuser12',
+            3 => 'start-commit'
+        );
 
-		$oHook = new HookHelper($aData);
-		$iExit = $oHook->run();
+        $oHook = new HookHelper($aData);
+        $iExit = $oHook->run();
 
-		$this->assertEquals(0, $iExit);
-	} // function
+        $this->assertEquals(0, $iExit);
+    } // function
 
-	/**
-	 * Test pre hook with errors.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function testHookPreCommitWithError()
-	{
-		$aData = array(
-				  0 => '/var/local/svn/hooks/Hook',
-				  1 => TEST_SVN_EXAMPLE,
-				  2 => '666-1',
-				  3 => 'pre-commit',
-				 );
+    /**
+     * Test pre hook with errors.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testHookPreCommitWithError()
+    {
+        $aData = array(
+            0 => '/var/local/svn/hooks/Hook',
+            1 => TEST_SVN_EXAMPLE,
+            2 => '666-1',
+            3 => 'pre-commit',
+        );
 
-		ob_start();
-		$this->bObStart = true;
-		$oHook = new HookHelper($aData);
-		$iExit = $oHook->run();
+        ob_start();
+        $this->bObStart = true;
+        $oHook          = new HookHelper($aData);
+        $iExit          = $oHook->run();
 
-		$this->assertEquals(1, $iExit);
+        $this->assertEquals(1, $iExit);
 
-		$sLines = ob_get_contents();
-		ob_end_clean();
-		$this->bObStart = false;
-	} // function
+        ob_end_clean();
+        $this->bObStart = false;
+    } // function
 
-	/**
-	 * Test pre hook that works fine.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function testHookPreCommitOk()
-	{
-		$aData = array(
-				  0 => '/var/local/svn/hooks/Hook',
-				  1 => TEST_SVN_EXAMPLE,
-				  2 => '74-1',
-				  3 => 'pre-commit',
-				 );
+    /**
+     * Test pre hook that works fine.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testHookPreCommitOk()
+    {
+        $aData = array(
+            0 => '/var/local/svn/hooks/Hook',
+            1 => TEST_SVN_EXAMPLE,
+            2 => '74-1',
+            3 => 'pre-commit',
+        );
 
-		$oHook = new HookHelper($aData);
-		$iExit = $oHook->run();
+        $oHook = new HookHelper($aData);
+        $iExit = $oHook->run();
 
-		$this->assertEquals(0, $iExit);
-	} // function
+        $this->assertEquals(0, $iExit);
+    } // function
 
-	/**
-	 * Test post hook.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function testHookPost()
-	{
-		$aData = array(
-				  0 => '/var/local/svn/hooks/Hook',
-				  1 => TEST_SVN_EXAMPLE,
-				  2 => 76,
-				  3 => 'post-commit',
-				 );
+    /**
+     * Test post hook.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testHookPost()
+    {
+        $aData = array(
+            0 => '/var/local/svn/hooks/Hook',
+            1 => TEST_SVN_EXAMPLE,
+            2 => 76,
+            3 => 'post-commit',
+        );
 
-		$oHook = new HookHelper($aData);
-		$iExit = $oHook->run();
+        $oHook = new HookHelper($aData);
+        $iExit = $oHook->run();
 
-		// Post is always 0, cause we do not abort here.
-		$this->assertEquals(0, $iExit);
-	} // function
+        // Post is always 0, cause we do not abort here.
+        $this->assertEquals(0, $iExit);
+    } // function
 } // class

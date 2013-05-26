@@ -88,7 +88,7 @@ class Usage
         $sUsage .= 'Hook      start-commit, pre-commit, post-commit' . "\n";
         $sUsage .= "\n";
         $sUsage .= 'Example: ';
-        $sUsage .= '/var/svn/hk/Hook $REPOS $USER start-commit' . "\n";
+        $sUsage .= '/path/to/hookframework/Hook $REPOS $USER start-commit' . "\n";
 
         return $sUsage;
     }
@@ -111,7 +111,7 @@ class Usage
         $sUsage .= 'Hook      start-commit, pre-commit, post-commit' . "\n";
         $sUsage .= "\n";
         $sUsage .= 'Example: ';
-        $sUsage .= '/var/svn/hk/Hook $REPOS $TXN pre-commit' . "\n";
+        $sUsage .= '/path/to/hookframework/Hook $REPOS $TXN pre-commit' . "\n";
 
         return $sUsage;
     }
@@ -144,7 +144,7 @@ class Usage
         $sUsage .= 'Hook      start-commit, pre-commit, post-commit' . "\n";
         $sUsage .= "\n";
         $sUsage .= 'Example: ';
-        $sUsage .= '/var/svn/hk/Hook $REPOS $REV $USER ';
+        $sUsage .= '/path/to/hookframework/Hook $REPOS $REV $USER ';
         $sUsage .= '$SPROPNAME $ACTION pre-revprop-change' . "\n";
 
         return $sUsage;
@@ -170,7 +170,7 @@ class Usage
         $sUsage .= 'Hook      start-commit, pre-commit, post-commit' . "\n";
         $sUsage .= "\n\n";
         $sUsage .= 'Example: ';
-        $sUsage .= '/var/svn/hk/Hook $REPOS $PATH $USER pre-lock' . "\n";
+        $sUsage .= '/path/to/hookframework/Hook $REPOS $PATH $USER pre-lock' . "\n";
 
         return $sUsage;
     }
@@ -195,7 +195,7 @@ class Usage
         $sUsage .= 'Hook      start-commit, pre-commit, post-commit' . "\n";
         $sUsage .= "\n";
         $sUsage .= 'Example: ';
-        $sUsage .= '/var/svn/hk/Hook $REPOS $PATH $USER pre-unlock' . "\n";
+        $sUsage .= '/path/to/hookframework/Hook $REPOS $PATH $USER pre-unlock' . "\n";
 
         return $sUsage;
     }
@@ -218,7 +218,7 @@ class Usage
         $sUsage .= 'Hook      start-commit, pre-commit, post-commit' . "\n";
         $sUsage .= "\n";
         $sUsage .= 'Example: ';
-        $sUsage .= '/var/svn/hk/Hook $REPOS $REV post-commit' . "\n";
+        $sUsage .= '/path/to/hookframework/Hook $REPOS $REV post-commit' . "\n";
 
         return $sUsage;
     }
@@ -251,7 +251,7 @@ class Usage
         $sUsage .= 'Hook      start-commit, pre-commit, post-commit' . "\n";
         $sUsage .= "\n";
         $sUsage .= 'Example: ';
-        $sUsage .= '/var/svn/hk/Hook $REPOS $REV $USER ';
+        $sUsage .= '/path/to/hookframework/Hook $REPOS $REV $USER ';
         $sUsage .= '$SPROPNAME $ACTION post-revprop-change' . "\n";
 
         return $sUsage;
@@ -275,7 +275,7 @@ class Usage
         $sUsage .= 'Hook      start-commit, pre-commit, post-commit' . "\n";
         $sUsage .= "\n";
         $sUsage .= 'Example: ';
-        $sUsage .= '/var/svn/hk/Hook $REPOS $USER post-lock' . "\n";
+        $sUsage .= '/path/to/hookframework/Hook $REPOS $USER post-lock' . "\n";
 
         return $sUsage;
     }
@@ -298,7 +298,7 @@ class Usage
         $sUsage .= 'Hook      start-commit, pre-commit, post-commit' . "\n";
         $sUsage .= "\n";
         $sUsage .= 'Example: ';
-        $sUsage .= '/var/svn/hk/Hook $REPOS $USER post-unlock' . "\n";
+        $sUsage .= '/path/to/hookframework/Hook $REPOS $USER post-unlock' . "\n";
 
         return $sUsage;
     }
@@ -315,8 +315,8 @@ class Usage
         $sUsage .= 'Hook      start-commit, pre-commit, post-commit' . "\n";
         $sUsage .= "\n";
         $sUsage .= 'Examples: ';
-        $sUsage .= '/var/svn/hk/Hook $REPOS $TXN pre-commit' . "\n";
-        $sUsage .= '/var/svn/hk/Hook $REPOS $REV post-commit' . "\n";
+        $sUsage .= '/path/to/hookframework/Hook $REPOS $TXN pre-commit' . "\n";
+        $sUsage .= '/path/to/hookframework/Hook $REPOS $REV post-commit' . "\n";
 
         return $sUsage;
     }
