@@ -1,13 +1,12 @@
 <?php
 /**
  * Test class for parsing the info of a commit..
- * @category   Core
- * @package    Commit
- * @subpackage Parser
+ * @category   Tests
+ * @package    Adapter
+ * @subpackage Svn\Parser
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 3.0.0
  */
@@ -21,9 +20,9 @@ require_once __DIR__ . '/../../../../Bootstrap.php';
 
 /**
  * Test class for parsing the info of a commit.
- * @category   Core
- * @package    Commit
- * @subpackage Parser
+ * @category   Tests
+ * @package    Adapter
+ * @subpackage Svn\Parser
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License

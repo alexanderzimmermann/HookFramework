@@ -2,12 +2,11 @@
 /**
  * Argument Tests.
  * @category   Tests
- * @package    Main
- * @subpackage Core
+ * @package    Adapter
+ * @subpackage Svn
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
@@ -21,8 +20,8 @@ require_once __DIR__ . '/../../../Bootstrap.php';
 /**
  * Argument Tests.
  * @category   Tests
- * @package    Main
- * @subpackage Core
+ * @package    Adapter
+ * @subpackage Svn
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
