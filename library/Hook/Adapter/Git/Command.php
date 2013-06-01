@@ -7,7 +7,7 @@
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 3.0.0
  */

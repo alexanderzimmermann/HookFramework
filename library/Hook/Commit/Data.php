@@ -5,19 +5,19 @@
  * @package    Commit
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
 namespace Hook\Commit;
 
-use Hook\Commit\Data\Info;
-use Hook\Commit\Data\Object;
+use Hook\Commit\Info;
+use Hook\Commit\Object;
 use Hook\Filter\Filter;
-use Hook\Listener\AbstractObject;
+use Hook\Listener\ListenerInterface;
 
 /**
  * Data in the transaction.
@@ -25,7 +25,7 @@ use Hook\Listener\AbstractObject;
  * @package    Commit
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
@@ -33,176 +33,141 @@ use Hook\Listener\AbstractObject;
  */
 class Data
 {
-	/**
-	 * Commit Information.
-	 * @var Info
-	 */
-	private $oInfo;
+    /**
+     * Commit Information.
+     * @var Info
+     */
+    private $oInfo;
 
-	/**
-	 * All directories and file objects. (Multi dimension Array).
-	 * @var array
-	 */
-	private $aObjects;
+    /**
+     * All directories and file objects. (Multi dimension Array).
+     * @var array
+     */
+    private $aObjects = array();
 
-	/**
-	 * Constructor.
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function __construct()
-	{
-		$this->aObjects['A']['FILES'] = array();
-		$this->aObjects['A']['DIRS']  = array();
-		$this->aObjects['U']['FILES'] = array();
-		$this->aObjects['U']['DIRS']  = array();
-		$this->aObjects['D']['FILES'] = array();
-		$this->aObjects['D']['DIRS']  = array();
-	} // function
+    /**
+     * Available actions depending on adapter.
+     * @var array
+     */
+    private $aAvailableActions;
 
-	/**
-	 * Add an object.
-	 * @param array $aParams Params for the commit object.
-	 * @return Object
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function createObject(array $aParams)
-	{
-		$aParams['info'] = $this->oInfo;
-		$oObject         = new Object($aParams);
+    /**
+     * Constructor.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function __construct(array $aAvailableActions)
+    {
+        $this->aAvailableActions = $aAvailableActions;
 
-		if ($aParams['isdir'] === true)
-		{
-			$this->aObjects[$aParams['action']]['DIRS'][] = $oObject;
-		}
-		else
-		{
-			// Determine Files after extensions.
-			$sExt = $this->determineFileExtension($aParams['item']);
+        foreach ($aAvailableActions as $sAction) {
 
-			$this->aObjects[$aParams['action']]['FILES']['ALL'][] = $oObject;
-			$this->aObjects[$aParams['action']]['FILES'][$sExt][] = $oObject;
-		} // if
+            $this->aObjects[$sAction]['FILES'] = array();
+            $this->aObjects[$sAction]['DIRS']  = array();
+        }
+    }
 
-		return $oObject;
-	} // function
+    /**
+     * Sets the info object.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function setInfo(Info $oInfo)
+    {
+        $this->oInfo = $oInfo;
+    }
 
-	/**
-	 * Return the commit info object.
-	 * @return Info
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function getInfo()
-	{
-		return $this->oInfo;
-	} // function
+    /**
+     * Return the commit info object.
+     * @return Info
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function getInfo()
+    {
+        return $this->oInfo;
+    }
 
-	/**
-	 * Return the objects depending on the action.
-	 * @param AbstractObject $oListener Listener Object.
-	 * @return array
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function getObjects(AbstractObject $oListener)
-	{
-		$aRegister    = $oListener->register();
-		$aActionTypes = $aRegister['fileaction'];
-		$aExtensions  = $aRegister['extensions'];
-		$bWithDirs    = (bool) $aRegister['withdirs'];
+    /**
+     * Adds an object to the matrix.
+     * @param \Hook\Commit\Object|Object $oObject The commit item object.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function addObject(Object $oObject)
+    {
+        if (true === $oObject->isDir()) {
 
-		$aObjects = array();
+            $this->aObjects[$oObject->getAction()]['DIRS'][] = $oObject;
+            return;
+        }
 
-		// If both arrays are empty, then there is no data, maybe just property.
-		if ((empty($aActionTypes) === true) && (empty($aExtensions) === true))
-		{
-			return $aObjects;
-		} // if
+        $this->aObjects[$oObject->getAction()]['FILES'][$oObject->getFileExtension()][] = $oObject;
+        $this->aObjects[$oObject->getAction()]['FILES']['ALL'][]                        = $oObject;
+    }
 
-		// If one of the arrays is empty, then the other not set to all.
-		if ((empty($aActionTypes) === true) && (empty($aExtensions) === false))
-		{
-			$aActionTypes = array(
-							 'A', 'U', 'D'
-							);
-		} // if
+    /**
+     * Return the objects depending on the action.
+     * @param mixed $oListener Listener Object.
+     * @return array
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function getObjects($oListener)
+    {
+        $aRegister    = $oListener->register();
+        $aActionTypes = $aRegister['fileaction'];
+        $aExtensions  = $aRegister['extensions'];
+        $bWithDirs    = (bool) $aRegister['withdirs'];
 
-		// If extensions is empty, then we want all files.
-		if ((empty($aActionTypes) === false) && (empty($aExtensions) === true))
-		{
-			$aExtensions = array('ALL');
-		} // if
+        $aObjects = array();
 
-		// Search for the requested objects.
-		foreach ($aActionTypes as $iIndex => $sAction)
-		{
-			if (isset($this->aObjects[$sAction]) === true)
-			{
-				foreach ($aExtensions as $iIndex => $sExt)
-				{
-					if (isset($this->aObjects[$sAction]['FILES'][$sExt]) === true)
-					{
-						$aAddFiles = $this->aObjects[$sAction]['FILES'][$sExt];
-						$aObjects  = array_merge($aObjects, $aAddFiles);
-					} // if
-				} // foreach
+        // If both arrays are empty, then there is no data, maybe just property.
+        if ((true === empty($aActionTypes)) && (true === empty($aExtensions))) {
 
-				// Add directories if required.
-				if ($bWithDirs === true)
-				{
-					$aAddDirs = $this->aObjects[$sAction]['DIRS'];
-					$aObjects = array_merge($aObjects, $aAddDirs);
-				} // if
-			} // if
-		} // foreach
+            return $aObjects;
+        }
 
-		// List of files empty? Then return empty.
-		if (empty($aObjects) === true)
-		{
-			return $aObjects;
-		} // if
+        // If one of the arrays is empty, then the other not set to all.
+        if ((true === empty($aActionTypes)) && (false === empty($aExtensions))) {
 
-		// Now recognize the filter of the listener.
-		$oFilter  = new Filter($aObjects);
-		$aObjects = $oFilter->getFilteredFiles($oListener->getObjectFilter());
+            $aActionTypes = $this->aAvailableActions;
+        }
 
-		return $aObjects;
-	} // function
+        // If extensions is empty, then we want all files.
+        if ((false === empty($aActionTypes)) && (true === empty($aExtensions))) {
 
-	/**
-	 * Determine file extensions.
-	 * @param string $sFile File to determine extension for.
-	 * @return string
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	private function determineFileExtension($sFile)
-	{
-		// Search first point, starting from end of filename.
-		// If no point is found, its a file without extension.
-		$iPos       = strrpos($sFile, '.');
-		$sExtension = '';
+            $aExtensions = array('ALL');
+        }
 
-		if ($iPos !== false)
-		{
-			$iPos++;
-			$sExtension = substr($sFile, $iPos, (strlen($sFile) - $iPos));
-		} // if
+        // Search for the requested objects.
+        foreach ($aActionTypes as $iIndex => $sAction) {
 
-		return strtoupper($sExtension);
-	} // function
+            if (true === isset($this->aObjects[$sAction])) {
 
-	/**
-	 * Create commit info object.
-	 * @param array $aInfos Commit Information.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function createInfo(array $aInfos)
-	{
-		$this->oInfo = new Info(
-									$aInfos['txn'],
-									$aInfos['rev'],
-									$aInfos['user'],
-									$aInfos['datetime'],
-									$aInfos['message']
-								 );
-	} // function
-} // class
+                foreach ($aExtensions as $iIndex => $sExt) {
+
+                    if (true === isset($this->aObjects[$sAction]['FILES'][$sExt])) {
+
+                        $aAddFiles = $this->aObjects[$sAction]['FILES'][$sExt];
+                        $aObjects  = array_merge($aObjects, $aAddFiles);
+                    }
+                }
+
+                // Add directories if required.
+                if (true === $bWithDirs) {
+
+                    $aAddDirs = $this->aObjects[$sAction]['DIRS'];
+                    $aObjects = array_merge($aObjects, $aAddDirs);
+                }
+            }
+        }
+
+        // List of files empty? Then return empty.
+        if (true === empty($aObjects)) {
+
+            return $aObjects;
+        }
+
+        // Now recognize the filter of the listener.
+        $oFilter  = new Filter($aObjects);
+        $aObjects = $oFilter->getFilteredFiles($oListener->getObjectFilter());
+
+        return $aObjects;
+    }
+}

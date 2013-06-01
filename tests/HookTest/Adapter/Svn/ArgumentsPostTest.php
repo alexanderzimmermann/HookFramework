@@ -1,11 +1,11 @@
 <?php
 /**
- * Argument Tests.
+ * Argument tests for post commit.
  * @category   Tests
  * @package    Adapter
  * @subpackage Svn
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
@@ -18,18 +18,18 @@ use Hook\Adapter\Svn\Arguments;
 require_once __DIR__ . '/../../../Bootstrap.php';
 
 /**
- * Argument Tests.
+ * Argument tests for post commit.
  * @category   Tests
  * @package    Adapter
  * @subpackage Svn
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 3.0.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 3.0.0
  */
-class ArgumentsTest extends \PHPUnit_Framework_TestCase
+class ArgumentsPostTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Test if values are returned correctly..
@@ -40,7 +40,7 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
     {
         $aData = array(
             0 => '/var/local/svn/hooks/Hook',
-            1 => TEST_SVN_EXAMPLE,
+            1 => HF_TEST_SVN_EXAMPLE,
             2 => 666,
             3 => 'post-commit'
         );
@@ -48,13 +48,13 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
         $oArguments = new Arguments($aData);
 
         $this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
-        $this->assertEquals(TEST_SVN_EXAMPLE, $oArguments->getRepository(), 'Repository false');
-        $this->assertEquals('Example', $oArguments->getRepositoryName(), 'ReposName false');
+        $this->assertEquals(HF_TEST_SVN_EXAMPLE, $oArguments->getRepository(), 'Repository false');
+        $this->assertEquals('ExampleSvn', $oArguments->getRepositoryName(), 'ReposName false');
         $this->assertEquals(666, $oArguments->getRevision(), 'Revision false');
         $this->assertEquals('post-commit', $oArguments->getMainHook(), 'MainHook false');
         $this->assertEquals('post', $oArguments->getMainType(), 'MainType false');
         $this->assertEquals('commit', $oArguments->getSubType(), 'SubType false');
-    } // function
+    }
 
     /**
      * Dataprovider.
@@ -67,7 +67,7 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
             array(
                 array(
                     'path'  => '/var/local/svn/hooks/Hook',
-                    'repos' => TEST_SVN_EXAMPLE,
+                    'repos' => HF_TEST_SVN_EXAMPLE,
                     'rev'   => '666',
                     'hook'  => 'post-commit',
                 ), true
@@ -75,7 +75,7 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
             array(
                 array(
                     'path'  => '/var/local/svn/hooks/Hook',
-                    'repos' => TEST_SVN_EXAMPLE,
+                    'repos' => HF_TEST_SVN_EXAMPLE,
                     'rev'   => '',
                     'hook'  => 'post-commit',
                 ), false
@@ -83,7 +83,7 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
             array(
                 array(
                     'path'  => '/var/local/svn/hooks/Hook',
-                    'repos' => TEST_SVN_EXAMPLE,
+                    'repos' => HF_TEST_SVN_EXAMPLE,
                     'rev'   => 'testuser',
                     'hook'  => 'post-commit',
                 ), false
@@ -97,7 +97,7 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
                 ), false
             )
         );
-    } // function
+    }
 
     /**
      * Test arguments in pre commit.
@@ -118,5 +118,5 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
 
         $oArguments = new Arguments($aData);
         $this->assertEquals($bExpected, $oArguments->argumentsOk(), $oArguments->getError());
-    } // function
-} // class
+    }
+}

@@ -8,7 +8,10 @@ build/phpdox
 build/*.phar
 Docs/_build
 Docs/tmp
-Repositories/Example/logs/common.log
+Repositories/ExampleGit/logs/common.log
+Repositories/ExampleGit/logs/config.ini
+Repositories/ExampleSvn/logs/common.log
+Repositories/ExampleSvn/logs/config.ini
 tests/common-test.log
 config.ini
 common.log

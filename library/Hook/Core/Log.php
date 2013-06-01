@@ -5,14 +5,16 @@
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
 namespace Hook\Core;
+
+use \ArrayObject;
 
 /**
  * Little log object.
@@ -20,7 +22,7 @@ namespace Hook\Core;
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
@@ -28,123 +30,124 @@ namespace Hook\Core;
  */
 class Log
 {
-	/**
-	 * Just infos, normal protocol.
-	 */
-	const HF_INFO = 1;
+    /**
+     * Just infos, normal protocol.
+     */
+    const HF_INFO = 1;
 
-	/**
-	 * For a simple debug mode..
-	 */
-	const HF_DEBUG = 2;
+    /**
+     * For a simple debug mode..
+     */
+    const HF_DEBUG = 2;
 
-	/**
-	 * Need some dumps for debugging.
-	 */
-	const HF_VARDUMP = 3;
+    /**
+     * Need some dumps for debugging.
+     */
+    const HF_VARDUMP = 3;
 
-	/**
-	 * Log object.
-	 * @var Log
-	 */
-	static private $oLog = null;
+    /**
+     * List of Log objects.
+     * @var ArrayObject
+     */
+    static private $oInstances = null;
 
-	/**
-	 * Log Mode.
-	 * @var integer
-	 */
-	private $iLogMode;
+    /**
+     * Log Mode.
+     * @var integer
+     */
+    private $iLogMode;
 
-	/**
-	 * Resource to log file.
-	 * @var resource
-	 */
-	private $rFile;
+    /**
+     * Resource to log file.
+     * @var resource
+     */
+    private $rFile;
 
-	/**
-	 * Construct not allowed.
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	private function __construct()
-	{
-	} // function
+    /**
+     * Clone not allowed.
+     * @throws \Exception
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function __clone()
+    {
+        throw new \Exception('Not allowed');
+    }
 
-	/**
-	 * Clone not allowed.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	private function __clone()
-	{
-	} // function
+    /**
+     * Get the log instance.
+     * @param string $sInstance Log instance to init and return.
+     * @return Log
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public static function getInstance($sInstance = 'default')
+    {
+        if (null === self::$oInstances) {
 
-	/**
-	 * Get the log instance.
-	 * @return Log
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public static function getInstance()
-	{
-		if (self::$oLog === null)
-		{
-			self::$oLog = new self;
-		} // if
+            self::$oInstances = new ArrayObject();
+        }
 
-		return self::$oLog;
-	} // function
+        if (false === self::$oInstances->offsetExists($sInstance)) {
 
-	/**
-	 * Set the logfile name.
-	 * @param string $sFile Log file.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function setLogFile($sFile)
-	{
-		$this->rFile = fopen($sFile, 'a+');
+            $oLog = new self;
+            self::$oInstances->offsetSet($sInstance, $oLog);
+        } else {
 
-		fwrite($this->rFile, str_repeat('=', 80) . "\n");
-		fwrite($this->rFile, str_repeat(' ', 20) . date('Y-m-d H:i:s') . "\n");
-		fwrite($this->rFile, str_repeat('=', 80) . "\n");
-	} // function
+            $oLog = self::$oInstances->offsetGet($sInstance);
+        }
 
-	/**
-	 * Sets the log mode.
-	 * @param integer $iLogMode Log mode.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function setLogMode($iLogMode = self::HF_INFO)
-	{
-		$this->iLogMode = $iLogMode;
-	} // function
+        return $oLog;
+    }
 
-	/**
-	 * Write log.
-	 * @param integer $iLogMode Log mode.
-	 * @param string  $sHeadMsg Headline for var.
-	 * @param mixed   $mVar     Variable for Debug.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function writeLog($iLogMode, $sHeadMsg = '', $mVar = null)
-	{
-		if ($this->iLogMode < $iLogMode)
-		{
-			return;
-		} // if
+    /**
+     * Set the logfile name.
+     * @param string $sFile Log file.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function setLogFile($sFile)
+    {
+        $this->rFile = fopen($sFile, 'a+');
 
-		$sLogLine = $sHeadMsg . "\n";
+        fwrite($this->rFile, str_repeat('=', 80) . "\n");
+        fwrite($this->rFile, str_repeat(' ', 20) . date('Y-m-d H:i:s') . "\n");
+        fwrite($this->rFile, str_repeat('=', 80) . "\n");
+    }
 
-		$sVarDump = '';
-		if ($mVar !== null)
-		{
-			$sVarDump  = var_export($mVar, true);
-			$sLogLine .= $sVarDump . "\n";
-		} // if
+    /**
+     * Sets the log mode.
+     * @param integer $iLogMode Log mode.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function setLogMode($iLogMode = self::HF_INFO)
+    {
+        $this->iLogMode = $iLogMode;
+    }
 
-		$sLogLine .= str_repeat('-', 15) . "\n";
+    /**
+     * Write log.
+     * @param integer $iLogMode Log mode.
+     * @param string  $sHeadMsg Headline for var.
+     * @param mixed   $mVar     Variable for Debug.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function writeLog($iLogMode, $sHeadMsg = '', $mVar = null)
+    {
+        if ($this->iLogMode < $iLogMode) {
+            return;
+        }
 
-		fwrite($this->rFile, $sLogLine);
-	} // function
-} // class
+        $sLogLine = $sHeadMsg . "\n";
+
+        if ($mVar !== null) {
+            $sVarDump = var_export($mVar, true);
+            $sLogLine .= $sVarDump . "\n";
+        }
+
+        $sLogLine .= str_repeat('-', 40) . "\n";
+
+        fwrite($this->rFile, $sLogLine);
+    }
+}

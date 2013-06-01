@@ -1,42 +1,55 @@
 <?php
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+
 /**
- * Testdatei die korrekt ist.
+ * Short description for file
  *
- * Some Text, so that it fits to PEAR Style Guide Sniffs.
+ * Long description for file (if any)...
  *
- * @category   Tmp
- * @package    Test
- * @subpackage Newfolder
- * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id: correct_file1.php 161 2010-02-22 21:41:18Z alexander $
- * @link       http://www.azimmermann.com/
- * @since      File available since Release 1.0.0
+ * PHP version 5
+ *
+ * LICENSE: This source file is subject to version 3.01 of the PHP license
+ * that is available through the world-wide-web at the following URI:
+ * http://www.php.net/license/3_01.txt.  If you did not receive a copy of
+ * the PHP License and are unable to obtain it through the web, please
+ * send a note to license@php.net so we can mail you a copy immediately.
+ *
+ * @category   CategoryName
+ * @package    PackageName
+ * @author     Original Author <author@example.com>
+ * @author     Another Author <another@example.com>
+ * @copyright  1997-2005 The PHP Group
+ * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
+ * @version    SVN: $Id$
+ * @link       http://pear.php.net/package/PackageName
+ * @see        NetOther, Net_Sample::Net_Sample()
+ * @since      File available since Release 1.2.0
+ * @deprecated File deprecated in Release 2.0.0
  */
 
 /**
- * Testdatei die korrekt ist.
+ * Test file that is in correct PEAR standard.
  *
- * Some Text, so that it fits to PEAR Style Guide Sniffs.
- *
- * @category   Tmp
- * @package    Test
- * @subpackage Newfolder
- * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 2.1.0
- * @link       http://www.azimmermann.com/
+ * @category   CategoryName
+ * @package    PackageName
+ * @author     Original Author <author@example.com>
+ * @author     Another Author <another@example.com>
+ * @copyright  1997-2005 The PHP Group
+ * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
+ * @version    Release: @package_version@
+ * @link       http://pear.php.net/package/PackageName
+ * @see        NetOther, Net_Sample::Net_Sample()
+ * @since      Class available since Release 1.2.0
+ * @deprecated Class deprecated in Release 2.0.0
  */
 class MyClass
 {
-	/**
-	 * Konstrutkor.
-	 *
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function __construct()
-	{
-	} // function
-} // class
+    /**
+     * Constructor.
+     *
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function __construct()
+    {
+    }
+}

@@ -51,23 +51,24 @@ $aPath = array(
 set_include_path(implode(PATH_SEPARATOR, $aPath));
 
 // For simple access on files.
-define('TEST_DIR', $sRootTests);
+define('HF_TEST_DIR', $sRootTests);
+define('HF_TEST_FILES_DIR', $sRootTests . 'HookTest/_files/');
 
 /**
  * Define Example SVN directory and subversion test binary.
  */
 
-define('TEST_SVN_BIN', __DIR__ . '/HookTest//_files/bin/');
-define('TEST_SVN_EXAMPLE', __DIR__ . '/HookTest/_files/ExampleSvn/');
-define('TEST_SVN_REPOSITORY', __DIR__ . '/../Repositories/');
+define('HF_TEST_SVN_BIN', __DIR__ . '/HookTest//_files/bin/');
+define('HF_TEST_SVN_EXAMPLE', __DIR__ . '/HookTest/_files/ExampleSvn/');
+define('HF_TEST_SVN_REPOSITORY', __DIR__ . '/../Repositories/');
 
 /**
  * Define Example GIT directory and git test binary.
  */
 
-define('TEST_GIT_BIN', __DIR__ . '/HookTest//_files/bin/');
-define('TEST_GIT_EXAMPLE', __DIR__ . '/HookTest/_files/ExampleGit/');
-define('TEST_GIT_REPOSITORY', __DIR__ . '/../Repositories/');
+define('HF_TEST_GIT_BIN', __DIR__ . '/HookTest//_files/bin/');
+define('HF_TEST_GIT_EXAMPLE', __DIR__ . '/HookTest/_files/ExampleGit/');
+define('HF_TEST_GIT_REPOSITORY', __DIR__ . '/../Repositories/');
 
 /*
     Create Log instance and clear the file.

@@ -5,9 +5,8 @@
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 2.1.0
  */
@@ -19,22 +18,20 @@
  */
 function hfautoload($sClass)
 {
-	static $aClasses = null;
+    static $aClasses = null;
 
-	if ($aClasses === null)
-	{
-		$aClasses = array(
-			___CLASSLIST___
-		);
-	} // if
+    if ($aClasses === null) {
+        $aClasses = array(
+            ___CLASSLIST___
+        );
+    }
 
-	$sClassName = strtolower($sClass);
+    $sClassName = strtolower($sClass);
 
-	if (isset($aClasses[$sClassName]))
-	{
-		require __DIR__ . $aClasses[$sClassName];
-	} // if
-} // function
+    if (isset($aClasses[$sClassName])) {
+        require __DIR__ . $aClasses[$sClassName];
+    }
+}
 
 // Register spl auto load.
 spl_autoload_register('hfautoload');

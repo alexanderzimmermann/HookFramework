@@ -1,13 +1,13 @@
 <?php
 /**
  * Loading the different listener types.
- * @category   Core
- * @package    Listener
+ * @category   Hook
+ * @package    Svn
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 3.0.0
  */
@@ -15,24 +15,27 @@
 namespace Hook\Adapter;
 
 use \DirectoryIterator;
-use Hook\Core\Arguments;
+use Hook\Adapter\Svn\Arguments;
 use Hook\Core\Config;
 use Hook\Core\Log;
+
+use Hook\Listener\AbstractInfo;
+use Hook\Listener\AbstractObject;
 
 /**
  * Loading the different listener types.
  * The loader is responsible for some tasks.
  * - Parse the listener directory given to it.
  * - Includes the listener file.
- * - checks if the listener is implemented correctly and provides the needed methods (interface).
- * - creates the instance and checks if the listener registers data is correct.
- * If no one of this fits well, the listener is not used. The reason should be reported in the
- * error log. This should prevent from having errors.
- * @category   Core
- * @package    Listener
+ * - Checks if the listener is implemented correctly and provides the needed methods (interface).
+ * - Creates the object and checks, if the listener register data is correct.
+ * If one of this checks fails, the listener will not be used.
+ * The reason should be reported in the error log. This should prevent from having errors.
+ * @category   Hook
+ * @package    Svn
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 3.0.0
  * @link       http://www.azimmermann.com/
@@ -65,22 +68,16 @@ abstract class LoaderAbstract
     protected $aListenerFiles;
 
     /**
-     * Namespace of listener.
+     * List of listener object for info objects.
      * @var array
      */
-    protected $aListenerNamespace = array();
+    protected $aListenerInfo;
 
     /**
      * List of listener objects for file objects.
      * @var array
      */
     protected $aListenerObject;
-
-    /**
-     * List of listener object for info objects.
-     * @var array
-     */
-    protected $aListenerInfo;
 
     /**
      * Error why listener failed.
@@ -145,13 +142,13 @@ abstract class LoaderAbstract
     {
         $aListener = array();
 
-        if (empty($this->aListenerInfo) === false) {
+        if (false === empty($this->aListenerInfo)) {
             $aListener['info'] = $this->aListenerInfo;
-        } // if
+        }
 
-        if (empty($this->aListenerObject) === false) {
+        if (false === empty($this->aListenerObject)) {
             $aListener['object'] = $this->aListenerObject;
-        } // if
+        }
 
         return $aListener;
     }
@@ -168,7 +165,7 @@ abstract class LoaderAbstract
         // If directory does not exists, return.
         if (false === is_dir($this->sPath . $sType)) {
             return;
-        } // if
+        }
 
         $oIterator = new \DirectoryIterator($this->sPath . $sType);
         $aListener = array();
@@ -177,9 +174,9 @@ abstract class LoaderAbstract
             if (true === $oFile->isFile()) {
                 if ('php' === $oFile->getExtension()) {
                     $aListener[] = $oFile->getPathname();
-                } // if
-            } // if
-        } // foreach
+                }
+            }
+        }
 
         $this->aListenerFiles = $aListener;
     }
@@ -199,7 +196,7 @@ abstract class LoaderAbstract
             if ($bOk === false) {
 
                 unset($this->aListenerInfo[$iFor]);
-            } // if
+            }
         } // for
 
         $this->aListenerInfo = array_values($this->aListenerInfo);
@@ -220,7 +217,7 @@ abstract class LoaderAbstract
 
             if ($bOk === false) {
                 unset($this->aListenerObject[$iFor]);
-            } // if
+            }
         } // for
 
         $this->aListenerObject = array_values($this->aListenerObject);
@@ -242,14 +239,14 @@ abstract class LoaderAbstract
             $this->sError .= $sListener . ' Register not a String for InfoType';
 
             return false;
-        } // if
+        }
 
         // Types empty?
         if ($sRegister === '') {
             $this->sError .= $sListener . ' Error Register String Empty';
 
             return false;
-        } // if
+        }
 
         // Correct values?
         $aSvnActions = $this->oArguments->getSubActions();
@@ -259,7 +256,7 @@ abstract class LoaderAbstract
             $this->sError .= $sRegister . ' not available!';
 
             return false;
-        } // if
+        }
 
         return true;
     }
@@ -278,12 +275,12 @@ abstract class LoaderAbstract
         // All needed values available.
         if ((isset($aRegister['action']) === false) ||
             (isset($aRegister['extensions']) === false) ||
-            (isset($aRegister['fileaction']) === false)
-        ) {
+            (isset($aRegister['fileaction']) === false)) {
+
             $this->sError .= $sListener . ' Error Register Key Elements';
 
             return false;
-        } // if
+        }
 
         // Correct type?
         if ((is_string($aRegister['action']) === false) ||
@@ -293,7 +290,7 @@ abstract class LoaderAbstract
             $this->sError .= $sListener . ' Error Register Array Types';
 
             return false;
-        } // if
+        }
 
         // Type empty?
         if (($aRegister['action'] === '') &&
@@ -303,18 +300,18 @@ abstract class LoaderAbstract
             $this->sError .= $sListener . ' Error Register Array Empty';
 
             return false;
-        } // if
+        }
 
         // Valid values?
         $sAction     = $aRegister['action'];
-        $aSvnActions = $this->oArguments->getSubActions();
+        $aVcsActions = $this->oArguments->getSubActions();
 
-        if (in_array($sAction, $aSvnActions) === false) {
+        if (in_array($sAction, $aVcsActions) === false) {
             $this->sError .= $sListener . ' Register Action ';
             $this->sError .= $sAction . ' not available!';
 
             return false;
-        } // if
+        }
 
         return true;
     }
@@ -346,12 +343,12 @@ abstract class LoaderAbstract
                         unset($this->aListenerFiles[$iFor]);
                     } else {
                         $aListener[] = $sListener;
-                    } // if
+                    }
                 } catch (\Exception $oException) {
                     $this->sError .= $oException->getMessage() . PHP_EOL
-                        . $oException->getTraceAsString() . PHP_EOL;
+                                   . $oException->getTraceAsString() . PHP_EOL;
                 } // try
-            } // if
+            }
         } // for
 
         // Sets the listener.
@@ -362,7 +359,7 @@ abstract class LoaderAbstract
 
     /**
      * Check the included listener implements the required stuff.
-     * @param string $sListener Name des Listenere-Objekts.
+     * @param string $sListener Name of listener object.
      * @return boolean
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
@@ -379,7 +376,7 @@ abstract class LoaderAbstract
             Log::getInstance()->writeLog(Log::HF_DEBUG, $sMsg);
 
             return false;
-        } // if
+        }
 
         // Check for correct interface and abstract class.
         $aImplements = class_implements($sClass);
@@ -391,7 +388,7 @@ abstract class LoaderAbstract
             $this->aListenerInfo[] = $this->createClass($sClass, $sListener);
 
             return true;
-        } // if
+        }
 
         if ((isset($aImplements['Hook\\Listener\ObjectInterface']) === true) &&
             (isset($aParents['Hook\\Listener\AbstractObject']) === true)
@@ -399,7 +396,7 @@ abstract class LoaderAbstract
             $this->aListenerObject[] = $this->createClass($sClass, $sListener);
 
             return true;
-        } // if
+        }
 
         $sError = $sListener . ' does not implement or extend correct ';
         $sError .= 'interface or abstract class.!' . "\n";
@@ -412,7 +409,7 @@ abstract class LoaderAbstract
     }
 
     /**
-     * Create the listener.
+     * Create the listener class.
      * @param string $sClass    Class name of listener.
      * @param string $sListener Name of the listener (File, Class).
      * @return ListenerInterface
@@ -426,8 +423,9 @@ abstract class LoaderAbstract
         $aCfg  = $this->oConfig->getConfiguration(ucfirst($sMain), $sListener);
 
         if (false !== $aCfg) {
+
             $oClass->setConfiguration($aCfg);
-        } // if
+        }
 
         return $oClass;
     }

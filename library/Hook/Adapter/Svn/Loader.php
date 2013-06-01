@@ -5,9 +5,9 @@
  * @package    Listener
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 3.0.0
  */
@@ -32,7 +32,7 @@ use Hook\Adapter\LoaderAbstract;
  * @package    Listener
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 3.0.0
  * @link       http://www.azimmermann.com/
@@ -65,7 +65,7 @@ class Loader extends LoaderAbstract
         // If directory does not exists, return.
         if (false === is_dir($this->sPath . $sType)) {
             return;
-        } // if
+        }
 
         $oIterator = new \DirectoryIterator($this->sPath . $sType);
         $aListener = array();
@@ -74,9 +74,9 @@ class Loader extends LoaderAbstract
             if (true === $oFile->isFile()) {
                 if ('php' === $oFile->getExtension()) {
                     $aListener[] = $oFile->getPathname();
-                } // if
-            } // if
-        } // foreach
+                }
+            }
+        }
 
         $this->aListenerFiles = $aListener;
     }

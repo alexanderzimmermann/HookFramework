@@ -5,9 +5,9 @@
  * @package    Svn
  * @subpackage Parser
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
@@ -24,7 +24,7 @@ use Hook\Commit\Object;
  * @package    Svn
  * @subpackage Parser
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 3.0.0
  * @link       http://www.azimmermann.com/
@@ -32,18 +32,6 @@ use Hook\Commit\Object;
  */
 class Changed extends ChangedAbstract implements ChangedInterface
 {
-    /**
-     * Available item actions for this adapter.
-     * @return array
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function getAvailableActions()
-    {
-        return array(
-            'A', 'D', 'U'
-        );
-    }
-
     /**
      * Parse array with the changed items.
      * Determine directory or file.
@@ -73,7 +61,7 @@ class Changed extends ChangedAbstract implements ChangedInterface
             if (substr($sObject, -1) === '/') {
 
                 $bIsDir = true;
-            } // if
+            }
 
             $sRealPath = $this->getRealPath($sObject);
 
@@ -85,9 +73,6 @@ class Changed extends ChangedAbstract implements ChangedInterface
                 'real'   => $sRealPath,
                 'ext'    => $this->determineFileExtension($sObject),
                 'isdir'  => $bIsDir,
-                'info'   => '',
-                'props'  => null,
-                'lines'  => array()
             );
 
             $this->addItem($aTmp);
@@ -116,7 +101,7 @@ class Changed extends ChangedAbstract implements ChangedInterface
             array_shift($aPath);
             array_shift($aPath);
 
-        } // if
+        }
 
         $sObject = implode('/', $aPath);
 

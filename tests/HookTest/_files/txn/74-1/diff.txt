@@ -1,7 +1,7 @@
-Modified: hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file1.php
+Modified: trunk/tmp/newfolder1/newfolder1_1/correct_file1.php
 ===================================================================
---- hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file1.php	2008-12-20 18:58:26 UTC (rev 74)
-+++ hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file1.php	2008-12-20 19:20:58 UTC (txn 74-1)
+--- trunk/tmp/newfolder1/newfolder1_1/correct_file1.php	2008-12-20 18:58:26 UTC (rev 74)
++++ trunk/tmp/newfolder1/newfolder1_1/correct_file1.php	2008-12-20 19:20:58 UTC (txn 74-1)
 @@ -25,4 +25,13 @@
  	public function __construct()
  	{
@@ -17,10 +17,10 @@ Modified: hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file1.php
 +	} // function
  } // class
 
-Modified: hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file2.php
+Modified: trunk/tmp/newfolder1/newfolder1_1/correct_file2.php
 ===================================================================
---- hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file2.php	2008-12-20 18:58:26 UTC (rev 74)
-+++ hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file2.php	2008-12-20 19:20:58 UTC (txn 74-1)
+--- trunk/tmp/newfolder1/newfolder1_1/correct_file2.php	2008-12-20 18:58:26 UTC (rev 74)
++++ trunk/tmp/newfolder1/newfolder1_1/correct_file2.php	2008-12-20 19:20:58 UTC (txn 74-1)
 @@ -25,4 +25,13 @@
  	public function __construct()
  	{
@@ -37,17 +37,17 @@ Modified: hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file2.php
  } // class
 
 
-Property changes on: hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file2.php
+Property changes on: trunk/tmp/newfolder1/newfolder1_1/correct_file2.php
 ___________________________________________________________________
 Name: svn:executable
    - *
 Name: svn:keywords
    + Id
 
-Modified: hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file3.php
+Modified: trunk/tmp/newfolder1/newfolder1_1/correct_file3.php
 ===================================================================
---- hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file3.php	2008-12-20 18:58:26 UTC (rev 74)
-+++ hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file3.php	2008-12-20 19:20:58 UTC (txn 74-1)
+--- trunk/tmp/newfolder1/newfolder1_1/correct_file3.php	2008-12-20 18:58:26 UTC (rev 74)
++++ trunk/tmp/newfolder1/newfolder1_1/correct_file3.php	2008-12-20 19:20:58 UTC (txn 74-1)
 @@ -25,4 +25,13 @@
  	public function __construct()
  	{
@@ -64,7 +64,7 @@ Modified: hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file3.php
  } // class
 
 
-Property changes on: hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file3.php
+Property changes on: trunk/tmp/newfolder1/newfolder1_1/correct_file3.php
 ___________________________________________________________________
 Name: svn:executable
    - *

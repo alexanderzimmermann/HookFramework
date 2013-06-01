@@ -1,31 +1,27 @@
 <?php
 /**
- * Commit Data Tests.
+ * Commit Data Tests, dedicated for zabu.
  * @category   Tests
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
-namespace HookTest\Core\Commit;
+namespace HookTest\Commit;
 
 use Hook\Commit\Data;
-use HookTest\Core\Commit\DataHelper;
-use HookTest\Core\Commit\DataHelperDirs;
-use HookTest\Core\Commit\DataHelperActionTypes;
-use HookTest\Core\Commit\DataHelperExtensions;
+use Hook\Commit\Info;
+use Hook\Commit\Object;
+use Hook\Filter\ObjectFilter;
+use Hook\Listener\AbstractObject;
+use HookTest\Commit\DataTestHelper;
 
 require_once __DIR__ . '/../../Bootstrap.php';
-
-require_once __DIR__ . '/DataHelper.php';
-require_once __DIR__ . '/DataHelperDirs.php';
-require_once __DIR__ . '/DataHelperActionTypes.php';
-require_once __DIR__ . '/DataHelperExtensions.php';
 
 /**
  * Commit Data Tests.
@@ -33,7 +29,7 @@ require_once __DIR__ . '/DataHelperExtensions.php';
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
@@ -41,328 +37,302 @@ require_once __DIR__ . '/DataHelperExtensions.php';
  */
 class DataTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * Commit Data Object.
-	 * @var Data
-	 */
-	private $oData;
+    /**
+     * Commit Data Object.
+     * @var Data
+     */
+    private $oData;
 
-	/**
-	 * Set Up Method.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	protected function setUp()
-	{
-		$this->oData = new Data();
-	} // function
+    /**
+     * Set Up Method.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    protected function setUp()
+    {
+        $this->oData = new Data(array('A', 'U', 'D'));
 
-	/**
-	 * Test add object.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function testCreateObjectFile()
-	{
-		$aInfos['txn']      = '74-1';
-		$aInfos['rev']      = 74;
-		$aInfos['user']     = 'Zabu';
-		$aInfos['datetime'] = '2008-12-30 12:23:45';
-		$aInfos['message']  = '* A message for this tests.';
+        // Default values.
+        $aMock = array(
+            'functions' => array('getAction', 'getObjectPath', 'isDir'),
+            'values'    => array(
+                0 => array(
+                    'txn'    => '74-1',
+                    'rev'    => 74,
+                    'action' => 'A',
+                    'item'   => '/path/zabu-1.php',
+                    'real'   => '/path/zabu-1.php',
+                    'ext'    => 'php',
+                    'isdir'  => false,
+                    'info'   => null,
+                    'props'  => array(),
+                    'lines'  => array()
+                )
+            )
+        );
 
-		$this->oData->createInfo($aInfos);
+        // A file object using default.
+        $this->oData->addObject($this->setUpObject($aMock));
 
-		// A file object.
-		$aParams = array(
-					'txn'    => '74-1',
-					'rev'    => 74,
-					'action' => 'U',
-					'item'   => 'file.txt',
-					'real'   => 'file.txt',
-					'isdir'  => false,
-					'props'  => array(),
-					'lines'  => array()
-				   );
+        // A file object.
+        $aValues = array(
+            'action' => 'U',
+            'item'   => '/path/zabu-2.php',
+            'real'   => '/path/zabu-2.php',
+            'ext'    => 'php',
+            'isdir'  => false
+        );
 
-		$oObject = $this->oData->createObject($aParams);
+        $aMock['values'][0] = array_merge($aMock['values'][0], $aValues);
+        $this->oData->addObject($this->setUpObject($aMock));
 
-		$this->assertEquals('Hook\Commit\Data\Object', get_class($oObject), 'Not object Object');
-		$this->assertEquals('74-1', $oObject->getTransaction(), 'Txn wrong');
-		$this->assertEquals('U', $oObject->getAction(), 'Action wrong');
-		$this->assertEquals('file.txt', $oObject->getObjectPath(), 'objectpath wrong');
-	} // function
+        // A file object.
+        $aValues            = array(
+            'action' => 'D',
+            'item'   => '/path/zabu-3.php',
+            'real'   => '/path/zabu-3.php',
+            'ext'    => 'php',
+            'isdir'  => false
+        );
+        $aMock['values'][0] = array_merge($aMock['values'][0], $aValues);
+        $this->oData->addObject($this->setUpObject($aMock));
 
-	/**
-	 * Test add directory object.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function testCreateObjectDirectory()
-	{
-		$aInfos['txn']      = '74-1';
-		$aInfos['rev']      = 74;
-		$aInfos['user']     = 'Zabu';
-		$aInfos['datetime'] = '2008-12-30 12:23:45';
-		$aInfos['message']  = '* A message for this tests.';
+        // A directory object.
+        $aValues            = array(
+            'action' => 'U',
+            'item'   => '/path/to/zabu',
+            'real'   => '/path/to/zabu',
+            'ext'    => '',
+            'isdir'  => true
+        );
+        $aMock['values'][0] = array_merge($aMock['values'][0], $aValues);
+        $this->oData->addObject($this->setUpObject($aMock));
 
-		$this->oData->createInfo($aInfos);
+        // A file object.
+        $aValues            = array(
+            'action' => 'A',
+            'item'   => '/path/zabu-1.html',
+            'real'   => '/path/zabu-1.html',
+            'ext'    => 'html',
+            'isdir'  => false
+        );
+        $aMock['values'][0] = array_merge($aMock['values'][0], $aValues);
+        $this->oData->addObject($this->setUpObject($aMock));
 
-		// A directory object.
-		$aParams = array(
-					'txn'    => '74-1',
-					'rev'    => 74,
-					'action' => 'U',
-					'item'   => '/path',
-					'real'   => '/path',
-					'isdir'  => true,
-					'props'  => array(),
-					'lines'  => array()
-				   );
+        // A file object.
+        $aValues            = array(
+            'action' => 'U',
+            'item'   => '/path/zabu-2.html',
+            'real'   => '/path/zabu-2.html',
+            'ext'    => 'html',
+            'isdir'  => false
+        );
+        $aMock['values'][0] = array_merge($aMock['values'][0], $aValues);
+        $this->oData->addObject($this->setUpObject($aMock));
 
-		$oObject = $this->oData->createObject($aParams);
+        // A file object.
+        $aValues            = array(
+            'action' => 'D',
+            'item'   => '/path/zabu-3.html',
+            'real'   => '/path/zabu-3.html',
+            'ext'    => 'html',
+            'isdir'  => false
+        );
+        $aMock['values'][0] = array_merge($aMock['values'][0], $aValues);
+        $this->oData->addObject($this->setUpObject($aMock));
+    }
 
-		$this->assertEquals('Hook\Commit\Data\Object', get_class($oObject), 'class not Object');
-		$this->assertEquals('/path', $oObject->getObjectPath(), 'objectpath wrong');
-	} // function
+    /**
+     * Set up test info object.
+     * @return Info
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    protected function setUpInfoObject()
+    {
+        $aInfo             = array();
+        $aInfo['txn']      = '74-1';
+        $aInfo['rev']      = 74;
+        $aInfo['user']     = 'Zabu';
+        $aInfo['datetime'] = '2008-12-30 12:23:45';
+        $aInfo['message']  = '* A message for this tests.';
 
-	/**
-	 * Test to give the correct files for the listener.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function testGetObjectsForListener()
-	{
-		$aInfos['txn']      = '74-1';
-		$aInfos['rev']      = 74;
-		$aInfos['user']     = 'Zabu';
-		$aInfos['datetime'] = '2008-12-30 12:23:45';
-		$aInfos['message']  = '* A message for this tests.';
+        // Create a stub for the SomeClass class.
+        $oStub = $this->getMock('Hook\Commit\Info', array('getUser'), $aInfo);
 
-		$this->oData->createInfo($aInfos);
+        // Configure the stub.
+        $oStub->expects($this->any())
+            ->method('getUser')
+            ->will($this->returnValue('Zabu'));
 
-		// A directory object.
-		$aParams = array(
-					'txn'    => '74-1',
-					'rev'    => 74,
-					'action' => 'U',
-					'item'   => '/path',
-					'real'   => '/path',
-					'isdir'  => true,
-					'props'  => array(),
-					'lines'  => array()
-				   );
+        return $oStub;
+    }
 
-		$this->oData->createObject($aParams);
+    /**
+     * Set up test object item.
+     * @param array $aParams Parameter for the mock object.
+     * @return Object
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    protected function setUpObject(array $aParams)
+    {
+        // Create a stub for the SomeClass class.
+        $oStub = $this->getMock('Hook\Commit\Object', $aParams['functions'], $aParams['values']);
 
-		// A file object.
-		$aParams['item']   = '/path/file_1.php';
-		$aParams['real']   = '/path/file_1.php';
-		$aParams['action'] = 'A';
-		$aParams['isdir']  = false;
+        // Configure the stub.
+        $oStub->expects($this->any())
+            ->method('isDir')
+            ->will($this->returnValue($aParams['values'][0]['isdir']));
 
-		$this->oData->createObject($aParams);
+        $oStub->expects($this->any())
+            ->method('getAction')
+            ->will($this->returnValue($aParams['values'][0]['action']));
 
-		// A file object.
-		$aParams['item'] = '/path/file_2.php';
-		$aParams['real'] = '/path/file_2.php';
+        $oStub->expects($this->any())
+            ->method('getObjectPath')
+            ->will($this->returnValue($aParams['values'][0]['item']));
 
-		$this->oData->createObject($aParams);
+        $oStub->expects($this->any())
+            ->method('getFileExtension')
+            ->will($this->returnValue($aParams['values'][0]['ext']));
 
-		// Test listener.
-		$oListener = new DataHelper();
+        return $oStub;
+    }
 
-		$aFiles = $this->oData->getObjects($oListener);
+    /**
+     * Setup a mock listener.
+     * @param array $aRegister Register data.
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    protected function setUpListener(array $aRegister)
+    {
+        // Create a stub for the SomeClass class.
+        $aFunctions = array(
+            'register',
+            'getObjectFilter'
 
-		$this->assertTrue(is_array($aFiles), '$aFiles no array');
-		$this->assertEquals(2, count($aFiles), '$aFiles count wrong');
+        );
 
-		$this->assertEquals('/path/file_2.php', $aFiles[1]->getObjectPath(), 'objectpath wrong');
-	} // function
+        $oStub = $this->getMock('HookTest\Commit\DataTestHelper', $aFunctions);
 
-	/**
-	 * Test directories and files after action and extension.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function testGetFilesWithDirs()
-	{
-		$aInfos['txn']      = '110-1';
-		$aInfos['rev']      = 111;
-		$aInfos['user']     = 'Zabu';
-		$aInfos['datetime'] = '2008-12-30 12:23:45';
-		$aInfos['message']  = '* A message for this tests.';
+        // Configure the stub.
+        $oStub->expects($this->any())
+            ->method('register')
+            ->will($this->returnValue($aRegister));
 
-		$this->oData->createInfo($aInfos);
+        $oStub->expects($this->any())
+            ->method('getObjectFilter')
+            ->will($this->returnValue(new ObjectFilter()));
 
-		// A directory object.
-		$aParams = array(
-					'txn'    => '110-1',
-					'rev'    => 111,
-					'action' => 'U',
-					'item'   => '/path',
-					'real'   => '/path',
-					'isdir'  => true,
-					'props'  => array(),
-					'lines'  => array()
-				   );
-		$this->oData->createObject($aParams);
+        return $oStub;
+    }
 
-		// A file object.
-		$aParams['item']   = '/path/file_1.php';
-		$aParams['real']   = '/path/file_1.php';
-		$aParams['action'] = 'A';
-		$this->oData->createObject($aParams);
+    /**
+     * Test set and get info object.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testSetInfoObject()
+    {
+        $oInfo = $this->setUpInfoObject();
 
-		// A file object.
-		$aParams['item']   = '/path/file_2.php';
-		$aParams['real']   = '/path/file_2.php';
-		$this->oData->createObject($aParams);
+        $this->oData->setInfo($oInfo);
+        $this->assertSame($oInfo, $this->oData->getInfo());
+    }
 
-		$oListener = new DataHelperDirs();
+    /**
+     * Test to give the correct files for the listener.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testGetObjectsForListener()
+    {
+        // Test listener.
+        $aRegister = array(
+            'action'     => 'commit',
+            'fileaction' => array(
+                'A', 'U', 'D'
+            ),
+            'extensions' => array('ALL'),
+            'withdirs'   => false
+        );
 
-		$aFiles = $this->oData->getObjects($oListener);
+        $oListener = $this->setUpListener($aRegister);
+        $aFiles    = $this->oData->getObjects($oListener);
 
-		$this->assertTrue(is_array($aFiles), '$aFiles no array');
-		$this->assertEquals(3, count($aFiles), 'count $aFiles wrong');
+        $this->assertCount(6, $aFiles, '$aFiles count wrong');
+        $this->assertEquals('/path/zabu-1.html', $aFiles[1]->getObjectPath(), 'objectpath wrong');
+    }
 
-		$this->assertEquals('/path/file_2.php', $aFiles[1]->getObjectPath(), 'objectpath wrong');
-	} // function
+    /**
+     * Test directories and files after action and extension.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testGetFilesWithDirs()
+    {
+        // Test listener.
+        $aRegister = array(
+            'action'     => 'commit',
+            'fileaction' => array(
+                'A', 'U', 'D'
+            ),
+            'extensions' => array('ALL'),
+            'withdirs'   => true
+        );
 
-	/**
-	 * Test return all actions, when Array in register method is empty.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function testGetFilesActionTypes()
-	{
-		$aInfos['txn']      = '110-1';
-		$aInfos['rev']      = 111;
-		$aInfos['user']     = 'Zabu';
-		$aInfos['datetime'] = '2008-12-30 12:23:45';
-		$aInfos['message']  = '* A message for this tests.';
+        $oListener = $this->setUpListener($aRegister);
+        $aFiles    = $this->oData->getObjects($oListener);
 
-		$this->oData->createInfo($aInfos);
+        $this->assertCount(7, $aFiles, 'count $aFiles wrong');
+        $this->assertEquals('/path/zabu-2.php', $aFiles[2]->getObjectPath(), 'objectpath wrong');
+    }
 
-		// A directory object.
-		$aParams = array(
-					'txn'    => '110-1',
-					'rev'    => 111,
-					'action' => 'U',
-					'item'   => '/path/file_0.php',
-					'real'   => '/path/file_0.php',
-					'isdir'  => false,
-					'props'  => array(),
-					'lines'  => array()
-				   );
+    /**
+     * Test return all actions, when Array in register method is empty.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testGetFilesActionTypes()
+    {
+        // Test listener.
+        $aRegister = array(
+            'action'     => 'commit',
+            'fileaction' => array(
+                'A', 'U'
+            ),
+            'extensions' => array('ALL'),
+            'withdirs'   => false
+        );
 
-		$this->oData->createObject($aParams);
+        $oListener = $this->setUpListener($aRegister);
+        $aFiles    = $this->oData->getObjects($oListener);
 
-		// A file object
-		$aParams['action'] = 'A';
-		$aParams['item']   = '/path/file_1.php';
-		$aParams['real']   = '/path/file_1.php';
+        $this->assertCount(4, $aFiles, 'count $aFiles wrong');
+        $this->assertEquals('/path/zabu-1.html', $aFiles[1]->getObjectPath(), 'objectpath wrong');
+    }
 
-		$this->oData->createObject($aParams);
+    /**
+     * Test return all extensions, when register array is empty.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testGetFilesExtensions()
+    {
+        // Test listener.
+        $aRegister = array(
+            'action'     => 'commit',
+            'fileaction' => array(
+                'A', 'U', 'D'
+            ),
+            'extensions' => array('html'),
+            'withdirs'   => false
+        );
 
-		// A file object
-		$aParams['action'] = 'D';
-		$aParams['item']   = '/path/file_2.php';
-		$aParams['real']   = '/path/file_2.php';
+        $oListener = $this->setUpListener($aRegister);
+        $aFiles    = $this->oData->getObjects($oListener);
 
-		$this->oData->createObject($aParams);
-
-		$oListener = new DataHelperActionTypes();
-
-		$aFiles = $this->oData->getObjects($oListener);
-
-		$this->assertTrue(is_array($aFiles), '$aFiles no array');
-		$this->assertEquals(3, count($aFiles), 'count $aFiles wrong');
-
-		$this->assertEquals('/path/file_0.php', $aFiles[1]->getObjectPath(), 'objectpath wrong');
-	} // function
-
-	/**
-	 * Test return all extensions, when register array is empty.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function testGetFilesExtensions()
-	{
-		$aInfos['txn']      = '110-1';
-		$aInfos['rev']      = 111;
-		$aInfos['user']     = 'Zabu';
-		$aInfos['datetime'] = '2008-12-30 12:23:45';
-		$aInfos['message']  = '* A message for this tests.';
-
-		$this->oData->createInfo($aInfos);
-
-		// A file object
-		$aParams = array(
-					'txn'    => '110-1',
-					'rev'    => 111,
-					'action' => 'U',
-					'item'   => '/path/file_0.txt',
-					'real'   => '/path/file_0.txt',
-					'isdir'  => false,
-					'props'  => array(),
-					'lines'  => array()
-				   );
-
-		$this->oData->createObject($aParams);
-
-		// A file object
-		$aParams['action'] = 'A';
-		$aParams['item']   = '/path/file_1.php';
-		$aParams['real']   = '/path/file_1.php';
-
-		$this->oData->createObject($aParams);
-
-		// A file object
-		$aParams['action'] = 'A';
-		$aParams['item']   = '/path/file_1.phtml';
-		$aParams['real']   = '/path/file_1.phtml';
-
-		$this->oData->createObject($aParams);
-
-		// A file object
-		$aParams['action'] = 'D';
-		$aParams['item']   = '/path/file_2.phtml';
-		$aParams['real']   = '/path/file_2.phtml';
-
-		$this->oData->createObject($aParams);
-
-		$oListener = new DataHelperExtensions();
-
-		$aFiles = $this->oData->getObjects($oListener);
-
-		$this->assertTrue(is_array($aFiles), '$aFile no aray');
-		$this->assertEquals(3, count($aFiles), 'file count wrong');
-
-		$this->assertEquals('/path/file_1.phtml', $aFiles[1]->getObjectPath(), 'objectpath wrong');
-	} // function
-
-	/**
-	 * Test create commit info object.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function testCreateInfo()
-	{
-		$aInfos['txn']      = '74-1';
-		$aInfos['rev']      = 74;
-		$aInfos['user']     = 'Zabu';
-		$aInfos['datetime'] = '2008-12-30 12:23:45';
-		$aInfos['message']  = '* A message for this tests.';
-
-		$this->oData->createInfo($aInfos);
-
-		$oInfo = $this->oData->getInfo();
-
-		$this->assertEquals('Hook\Commit\Data\Info', get_class($oInfo), 'wrong class');
-		$this->assertEquals($aInfos['txn'], $oInfo->getTransaction(), 'txn wrong');
-		$this->assertEquals($aInfos['rev'], $oInfo->getRevision(), 'rev wrong');
-		$this->assertEquals($aInfos['user'], $oInfo->getUser(), 'user wrong');
-		$this->assertEquals($aInfos['datetime'], $oInfo->getDateTime(), 'datetime wrong');
-		$this->assertEquals($aInfos['message'], $oInfo->getMessage(), 'message wrong');
-	} // function
-} // class
+        $this->assertCount(3, $aFiles, 'file count wrong');
+        $this->assertEquals('/path/zabu-1.html', $aFiles[0]->getObjectPath(), 'objectpath wrong');
+    }
+}

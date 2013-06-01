@@ -15,7 +15,7 @@ namespace HookTest\Core;
 
 use Hook\Core\Response;
 
-require_once __DIR__ . '/../../Bootstrap.php';
+require_once HF_TEST_DIR . 'Bootstrap.php';
 
 /**
  * Tests for response object.
@@ -44,7 +44,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->oResponse = new Response();
-    } // function
+    }
 
     /**
      * Test check values on create
@@ -86,7 +86,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function testSend()
     {
-        $sFile = __DIR__ . '/_files/send.file';
+        $sFile = HF_TEST_FILES_DIR . 'send.file';
         $rFile = fopen($sFile, 'w+');
         $this->oResponse = new Response($rFile);
 

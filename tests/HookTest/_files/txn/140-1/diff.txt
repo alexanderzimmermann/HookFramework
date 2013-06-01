@@ -1,7 +1,7 @@
-Added: hookframework/trunk/.buildpath
+Added: trunk/.buildpath
 ===================================================================
---- hookframework/trunk/.buildpath	                        (rev 0)
-+++ hookframework/trunk/.buildpath	2009-01-03 12:11:06 UTC (txn 140-1)
+--- trunk/.buildpath	                        (rev 0)
++++ trunk/.buildpath	2009-01-03 12:11:06 UTC (txn 140-1)
 @@ -0,0 +1,5 @@
 +<?xml version="1.0" encoding="UTF-8"?>
 +<buildpath>
@@ -9,10 +9,10 @@ Added: hookframework/trunk/.buildpath
 +	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
 +</buildpath>
 
-Added: hookframework/trunk/.project
+Added: trunk/.project
 ===================================================================
---- hookframework/trunk/.project	                        (rev 0)
-+++ hookframework/trunk/.project	2009-01-03 12:11:06 UTC (txn 140-1)
+--- trunk/.project	                        (rev 0)
++++ trunk/.project	2009-01-03 12:11:06 UTC (txn 140-1)
 @@ -0,0 +1,22 @@
 +<?xml version="1.0" encoding="UTF-8"?>
 +<projectDescription>
@@ -37,10 +37,10 @@ Added: hookframework/trunk/.project
 +	</natures>
 +</projectDescription>
 
-Added: hookframework/trunk/Core/Usage.php
+Added: trunk/Core/Usage.php
 ===================================================================
---- hookframework/trunk/Core/Usage.php	                        (rev 0)
-+++ hookframework/trunk/Core/Usage.php	2009-01-03 12:11:06 UTC (txn 140-1)
+--- trunk/Core/Usage.php	                        (rev 0)
++++ trunk/Core/Usage.php	2009-01-03 12:11:06 UTC (txn 140-1)
 @@ -0,0 +1,323 @@
 +<?php
 +/**
@@ -367,13 +367,13 @@ Added: hookframework/trunk/Core/Usage.php
 +} // class
 
 
-Property changes on: hookframework/trunk/Core/Usage.php
+Property changes on: trunk/Core/Usage.php
 ___________________________________________________________________
 Name: svn:keywords
    + Id
 
 
-Property changes on: hookframework/trunk/logs
+Property changes on: trunk/logs
 ___________________________________________________________________
 Name: svn:ignore
    + mail.log
@@ -381,10 +381,10 @@ common.log
 test.log
 
 
-Deleted: hookframework/trunk/logs/common.log
+Deleted: trunk/logs/common.log
 ===================================================================
---- hookframework/trunk/logs/common.log	2008-12-20 19:20:59 UTC (rev 140)
-+++ hookframework/trunk/logs/common.log	2009-01-03 12:11:06 UTC (txn 140-1)
+--- trunk/logs/common.log	2008-12-20 19:20:59 UTC (rev 140)
++++ trunk/logs/common.log	2009-01-03 12:11:06 UTC (txn 140-1)
 @@ -1,38 +0,0 @@
 -================================================================================
 -                    2008-12-16 20:41:25
@@ -425,10 +425,10 @@ Deleted: hookframework/trunk/logs/common.log
 -Keine Listener: Abbruch Verarbeitung
 ----------------
 
-Modified: hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file1.php
+Modified: trunk/tmp/newfolder1/newfolder1_1/correct_file1.php
 ===================================================================
---- hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file1.php	2008-12-20 19:20:59 UTC (rev 140)
-+++ hookframework/trunk/tmp/newfolder1/newfolder1_1/correct_file1.php	2009-01-03 12:11:06 UTC (txn 140-1)
+--- trunk/tmp/newfolder1/newfolder1_1/correct_file1.php	2008-12-20 19:20:59 UTC (rev 140)
++++ trunk/tmp/newfolder1/newfolder1_1/correct_file1.php	2009-01-03 12:11:06 UTC (txn 140-1)
 @@ -5,7 +5,7 @@
   * @package    Test
   * @subpackage Newfolder

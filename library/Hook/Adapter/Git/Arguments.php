@@ -5,9 +5,9 @@
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
@@ -20,7 +20,7 @@ namespace Hook\Adapter\Git;
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 3.0.0
  * @link       http://www.azimmermann.com/
@@ -301,9 +301,9 @@ class Arguments
                     $this->bArgumentsOk = true;
 
                     return;
-                } // if
-            } // if
-        } // if
+                }
+            }
+        }
 
         $this->bArgumentsOk = false;
     }
@@ -320,7 +320,7 @@ class Arguments
             $this->sError = 'Empty Arguments';
 
             return false;
-        } // if
+        }
 
         $sMain = $this->aArguments[($this->iArguments - 1)];
 
@@ -328,7 +328,7 @@ class Arguments
             $this->sError .= 'MainHook ';
 
             return false;
-        } // if
+        }
 
         $aHook           = explode('-', $sMain, 2);
         $this->sMainType = $aHook[0];
@@ -352,7 +352,7 @@ class Arguments
 
         if ($this->iArguments === count($aTypes)) {
             return true;
-        } // if
+        }
 
         $this->sError .= 'Argument Count ';
 
@@ -375,12 +375,12 @@ class Arguments
 
             if (false === $bResult) {
                 $iErrors++;
-            } // if
-        } // foreach
+            }
+        }
 
         if (0 === $iErrors) {
             return true;
-        } // if
+        }
 
         return false;
     }
@@ -398,7 +398,7 @@ class Arguments
 
         if (true === method_exists($this, $sFunction)) {
             return $this->$sFunction($sArgument);
-        } // if
+        }
 
         $bResult = false;
         $this->sError .= 'Check Type Error for ' . $sType;
@@ -420,7 +420,7 @@ class Arguments
             $this->sRepositoryName = basename($sRepository);
 
             return true;
-        } // if
+        }
 
         $this->sError .= 'Repository ' . $sRepository . ' does not exists.';
 
@@ -439,7 +439,7 @@ class Arguments
             $this->sUser = $sUser;
 
             return true;
-        } // if
+        }
 
         $this->sError .= 'User ';
 
@@ -458,7 +458,7 @@ class Arguments
             $this->sTxn = $sTransaction;
 
             return true;
-        } // if
+        }
 
         $this->sError .= 'Transaction ';
 
@@ -477,7 +477,7 @@ class Arguments
             $this->iRev = (int)$sRevision;
 
             return true;
-        } // if
+        }
 
         $this->sError .= 'Revision ';
 
@@ -522,7 +522,7 @@ class Arguments
             $this->sAction = $sAction;
 
             return true;
-        } // if
+        }
 
         $this->sError .= 'Action false, not (A, M, D)';
 

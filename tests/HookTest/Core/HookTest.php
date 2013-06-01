@@ -5,18 +5,18 @@
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
 namespace HookTest\Core;
 
-require_once __DIR__ . '/../../Bootstrap.php';
+use Hook\Core\Hook;
 
-require_once __DIR__ . '/HookHelper.php';
+require_once HF_TEST_DIR . 'Bootstrap.php';
 
 /**
  * Hook Tests.
@@ -24,7 +24,7 @@ require_once __DIR__ . '/HookHelper.php';
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
@@ -46,7 +46,7 @@ class HookTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->bObStart = false;
-    } // function
+    }
 
     /**
      * Tear down.
@@ -57,45 +57,29 @@ class HookTest extends \PHPUnit_Framework_TestCase
     {
         if (true === $this->bObStart) {
             ob_end_clean();
-        } // if
-    } // function
+        }
+    }
 
     /**
-     * Test usage output.
-     * @return void
+     * Test arguments error throwing exception.
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function testHookUsage()
+    public function testWrongArguments()
     {
+        $this->setExpectedException('Exception', 'Arguments Error');
+
         $aData = array(
             0 => '/var/local/svn/hooks/Hook',
-            1 => TEST_SVN_EXAMPLE,
+            1 => HF_TEST_SVN_EXAMPLE,
             2 => 'phoebe',
             3 => 'pre-commit'
         );
 
-        $oHook = new HookHelper($aData);
-
-        // Avoid output.
-        ob_start();
-        $this->bObStart = true;
-        $iExit          = $oHook->run();
-
-        $sContent = ob_get_contents();
-        ob_end_clean();
-        $this->bObStart = false;
-
-        $sExpected = 'Call with the following parameters and order:' . "\n\n";
-        $sExpected .= '$REPOS    Repository path (/var/svn/project)' . "\n";
-        $sExpected .= '$TXN      Transaction (74-1)' . "\n";
-        $sExpected .= 'Hook      start-commit, pre-commit, post-commit' . "\n";
-        $sExpected .= "\n";
-        $sExpected .= 'Example: ';
-        $sExpected .= '/path/to/hookframework/Hook $REPOS $TXN pre-commit' . "\n";
+        $oHook = new Hook($aData);
+        $iExit = $oHook->run();
 
         $this->assertEquals(1, $iExit, 'Exit code false.');
-        $this->assertEquals($sExpected, $sContent, 'Message not as expected.');
-    } // function
+    }
 
     /**
      * Test start hook.
@@ -106,16 +90,16 @@ class HookTest extends \PHPUnit_Framework_TestCase
     {
         $aData = array(
             0 => '/var/local/svn/hooks/Hook',
-            1 => TEST_SVN_EXAMPLE,
-            2 => 'testuser12',
+            1 => HF_TEST_SVN_EXAMPLE,
+            2 => 'alice',
             3 => 'start-commit'
         );
 
-        $oHook = new HookHelper($aData);
+        $oHook = new Hook($aData);
         $iExit = $oHook->run();
 
         $this->assertEquals(0, $iExit);
-    } // function
+    }
 
     /**
      * Test pre hook with errors.
@@ -126,21 +110,21 @@ class HookTest extends \PHPUnit_Framework_TestCase
     {
         $aData = array(
             0 => '/var/local/svn/hooks/Hook',
-            1 => TEST_SVN_EXAMPLE,
+            1 => HF_TEST_SVN_EXAMPLE,
             2 => '666-1',
             3 => 'pre-commit',
         );
 
         ob_start();
         $this->bObStart = true;
-        $oHook          = new HookHelper($aData);
+        $oHook          = new Hook($aData);
         $iExit          = $oHook->run();
 
         $this->assertEquals(1, $iExit);
 
         ob_end_clean();
         $this->bObStart = false;
-    } // function
+    }
 
     /**
      * Test pre hook that works fine.
@@ -151,16 +135,16 @@ class HookTest extends \PHPUnit_Framework_TestCase
     {
         $aData = array(
             0 => '/var/local/svn/hooks/Hook',
-            1 => TEST_SVN_EXAMPLE,
+            1 => HF_TEST_SVN_EXAMPLE,
             2 => '74-1',
             3 => 'pre-commit',
         );
 
-        $oHook = new HookHelper($aData);
+        $oHook = new Hook($aData);
         $iExit = $oHook->run();
 
         $this->assertEquals(0, $iExit);
-    } // function
+    }
 
     /**
      * Test post hook.
@@ -171,15 +155,15 @@ class HookTest extends \PHPUnit_Framework_TestCase
     {
         $aData = array(
             0 => '/var/local/svn/hooks/Hook',
-            1 => TEST_SVN_EXAMPLE,
+            1 => HF_TEST_SVN_EXAMPLE,
             2 => 76,
             3 => 'post-commit',
         );
 
-        $oHook = new HookHelper($aData);
+        $oHook = new Hook($aData);
         $iExit = $oHook->run();
 
-        // Post is always 0, cause we do not abort here.
+        // Post is always 0, cause an abort does not make sense here.
         $this->assertEquals(0, $iExit);
-    } // function
-} // class
+    }
+}

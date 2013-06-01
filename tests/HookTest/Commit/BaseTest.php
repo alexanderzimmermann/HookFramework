@@ -5,16 +5,16 @@
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
 namespace HookTest\Core\Commit;
 
-use Hook\Commit\Data\Base;
+use Hook\Commit\Base;
 
 require_once __DIR__ . '/../../Bootstrap.php';
 
@@ -24,7 +24,7 @@ require_once __DIR__ . '/../../Bootstrap.php';
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
@@ -46,7 +46,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 	protected function setUp()
 	{
 		$this->oBase = new Base('74-1', 74);
-	} // function
+	}
 
 	/**
 	 * Check correct transaction number.
@@ -56,7 +56,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 	public function testGetTransaction()
 	{
 		$this->assertEquals('74-1', $this->oBase->getTransaction());
-	} // function
+	}
 
 	/**
 	 * Check correct revision number.
@@ -66,7 +66,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 	public function testGetRevision()
 	{
 		$this->assertEquals(74, $this->oBase->getRevision());
-	} // function
+	}
 
 	/**
 	 * Test for added error lines.
@@ -87,7 +87,7 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue(is_array($aError), 'no array');
 		$this->assertFalse(empty($aError), 'array aError empty');
 		$this->assertEquals($aLines, $aError, 'aError does not eqal aLines.');
-	} // function
+	}
 
 	/**
 	 * Test for adding multiple error lines.
@@ -117,5 +117,5 @@ class BaseTest extends \PHPUnit_Framework_TestCase
 		$aLines[] = 'Eine weitere Fehlermeldung.';
 
 		$this->assertEquals($aLines, $aError, 'aError does not eqal aLines.');
-	} // function
-} // class
+	}
+}

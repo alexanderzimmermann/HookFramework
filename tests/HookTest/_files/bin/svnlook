@@ -14,27 +14,25 @@
  */
 
 /**
-	The check for the params can be skipped, cause the script is only used in the test environment.
-*/
+    The check for the params can be skipped, cause the script is only used in the test environment.
+ */
 
 $aCommands = array(
-			  'changed', 'diff', 'info', 'cat'
-			 );
+    'changed', 'diff', 'info', 'cat'
+);
 
 $sCommand = $argv[1];
-$sParam   = $argv[2];
-$sNumber  = $argv[3];
-$sRepos   = $argv[4];
+$sParam = $argv[2];
+$sNumber = $argv[3];
+$sRepos = $argv[4];
 
 $sCatFile = '';
-if (true === isset($argv[5]))
-{
-	$sCatFile = $argv[5];
+if (true === isset($argv[5])) {
+    $sCatFile = $argv[5];
 } // if
 
-if (in_array($sCommand, $aCommands) === false)
-{
-	exit;
+if (in_array($sCommand, $aCommands) === false) {
+    exit;
 } // if
 
 // Path to _files directory.
@@ -43,28 +41,23 @@ $sPath = str_replace('bin', '', __DIR__);
 // Determine file.
 $sCatFile = basename($sCatFile);
 
-if ($sParam === '-t')
-{
-	$sType = 'txn';
-} // if
+if ($sParam === '-t') {
+    $sType = 'txn';
+}
 
-if ($sParam === '-r')
-{
-	$sType = 'rev';
-} // if
+if ($sParam === '-r') {
+    $sType = 'rev';
+}
 
 // Prepare file for svn fake.
 $sFile = $sPath . $sType . '/' . $sNumber . '/';
 
 // On "cat" the file will be attached.
-if ($sCommand === 'cat')
-{
-	$sFile .= $sCatFile;
+if ($sCommand === 'cat') {
+    $sFile .= $sCatFile;
+} else {
+    $sFile .= $sCommand;
 }
-else
-{
-	$sFile .= $sCommand;
-} // if
 
 $sFile .= '.txt';
 

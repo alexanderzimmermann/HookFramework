@@ -5,7 +5,7 @@
  * @package    Adapter
  * @subpackage Svn
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
@@ -23,7 +23,7 @@ require_once __DIR__ . '/../../../Bootstrap.php';
  * @package    Adapter
  * @subpackage Svn
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 3.0.0
  * @link       http://www.azimmermann.com/
@@ -47,7 +47,7 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
         $oArguments = new Arguments($aData);
 
         $this->assertFalse($oArguments->argumentsOk());
-    } // function
+    }
 
     /**
      * Test with no arguments provided.
@@ -59,7 +59,7 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
         $oArguments = new Arguments(array());
 
         $this->assertFalse($oArguments->argumentsOk());
-    } // function
+    }
 
     /**
      * Test if values are returned correctly.
@@ -70,7 +70,7 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
     {
         $aData = array(
             0 => '/var/local/svn/hooks/Hook',
-            1 => TEST_SVN_EXAMPLE,
+            1 => HF_TEST_SVN_EXAMPLE,
             2 => '666-1',
             3 => 'pre-commit',
         );
@@ -83,7 +83,7 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
         $this->assertEquals($aExpect, $oArguments->getSubActions(), 'Subaction false');
-    } // function
+    }
 
     /**
      * Test if values are returned correctly.
@@ -94,7 +94,7 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
     {
         $aData = array(
             0 => '/var/local/svn/hooks/Hook',
-            1 => TEST_SVN_EXAMPLE,
+            1 => HF_TEST_SVN_EXAMPLE,
             2 => 666,
             3 => 'post-commit'
         );
@@ -107,7 +107,7 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
         $this->assertEquals($aExpect, $oArguments->getSubActions(), 'Subaction false');
-    } // function
+    }
 
     /**
      * Test if values are returned correctly.
@@ -118,7 +118,7 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
     {
         $aData = array(
             0 => '/var/local/svn/hooks/Hook',
-            1 => TEST_SVN_EXAMPLE,
+            1 => HF_TEST_SVN_EXAMPLE,
             2 => 'testuser12',
             3 => 'start-commit'
         );
@@ -129,5 +129,5 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($oArguments->argumentsOk(), 'Arguments false');
         $this->assertEquals($aExpect, $oArguments->getSubActions(), 'Subaction false');
-    } // function
-} // class
+    }
+}

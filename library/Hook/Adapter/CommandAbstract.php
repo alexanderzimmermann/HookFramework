@@ -7,12 +7,14 @@
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 3.0.0
  */
 
 namespace Hook\Adapter;
+
+use Hook\Core\Log;
 
 /**
  * Abstract class for the adapter for the git version control system.
@@ -58,7 +60,7 @@ abstract class CommandAbstract implements CommandInterface
      */
     protected function execCommand($sCommand)
     {
-        $oLog = Log::getInstance();
+        $oLog = Log::getInstance('repository');
         $oLog->writeLog(Log::HF_VARDUMP, 'command', $sCommand);
 
         exec($sCommand, $aData);

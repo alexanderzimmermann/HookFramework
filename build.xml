@@ -29,6 +29,8 @@
 		<delete dir="${basedir}/build/logs"/>
 		<delete dir="${basedir}/build/pdepend"/>
 		<delete dir="${basedir}/build/phar"/>
+		<delete dir="${basedir}/Docs/_build/doctrees"/>
+		<delete dir="${basedir}/Docs/_build/html"/>
 
 		<delete>
 			<fileset dir="${basedir}/build">
@@ -44,7 +46,6 @@
 		<mkdir dir="${basedir}/build/coverage"/>
 		<mkdir dir="${basedir}/build/logs"/>
 		<mkdir dir="${basedir}/build/pdepend"/>
-		<mkdir dir="${basedir}/build/phpdox"/>
 	</target>
 
 	<target name="phpab" description="Generate autoloader scripts">
@@ -76,6 +77,7 @@
 			<fileset dir="${basedir}/tests">
 				<include name="**/*.php" />
 				<modified />
+				<excludesfile name="${basedir}/tests/HookTest/Listener/Pre/_files/parse-error_file1.php" />
 			</fileset>
 		</apply>
 	</target>

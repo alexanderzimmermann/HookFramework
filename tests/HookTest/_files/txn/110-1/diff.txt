@@ -1,7 +1,7 @@
-Added: hookframework/trunk/Core/Commit/CommitBase.php
+Added: trunk/Core/Commit/CommitBase.php
 ===================================================================
---- hookframework/trunk/Core/Commit/CommitBase.php	                        (rev 0)
-+++ hookframework/trunk/Core/Commit/CommitBase.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/Commit/CommitBase.php	                        (rev 0)
++++ trunk/Core/Commit/CommitBase.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -0,0 +1,105 @@
 +<?php
 +/**
@@ -114,15 +114,15 @@ Added: hookframework/trunk/Core/Commit/CommitBase.php
 +} // class
 
 
-Property changes on: hookframework/trunk/Core/Commit/CommitBase.php
+Property changes on: trunk/Core/Commit/CommitBase.php
 ___________________________________________________________________
 Name: svn:keywords
    + Id
 
-Added: hookframework/trunk/Core/Commit/CommitData.php
+Added: trunk/Core/Commit/CommitData.php
 ===================================================================
---- hookframework/trunk/Core/Commit/CommitData.php	                        (rev 0)
-+++ hookframework/trunk/Core/Commit/CommitData.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/Commit/CommitData.php	                        (rev 0)
++++ trunk/Core/Commit/CommitData.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -0,0 +1,186 @@
 +<?php
 +/**
@@ -319,15 +319,15 @@ Added: hookframework/trunk/Core/Commit/CommitData.php
 \', No newline at end of file
 
 
-Property changes on: hookframework/trunk/Core/Commit/CommitData.php
+Property changes on: trunk/Core/Commit/CommitData.php
 ___________________________________________________________________
 Name: svn:keywords
    + Id
 
-Added: hookframework/trunk/Core/Commit/CommitInfo.php
+Added: trunk/Core/Commit/CommitInfo.php
 ===================================================================
---- hookframework/trunk/Core/Commit/CommitInfo.php	                        (rev 0)
-+++ hookframework/trunk/Core/Commit/CommitInfo.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/Commit/CommitInfo.php	                        (rev 0)
++++ trunk/Core/Commit/CommitInfo.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -0,0 +1,107 @@
 +<?php
 +/**
@@ -442,15 +442,15 @@ Added: hookframework/trunk/Core/Commit/CommitInfo.php
 +} // class
 
 
-Property changes on: hookframework/trunk/Core/Commit/CommitInfo.php
+Property changes on: trunk/Core/Commit/CommitInfo.php
 ___________________________________________________________________
 Name: svn:keywords
    + Id
 
-Added: hookframework/trunk/Core/Commit/CommitObject.php
+Added: trunk/Core/Commit/CommitObject.php
 ===================================================================
---- hookframework/trunk/Core/Commit/CommitObject.php	                        (rev 0)
-+++ hookframework/trunk/Core/Commit/CommitObject.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/Commit/CommitObject.php	                        (rev 0)
++++ trunk/Core/Commit/CommitObject.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -0,0 +1,140 @@
 +<?php
 +/**
@@ -598,15 +598,15 @@ Added: hookframework/trunk/Core/Commit/CommitObject.php
 +} // class
 
 
-Property changes on: hookframework/trunk/Core/Commit/CommitObject.php
+Property changes on: trunk/Core/Commit/CommitObject.php
 ___________________________________________________________________
 Name: svn:keywords
    + Id
 
-Added: hookframework/trunk/Core/Commit/CommitParser.php
+Added: trunk/Core/Commit/CommitParser.php
 ===================================================================
---- hookframework/trunk/Core/Commit/CommitParser.php	                        (rev 0)
-+++ hookframework/trunk/Core/Commit/CommitParser.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/Commit/CommitParser.php	                        (rev 0)
++++ trunk/Core/Commit/CommitParser.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -0,0 +1,274 @@
 +<?php
 +/**
@@ -890,15 +890,15 @@ Added: hookframework/trunk/Core/Commit/CommitParser.php
 +} // class
 
 
-Property changes on: hookframework/trunk/Core/Commit/CommitParser.php
+Property changes on: trunk/Core/Commit/CommitParser.php
 ___________________________________________________________________
 Name: svn:keywords
    + Id
 
-Deleted: hookframework/trunk/Core/CommitBase.php
+Deleted: trunk/Core/CommitBase.php
 ===================================================================
---- hookframework/trunk/Core/CommitBase.php	2008-12-16 19:42:16 UTC (rev 110)
-+++ hookframework/trunk/Core/CommitBase.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/CommitBase.php	2008-12-16 19:42:16 UTC (rev 110)
++++ trunk/Core/CommitBase.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -1,105 +0,0 @@
 -<?php
 -/**
@@ -1010,10 +1010,10 @@ Deleted: hookframework/trunk/Core/CommitBase.php
 -	} // function
 -} // class
 
-Deleted: hookframework/trunk/Core/CommitData.php
+Deleted: trunk/Core/CommitData.php
 ===================================================================
---- hookframework/trunk/Core/CommitData.php	2008-12-16 19:42:16 UTC (rev 110)
-+++ hookframework/trunk/Core/CommitData.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/CommitData.php	2008-12-16 19:42:16 UTC (rev 110)
++++ trunk/Core/CommitData.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -1,186 +0,0 @@
 -<?php
 -/**
@@ -1209,10 +1209,10 @@ Deleted: hookframework/trunk/Core/CommitData.php
 -} // class
 \', No newline at end of file
 
-Deleted: hookframework/trunk/Core/CommitInfo.php
+Deleted: trunk/Core/CommitInfo.php
 ===================================================================
---- hookframework/trunk/Core/CommitInfo.php	2008-12-16 19:42:16 UTC (rev 110)
-+++ hookframework/trunk/Core/CommitInfo.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/CommitInfo.php	2008-12-16 19:42:16 UTC (rev 110)
++++ trunk/Core/CommitInfo.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -1,107 +0,0 @@
 -<?php
 -/**
@@ -1326,10 +1326,10 @@ Deleted: hookframework/trunk/Core/CommitInfo.php
 -	} // function
 -} // class
 
-Deleted: hookframework/trunk/Core/CommitObject.php
+Deleted: trunk/Core/CommitObject.php
 ===================================================================
---- hookframework/trunk/Core/CommitObject.php	2008-12-16 19:42:16 UTC (rev 110)
-+++ hookframework/trunk/Core/CommitObject.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/CommitObject.php	2008-12-16 19:42:16 UTC (rev 110)
++++ trunk/Core/CommitObject.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -1,140 +0,0 @@
 -<?php
 -/**
@@ -1476,10 +1476,10 @@ Deleted: hookframework/trunk/Core/CommitObject.php
 -	} // function
 -} // class
 
-Deleted: hookframework/trunk/Core/CommitParser.php
+Deleted: trunk/Core/CommitParser.php
 ===================================================================
---- hookframework/trunk/Core/CommitParser.php	2008-12-16 19:42:16 UTC (rev 110)
-+++ hookframework/trunk/Core/CommitParser.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/CommitParser.php	2008-12-16 19:42:16 UTC (rev 110)
++++ trunk/Core/CommitParser.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -1,263 +0,0 @@
 -<?php
 -/**
@@ -1751,10 +1751,10 @@ Deleted: hookframework/trunk/Core/CommitParser.php
 -	} // function
 -} // class
 
-Modified: hookframework/trunk/Core/Error.php
+Modified: trunk/Core/Error.php
 ===================================================================
---- hookframework/trunk/Core/Error.php	2008-12-16 19:42:16 UTC (rev 110)
-+++ hookframework/trunk/Core/Error.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/Error.php	2008-12-16 19:42:16 UTC (rev 110)
++++ trunk/Core/Error.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -95,7 +95,7 @@
  			} // if
 
@@ -1825,10 +1825,10 @@ Modified: hookframework/trunk/Core/Error.php
  		$this->bError = false;
 
 
-Modified: hookframework/trunk/Core/Hook.php
+Modified: trunk/Core/Hook.php
 ===================================================================
---- hookframework/trunk/Core/Hook.php	2008-12-16 19:42:16 UTC (rev 110)
-+++ hookframework/trunk/Core/Hook.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/Hook.php	2008-12-16 19:42:16 UTC (rev 110)
++++ trunk/Core/Hook.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -8,19 +8,14 @@
   * @version    SVN: $Id: commit_110-1_common.log 2 2008-12-19 12:32:00Z alexander $
  * @link       http://www.azimmermann.com/
@@ -2083,10 +2083,10 @@ Modified: hookframework/trunk/Core/Hook.php
  } // class
 
 
-Added: hookframework/trunk/Core/Listener/ListenerInfo.php
+Added: trunk/Core/Listener/ListenerInfo.php
 ===================================================================
---- hookframework/trunk/Core/Listener/ListenerInfo.php	                        (rev 0)
-+++ hookframework/trunk/Core/Listener/ListenerInfo.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/Listener/ListenerInfo.php	                        (rev 0)
++++ trunk/Core/Listener/ListenerInfo.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -0,0 +1,75 @@
 +<?php
 +/**
@@ -2171,15 +2171,15 @@ Added: hookframework/trunk/Core/Listener/ListenerInfo.php
 +} // interface
 
 
-Property changes on: hookframework/trunk/Core/Listener/ListenerInfo.php
+Property changes on: trunk/Core/Listener/ListenerInfo.php
 ___________________________________________________________________
 Name: svn:keywords
    + Id
 
-Added: hookframework/trunk/Core/Listener/ListenerInfoAbstract.php
+Added: trunk/Core/Listener/ListenerInfoAbstract.php
 ===================================================================
---- hookframework/trunk/Core/Listener/ListenerInfoAbstract.php	                        (rev 0)
-+++ hookframework/trunk/Core/Listener/ListenerInfoAbstract.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/Listener/ListenerInfoAbstract.php	                        (rev 0)
++++ trunk/Core/Listener/ListenerInfoAbstract.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -0,0 +1,38 @@
 +<?php
 +/**
@@ -2225,15 +2225,15 @@ Added: hookframework/trunk/Core/Listener/ListenerInfoAbstract.php
 +} // class
 
 
-Property changes on: hookframework/trunk/Core/Listener/ListenerInfoAbstract.php
+Property changes on: trunk/Core/Listener/ListenerInfoAbstract.php
 ___________________________________________________________________
 Name: svn:keywords
    + Id
 
-Added: hookframework/trunk/Core/Listener/ListenerObject.php
+Added: trunk/Core/Listener/ListenerObject.php
 ===================================================================
---- hookframework/trunk/Core/Listener/ListenerObject.php	                        (rev 0)
-+++ hookframework/trunk/Core/Listener/ListenerObject.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/Listener/ListenerObject.php	                        (rev 0)
++++ trunk/Core/Listener/ListenerObject.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -0,0 +1,83 @@
 +<?php
 +/**
@@ -2326,15 +2326,15 @@ Added: hookframework/trunk/Core/Listener/ListenerObject.php
 +} // interface
 
 
-Property changes on: hookframework/trunk/Core/Listener/ListenerObject.php
+Property changes on: trunk/Core/Listener/ListenerObject.php
 ___________________________________________________________________
 Name: svn:keywords
    + Id
 
-Added: hookframework/trunk/Core/Listener/ListenerObjectAbstract.php
+Added: trunk/Core/Listener/ListenerObjectAbstract.php
 ===================================================================
---- hookframework/trunk/Core/Listener/ListenerObjectAbstract.php	                        (rev 0)
-+++ hookframework/trunk/Core/Listener/ListenerObjectAbstract.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/Listener/ListenerObjectAbstract.php	                        (rev 0)
++++ trunk/Core/Listener/ListenerObjectAbstract.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -0,0 +1,38 @@
 +<?php
 +/**
@@ -2380,15 +2380,15 @@ Added: hookframework/trunk/Core/Listener/ListenerObjectAbstract.php
 +} // class
 
 
-Property changes on: hookframework/trunk/Core/Listener/ListenerObjectAbstract.php
+Property changes on: trunk/Core/Listener/ListenerObjectAbstract.php
 ___________________________________________________________________
 Name: svn:keywords
    + Id
 
-Added: hookframework/trunk/Core/Listener/ListenerParser.php
+Added: trunk/Core/Listener/ListenerParser.php
 ===================================================================
---- hookframework/trunk/Core/Listener/ListenerParser.php	                        (rev 0)
-+++ hookframework/trunk/Core/Listener/ListenerParser.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/Listener/ListenerParser.php	                        (rev 0)
++++ trunk/Core/Listener/ListenerParser.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -0,0 +1,340 @@
 +<?php
 +/**
@@ -2738,15 +2738,15 @@ Added: hookframework/trunk/Core/Listener/ListenerParser.php
 +} // class
 
 
-Property changes on: hookframework/trunk/Core/Listener/ListenerParser.php
+Property changes on: trunk/Core/Listener/ListenerParser.php
 ___________________________________________________________________
 Name: svn:keywords
    + Id
 
-Deleted: hookframework/trunk/Core/ListenerInfo.php
+Deleted: trunk/Core/ListenerInfo.php
 ===================================================================
---- hookframework/trunk/Core/ListenerInfo.php	2008-12-16 19:42:16 UTC (rev 110)
-+++ hookframework/trunk/Core/ListenerInfo.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/ListenerInfo.php	2008-12-16 19:42:16 UTC (rev 110)
++++ trunk/Core/ListenerInfo.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -1,75 +0,0 @@
 -<?php
 -/**
@@ -2830,10 +2830,10 @@ Deleted: hookframework/trunk/Core/ListenerInfo.php
 -	public function processAction(CommitInfo $oInfo);
 -} // interface
 
-Deleted: hookframework/trunk/Core/ListenerInfoAbstract.php
+Deleted: trunk/Core/ListenerInfoAbstract.php
 ===================================================================
---- hookframework/trunk/Core/ListenerInfoAbstract.php	2008-12-16 19:42:16 UTC (rev 110)
-+++ hookframework/trunk/Core/ListenerInfoAbstract.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/ListenerInfoAbstract.php	2008-12-16 19:42:16 UTC (rev 110)
++++ trunk/Core/ListenerInfoAbstract.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -1,38 +0,0 @@
 -<?php
 -/**
@@ -2878,10 +2878,10 @@ Deleted: hookframework/trunk/Core/ListenerInfoAbstract.php
 -	} // function
 -} // class
 
-Deleted: hookframework/trunk/Core/ListenerObject.php
+Deleted: trunk/Core/ListenerObject.php
 ===================================================================
---- hookframework/trunk/Core/ListenerObject.php	2008-12-16 19:42:16 UTC (rev 110)
-+++ hookframework/trunk/Core/ListenerObject.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/ListenerObject.php	2008-12-16 19:42:16 UTC (rev 110)
++++ trunk/Core/ListenerObject.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -1,83 +0,0 @@
 -<?php
 -/**
@@ -2973,10 +2973,10 @@ Deleted: hookframework/trunk/Core/ListenerObject.php
 -	public function processAction(CommitObject $oObject);
 -} // interface
 
-Deleted: hookframework/trunk/Core/ListenerObjectAbstract.php
+Deleted: trunk/Core/ListenerObjectAbstract.php
 ===================================================================
---- hookframework/trunk/Core/ListenerObjectAbstract.php	2008-12-16 19:42:16 UTC (rev 110)
-+++ hookframework/trunk/Core/ListenerObjectAbstract.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/ListenerObjectAbstract.php	2008-12-16 19:42:16 UTC (rev 110)
++++ trunk/Core/ListenerObjectAbstract.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -1,38 +0,0 @@
 -<?php
 -/**
@@ -3021,10 +3021,10 @@ Deleted: hookframework/trunk/Core/ListenerObjectAbstract.php
 -	} // function
 -} // class
 
-Deleted: hookframework/trunk/Core/ListenerParser.php
+Deleted: trunk/Core/ListenerParser.php
 ===================================================================
---- hookframework/trunk/Core/ListenerParser.php	2008-12-16 19:42:16 UTC (rev 110)
-+++ hookframework/trunk/Core/ListenerParser.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/ListenerParser.php	2008-12-16 19:42:16 UTC (rev 110)
++++ trunk/Core/ListenerParser.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -1,339 +0,0 @@
 -<?php
 -/**
@@ -3372,10 +3372,10 @@ Deleted: hookframework/trunk/Core/ListenerParser.php
 -	} // function
 -} // class
 
-Modified: hookframework/trunk/Core/Svn.php
+Modified: trunk/Core/Svn.php
 ===================================================================
---- hookframework/trunk/Core/Svn.php	2008-12-16 19:42:16 UTC (rev 110)
-+++ hookframework/trunk/Core/Svn.php	2008-12-16 19:56:21 UTC (txn 110-1)
+--- trunk/Core/Svn.php	2008-12-16 19:42:16 UTC (rev 110)
++++ trunk/Core/Svn.php	2008-12-16 19:56:21 UTC (txn 110-1)
 @@ -72,9 +72,14 @@
  	 * @author Alexander Zimmermann <alex@azimmermann.com>
  	 */

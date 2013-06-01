@@ -5,9 +5,9 @@
  * @package    Package
  * @subpackage Subpackage
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
@@ -24,7 +24,7 @@ use Hook\Commit\Object;
  * @package    Adapter
  * @subpackage Parser
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 3.0.0
  * @link       http://www.azimmermann.com/
@@ -32,18 +32,6 @@ use Hook\Commit\Object;
  */
 class Changed extends ChangedAbstract implements ChangedInterface
 {
-    /**
-     * Available item actions for this adapter.
-     * @return array
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function getAvailableActions()
-    {
-        return array(
-                'M', 'C', 'R', 'A', 'D', 'U'
-               );
-    }
-
     /**
      * Parse the output lines of the diff command.
      * @param array $aLines Changed files from a git diff --raw.
@@ -59,9 +47,9 @@ class Changed extends ChangedAbstract implements ChangedInterface
             $aParts[2] = str_replace('.', '', $aParts[2]);
             $aParts[3] = str_replace('.', '', $aParts[3]);
 
-            if ((1 < strlen($aParts[4])) && (('R' === $aParts[4][1]) || ('C' === $aParts[4][1]))) {
+            if ((1 < strlen($aParts[4])) && (('R' === $aParts[4][0]) || ('C' === $aParts[4][0]))) {
 
-                $aParts['char']    = $aParts[4][1];
+                $aParts['char']    = $aParts[4][0];
                 $aParts['percent'] = substr($aParts[4], 1, 2);
                 $aParts['source']  = $aParts[6];
 

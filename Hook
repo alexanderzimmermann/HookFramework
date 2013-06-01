@@ -48,13 +48,7 @@
 
 use Hook\Core\Hook;
 
-$sRoot = realpath(dirname(__FILE__) . '/');
-
-$aPath = array(
-          $sRoot,
-          get_include_path()
-         );
-set_include_path(implode(PATH_SEPARATOR, $aPath));
+define('HF_ROOT', __DIR__ . '/');
 
 // Include autoloader.
 require_once 'library/Hook/Autoload.php';

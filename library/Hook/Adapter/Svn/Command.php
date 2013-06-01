@@ -5,9 +5,9 @@
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
@@ -23,7 +23,7 @@ use Hook\Adapter\Svn\Arguments;
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
@@ -50,7 +50,7 @@ class Command extends CommandAbstract
      */
     public function __construct($sBinPath)
     {
-        $this->sBinPath = $sBinPath;
+        parent::__construct($sBinPath);
     }
 
     /**
@@ -67,12 +67,12 @@ class Command extends CommandAbstract
         if ($oArguments->getMainType() === 'pre') {
             $this->sLookParams = ' -t ';
             $this->sLookParams .= $oArguments->getTransaction();
-        } // if
+        }
 
         if ($oArguments->getMainType() === 'post') {
             $this->sLookParams = ' -r ';
             $this->sLookParams .= $oArguments->getRevision();
-        } // if
+        }
     }
 
     /**

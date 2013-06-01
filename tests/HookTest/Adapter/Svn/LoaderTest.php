@@ -47,7 +47,7 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
         $aArguments = array(
             array(
                 0 => '/var/local/svn/hooks/Hook',
-                1 => TEST_SVN_EXAMPLE,
+                1 => HF_TEST_SVN_EXAMPLE,
                 2 => 'Juliana',
                 3 => 'pre-commit'
             )
@@ -71,7 +71,7 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
         // Just the instance.
         $oConfig = new Config;
 
-        $sTestDir = TEST_DIR . 'HookTest/Listener/';
+        $sTestDir = HF_TEST_DIR . 'HookTest/Listener/';
 
         $oLoader = new Loader();
         $oLoader->setArguments($oArguments);
@@ -109,7 +109,7 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
             array(
                 array(
                     0        => '/var/local/svn/hooks/Hook',
-                    1        => TEST_SVN_EXAMPLE,
+                    1        => HF_TEST_SVN_EXAMPLE,
                     2        => '666-1',
                     3        => 'pre-commit'
                 ),
@@ -126,7 +126,7 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
             array(
                 array(
                     0        => '/var/local/svn/hooks/Hook',
-                    1        => TEST_SVN_EXAMPLE,
+                    1        => HF_TEST_SVN_EXAMPLE,
                     2        => 666,
                     3        => 'post-commit'
                 ),
@@ -138,7 +138,7 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
             array(
                 array(
                     0        => '/var/local/svn/hooks/Hook',
-                    1        => TEST_SVN_EXAMPLE,
+                    1        => HF_TEST_SVN_EXAMPLE,
                     2        => 'testuser12',
                     3        => 'start-commit'
                 ),
@@ -172,7 +172,7 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
         $oLoader = new Loader();
         $oLoader->setArguments($oArguments);
         $oLoader->setConfiguration($oConfig);
-        $oLoader->setPath(TEST_SVN_REPOSITORY . 'ExampleSvn/');
+        $oLoader->setPath(HF_TEST_SVN_REPOSITORY . 'ExampleSvn/');
 
         $oLoader->init();
         $aListener = $oLoader->getListener();

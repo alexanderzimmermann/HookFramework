@@ -5,16 +5,16 @@
  * @package    Listener
  * @subpackage Info
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 2.1.0
  */
 
 namespace Hook\Listener;
 
-use Hook\Commit\Data\Info;
+use Hook\Commit\Info;
 
 /**
  * Interface für Info Listener.
@@ -22,7 +22,7 @@ use Hook\Commit\Data\Info;
  * @package    Listener
  * @subpackage Info
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
@@ -30,11 +30,11 @@ use Hook\Commit\Data\Info;
  */
 interface InfoInterface
 {
-	/**
-	 * Execute the action.
-	 * @param Info $oInfo Info des Commits.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function processAction(Info $oInfo);
-} // interface
+    /**
+     * Execute the action.
+     * @param Info $oInfo Info des Commits.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function processAction(Info $oInfo);
+}

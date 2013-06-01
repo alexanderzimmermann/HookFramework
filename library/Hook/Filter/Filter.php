@@ -5,9 +5,9 @@
  * @package    Filter
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
@@ -20,7 +20,7 @@ namespace Hook\Filter;
  * @package    Filter
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
@@ -79,7 +79,7 @@ class Filter
 	{
 		$this->aObjects    = $aObjects;
 		$this->aNewObjects = array();
-	} // function
+	}
 
 	/**
 	 * Compare commit objects paths with the filter of the listener.
@@ -101,7 +101,7 @@ class Filter
 			(true === empty($this->aWhiteDirs)))
 		{
 			return $this->aObjects;
-		} // if
+		}
 
 		// Extract paths.
 		$this->getPaths();
@@ -117,7 +117,7 @@ class Filter
 		$this->aNewObjects = array_values($this->aNewObjects);
 
 		return $this->aNewObjects;
-	} // function
+	}
 
 	/**
 	 * Take the paths from the objects to filter them.
@@ -132,7 +132,7 @@ class Filter
 		{
 			$this->aPaths[] = $this->aObjects[$iFor]->getRealPath();
 		} // for
-	} // function
+	}
 
 	/**
 	 * Copy all white list objects into the new array.
@@ -144,16 +144,16 @@ class Filter
 		if (true === empty($this->aWhiteFiles))
 		{
 			return;
-		} // if
+		}
 
 		foreach ($this->aPaths as $iIndex => $sPath)
 		{
 			if (in_array($sPath, $this->aWhiteFiles) === true)
 			{
 				$this->aNewObjects[] = $this->aObjects[$iIndex];
-			} // if
-		} // foreach
-	} // function
+			}
+		}
+	}
 
 	/**
 	 * Copy items in a white listed directory into the new array.
@@ -165,7 +165,7 @@ class Filter
 		if (true === empty($this->aWhiteDirs))
 		{
 			return;
-		} // if
+		}
 
 		$iMax = count($this->aWhiteDirs);
 		for ($iFor = 0; $iFor < $iMax; $iFor++)
@@ -181,10 +181,10 @@ class Filter
 				if ($sResult !== $sPath)
 				{
 					$this->aNewObjects[] = $this->aObjects[$iIndex];
-				} // if
-			} // foreach
+				}
+			}
 		} // for
-	} // function
+	}
 
 	/**
 	 * Delete every file that lies within a "forbidden" directory.
@@ -196,7 +196,7 @@ class Filter
 		if (true === empty($this->aDirectories))
 		{
 			return;
-		} // if
+		}
 
 		$iMax = count($this->aDirectories);
 		for ($iFor = 0; $iFor < $iMax; $iFor++)
@@ -213,10 +213,10 @@ class Filter
 				{
 					unset($this->aPaths[$iIndex]);
 					unset($this->aObjects[$iIndex]);
-				} // if
-			} // foreach
+				}
+			}
 		} // for
-	} // function
+	}
 
 	/**
 	 * Delete single files.
@@ -228,7 +228,7 @@ class Filter
 		if (true === empty($this->aFiles))
 		{
 			return;
-		} // if
+		}
 
 		foreach ($this->aPaths as $iIndex => $sPath)
 		{
@@ -236,7 +236,7 @@ class Filter
 			{
 				unset($this->aPaths[$iIndex]);
 				unset($this->aObjects[$iIndex]);
-			} // if
-		} // foreach
-	} // function
-} // class
+			}
+		}
+	}
+}

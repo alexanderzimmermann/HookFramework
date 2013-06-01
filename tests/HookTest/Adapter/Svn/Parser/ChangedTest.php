@@ -55,19 +55,6 @@ class ChangedTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test just the available actions.
-     * @covers Hook\Adapter\Git\Parser\Changed::getAvailableActions
-     */
-    public function testGetAvailableActions()
-    {
-        $aExpected = array(
-            'A', 'D', 'U'
-        );
-
-        $this->assertSame($aExpected, $this->oChanged->getAvailableActions());
-    }
-
-    /**
      * Test that the git diff raw output is parsed correctly.
      * @covers Hook\Adapter\Git\Parser\Changed::parseFiles
      */
@@ -80,7 +67,7 @@ class ChangedTest extends \PHPUnit_Framework_TestCase
         $oActual = $this->oChanged->getObjects();
 
         // Includes $aObjects array.
-        include __DIR__ . '/_files//expected-simple.php';
+        include __DIR__ . '/_files/expected-simple.php';
 
         $oExpected = new \ArrayObject();
         foreach ($aObjects as $aObject) {
@@ -114,9 +101,6 @@ class ChangedTest extends \PHPUnit_Framework_TestCase
             'real'   => 'Core/CommitParser.php',
             'ext'    => 'PHP',
             'isdir'  => false,
-            'info'   => '',
-            'props'  => null,
-            'lines'  => array()
         );
 
         $this->assertSame($aExpected, $aElements[10], 'Element 11 failed');
@@ -130,9 +114,6 @@ class ChangedTest extends \PHPUnit_Framework_TestCase
             'real'   => 'Core/Listener/',
             'ext'    => '',
             'isdir'  => true,
-            'info'   => '',
-            'props'  => null,
-            'lines'  => array()
         );
 
         $this->assertSame($aExpected, $aElements[13], 'Element 14 failed');

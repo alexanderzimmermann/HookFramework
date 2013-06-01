@@ -1,7 +1,7 @@
-Modified: hookframework/trunk/tmp/newfile1.php
+Modified: trunk/tmp/newfile1.php
 ===================================================================
---- hookframework/trunk/tmp/newfile1.php        2008-11-26 23:12:23 UTC (rev 53)
-+++ hookframework/trunk/tmp/newfile1.php        2008-11-27 20:17:41 UTC (txn 53-1)
+--- trunk/tmp/newfile1.php        2008-11-26 23:12:23 UTC (rev 53)
++++ trunk/tmp/newfile1.php        2008-11-27 20:17:41 UTC (txn 53-1)
 @@ -1,12 +1,33 @@
  <?php
 -// 1

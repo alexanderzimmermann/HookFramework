@@ -73,7 +73,7 @@ class InfoTest extends \PHPUnit_Framework_TestCase
      */
     public function testStandard()
     {
-        $aData     = file(__DIR__ . '/../../../_files/txn/10-k/info.txt');
+        $aData     = file(HF_TEST_FILES_DIR . 'txn/10-k/info.txt');
         $oExpected = new InfoObject(
             '10-k',
             '10',

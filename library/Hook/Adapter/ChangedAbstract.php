@@ -7,7 +7,7 @@
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 3.0.0
  */
@@ -52,13 +52,6 @@ abstract class ChangedAbstract
     }
 
     /**
-     * Available item actions for this adapter.
-     * @return array
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    abstract public function getAvailableActions();
-
-    /**
      * Return the create commit objects.
      * @return ArrayObject
      * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -66,6 +59,24 @@ abstract class ChangedAbstract
     public function getObjects()
     {
         return $this->oItems;
+    }
+
+    /**
+     * Return items as array.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function getObjectsArray()
+    {
+        return $this->oItems->getArrayCopy();
+    }
+
+    /**
+     * Return file items.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function getFiles()
+    {
+        return $this->aItems;
     }
 
     /**
@@ -98,7 +109,7 @@ abstract class ChangedAbstract
 
             $iPos++;
             $sExtension = substr($sFile, $iPos, (strlen($sFile) - $iPos));
-        } // if
+        }
 
         return strtoupper($sExtension);
     }

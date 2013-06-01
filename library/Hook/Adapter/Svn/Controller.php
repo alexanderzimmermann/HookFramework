@@ -5,20 +5,26 @@
  * @package    Parser
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
 namespace Hook\Adapter\Svn;
 
+use \Exception;
 use Hook\Adapter\ControllerAbstract;
-use Hook\Adapter\Svn\Parser\Parser as DiffParser;
-use Hook\Commit\Info;
-use Hook\Commit\Object;
+use Hook\Adapter\Svn\Arguments;
+use Hook\Adapter\Svn\Parser\Changed;
+use Hook\Adapter\Svn\Parser\Parser;
+use Hook\Adapter\Svn\Parser\Info;
 use Hook\Commit\Data;
+use Hook\Commit\Object;
+use Hook\Core\Config;
+use Hook\Core\File;
+use Hook\Core\Log;
 
 /**
  * Data in the transaction.
@@ -26,7 +32,7 @@ use Hook\Commit\Data;
  * @package    Parser
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 3.0.0
  * @link       http://www.azimmermann.com/
@@ -35,146 +41,248 @@ use Hook\Commit\Data;
 class Controller extends ControllerAbstract
 {
     /**
-     * Start to parse the commit..
+     * Available adapter actions.
+     * @var array
+     */
+    protected $aAdapterActions = array('A', 'U', 'D');
+
+    /**
+     * Constructor.
+     * @param array $aArguments Arguments from command line.
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function parse()
+    public function __construct(array $aArguments)
+    {
+        $this->oArguments = new Arguments($aArguments);
+    }
+
+    /**
+     * Initialize controller.
+     * - Check Arguments.
+     * - Create the command object.
+     * - Init the repository data.
+     * - Load the listener
+     * @param Config $oConfig Main configuration.
+     * @throws \Exception
+     * @return boolean
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function init(Config $oConfig)
+    {
+        parent::init($oConfig);
+        $this->oLog = Log::getInstance('repository');
+
+        if ($this->oArguments->argumentsOk() === false) {
+
+            $this->showUsage();
+            $this->oLog->writeLog(Log::HF_INFO, 'Arguments Error');
+            throw new Exception('Arguments Error.');
+        }
+
+        // Repository.
+        $sDirector = $this->initRepository();
+
+        // Create command object.
+        $this->oCommand = new Command($this->oConfig->getConfiguration('vcs', 'binpath'));
+        $this->oCommand->init($this->oArguments);
+
+        // A file writer that handles all temporary created files.
+        $this->oFile = new File($this->oCommand, $this->oLog);
+
+        // Loader.
+        return $this->initLoader($sDirector);
+    }
+
+    /**
+     * Initialize repository stuff.
+     * @throws Exception
+     * @return string
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    protected function initRepository()
+    {
+        // Check if there is a repository path.
+        $sRepositoryDir = $this->oConfig->getConfiguration('path', 'repositories');
+        $sLogMode       = $this->oConfig->getConfiguration('log', 'logmode');
+
+        // Fallback, set the shipped repository Example.
+        if (false === $sRepositoryDir) {
+
+            $sRepositoryDir = realpath(HF_ROOT . 'Repositories/');
+        }
+
+        $sDirectory = $sRepositoryDir . $this->oArguments->getRepositoryName() . '/';
+
+        if (false === is_dir($sDirectory)) {
+
+            // Use the Listener that come with the hookframework.
+            $sDirectory = $sRepositoryDir . 'ExampleSvn/';
+
+            // If this directory is missing, then we are screwed.
+            if (false === is_dir($sDirectory)) {
+
+                throw new Exception('Build-in repository is missing');
+            }
+        }
+
+        // Load the configuration file of the repository.
+        $sFile = $sDirectory . 'config.ini';
+        if (false === file_exists($sFile)) {
+            $sFile = $sDirectory . 'config-dist.ini';
+        }
+
+        $this->oConfig = new Config();
+        $this->oConfig->loadConfigFile($sFile);
+
+        // Check if a common.log file is available.
+        $sFile = $sDirectory . 'logs/common.log';
+
+        if ((true === is_file($sFile)) &&
+            (true === is_writable($sFile))) {
+
+            // Change log file if a separate exists for the repository.
+            $this->oLog->setLogFile($sFile);
+            $this->oLog->setLogMode($sLogMode);
+        }
+
+        return $sDirectory;
+    }
+
+    /**
+     * Init the listener loader and load the listener.
+     * @param string $sDirectory Directory of repository.
+     * @return boolean
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    protected function initLoader($sDirectory)
+    {
+        // Parse listener in directory.
+        $oLoader = new Loader();
+        $oLoader->setArguments($this->oArguments);
+        $oLoader->setConfiguration($this->oConfig);
+        $oLoader->setPath($sDirectory);
+        $oLoader->init();
+
+        $this->aListener = $oLoader->getListener();
+        unset($oLoader);
+
+        // No listener available? Then abort here (performance).
+        if (true === empty($this->aListener)) {
+
+            $sMessage = 'No listener: Abort';
+            $this->oLog->writeLog(Log::HF_DEBUG, $sMessage);
+            $this->oResponse->setResult(0);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Show usage.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function showUsage()
+    {
+        $sMainType = $this->oArguments->getMainType();
+        $sSubType  = $this->oArguments->getSubType();
+        $oUsage    = new Usage($sMainType, $sSubType);
+
+        echo $oUsage->getUsage();
+    }
+
+    /**
+     * Start to parse the commit, info and objects.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    protected function parse()
     {
         $sTxn        = $this->oArguments->getTransaction();
         $iRev        = $this->oArguments->getRevision();
-        $this->oData = new Data();
+        $this->oData = new Data($this->aAdapterActions);
+
+        $oInfo = new Info();
 
         // Only start has limited information.
         if ($this->oArguments->getMainType() === 'start') {
-            $aInfo['txn']      = $sTxn;
-            $aInfo['rev']      = $iRev;
-            $aInfo['user']     = $this->oArguments->getUser();
-            $aInfo['datetime'] = date('Y-m-d H:i:s', time());
-            $aInfo['message']  = 'No Message in Start Hook';
 
-            $this->oData->createInfo($aInfo);
+            $aInfo[0] = $this->oArguments->getUser();
+            $aInfo[1] = date('Y-m-d H:i:s', time());
+            $aInfo[2] = 24;
+            $aInfo[3] = 'No Message in Start Hook';
+
+            $this->oData->setInfo($oInfo->parse($aInfo, $sTxn, $iRev));
 
             return;
-        } // if
+        }
+
+        // First contact.
+        $aInfo = $this->oCommand->getInfo();
 
         // Parse info from commit.
-        $this->parseInfo($this->oCommand->getInfo());
+        $this->oData->setInfo($oInfo->parse($aInfo, $sTxn, $iRev));
 
         $aDiffLines = $this->oCommand->getCommitDiff();
 
         // Parse array with the changed items.
-        $this->parseItems($this->oCommand->getCommitChanged());
+        $oChanged = new Changed();
+        $oChanged->parseFiles($this->oCommand->getCommitChanged());
 
-        $oParser = new DiffParser($this->aChangedItems, $aDiffLines);
+        $oParser = new Parser($oChanged->getFiles(), $aDiffLines);
         $oParser->parse();
 
-        $this->createObjects($oParser->getProperties(), $oParser->getLines());
+        $this->createObjects($oChanged, $oParser);
     }
 
     /**
      * Creating the data for the listener.
-     * @param array $aProperties Properties of each item, if available.
-     * @param array $aLines      Changed lines of each item, if available.
+     * @param Changed $oChanged Changed object with all changed items in that commit.
+     * @param Parser  $oParser  Parser objects.
      * @return void
-     * @author Alexander Zimmermann <alex@azimmermann.com>
+     * @author   Alexander Zimmermann <alex@azimmermann.com>
      */
-    private function createObjects(array $aProperties, array $aLines)
+    private function createObjects(Changed $oChanged, Parser $oParser)
     {
+        $aProperties = $oParser->getProperties();
+        $aLines      = $oParser->getLines();
+
         // Values for all items.
         $sTxn = $this->oArguments->getTransaction();
         $iRev = $this->oArguments->getRevision();
 
+        // Get the pre parsed items.
+        $oItems = $oChanged->getObjects();
+
+        // The info object to store in each item.
+        $oInfo = $this->oData->getInfo();
+
         $aObjects = array();
-        foreach ($this->aChangedData as $iFor => $aData) {
+        foreach ($oItems as $iFor => $aData) {
+
             $aData['txn']   = $sTxn;
             $aData['rev']   = $iRev;
             $aData['props'] = array();
             $aData['lines'] = null;
+            $aData['info']  = $oInfo;
 
             if (true === isset($aProperties[$iFor])) {
                 $aData['props'] = $aProperties[$iFor];
-            } // if
+            }
 
             if (true === isset($aLines[$iFor])) {
                 $aData['lines'] = $aLines[$iFor];
-            } // if
+            }
 
+            // Create object and collect it to store it in the info object.
+            $oObject    = new Object($aData);
+            $aObjects[] = $oObject;
 
-            $aObjects[] = $this->oData->createObject($aData);
-        } // foreach
+            $this->oData->addObject($oObject);
+        }
 
         // Set the commited objects for info listener.
         $this->oData->getInfo()->setObjects($aObjects);
-    }
-
-    /**
-     * Parse info from the commit.
-     * @param array $aData Commit Data info.
-     * @return void
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    private function parseInfo(array $aData)
-    {
-        // Set defaults.
-        $aInfo             = array();
-        $aInfo['txn']      = $this->oArguments->getTransaction();
-        $aInfo['rev']      = $this->oArguments->getRevision();
-        $aInfo['user']     = '';
-        $aInfo['datetime'] = '';
-        $aInfo['message']  = '';
-
-        // This elements in this order.
-        $aProperties = array(
-            'user', 'datetime', 'messagelength', 'message'
-        );
-
-        $iMax = count($aData);
-
-        // Discard empty elements. Count could also be 0.
-        if ($iMax > 4) {
-            $iMax = 4;
-        } // if
-
-        for ($iFor = 0; $iFor < $iMax; $iFor++) {
-            $sData = $aData[$iFor];
-            if ($aProperties[$iFor] === 'message') {
-                $aData[$iFor] = $this->parseMessage($sData);
-            } // if
-
-            $aInfo[$aProperties[$iFor]] = trim($aData[$iFor]);
-        } // for
-
-        $oInfo = new Info(
-            $aInfo['txn'],
-            $aInfo['rev'],
-            $aInfo['user'],
-            $aInfo['datetime'],
-            $aInfo['message']
-        );
-
-        $this->oData->setInfo($oInfo);
-    }
-
-    /**
-     * Parse message.
-     * @param string $sMessage Commit Text.
-     * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    private function parseMessage($sMessage)
-    {
-        $aMatches = array();
-
-        // Replace special signs in Format \\123.
-        preg_match_all('/\?\\\\\\\\([0-9]+)/', $sMessage, $aMatches);
-
-        $iMax = count($aMatches[0]);
-        for ($iFor = 0; $iFor < $iMax; $iFor++) {
-            $sChr     = $aMatches[0][$iFor];
-            $iChr     = (int)$aMatches[1][$iFor];
-            $sMessage = str_replace($sChr, chr($iChr), $sMessage);
-        } // for
-
-        return $sMessage;
     }
 }

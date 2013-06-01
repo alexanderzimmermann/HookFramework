@@ -5,14 +5,16 @@
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
 namespace Hook\Adapter\Svn;
+
+use Hook\Adapter\ArgumentsInterface;
 
 /**
  * Class for handling the arguments of a hook call.
@@ -20,13 +22,13 @@ namespace Hook\Adapter\Svn;
  * @package    Main
  * @subpackage Main
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class Arguments
+class Arguments extends ArgumentsAbstract implements ArgumentsInterface
 {
     /**
      * Valid hooks (complete name).
@@ -87,18 +89,6 @@ class Arguments
     );
 
     /**
-     * Arguments of hook call.
-     * @var array
-     */
-    private $aArguments;
-
-    /**
-     * arguments count.
-     * @var integer
-     */
-    private $iArguments;
-
-    /**
      * main type for hook call (start, pre, post).
      * @var string
      */
@@ -109,24 +99,6 @@ class Arguments
      * @var string
      */
     private $sSubType;
-
-    /**
-     * Arguments Ok.
-     * @var boolean
-     */
-    private $bArgumentsOk;
-
-    /**
-     * Repository path.
-     * @var string
-     */
-    private $sRepository;
-
-    /**
-     * Repository name.
-     * @var string
-     */
-    private $sRepositoryName;
 
     /**
      * Username of commit.
@@ -165,39 +137,6 @@ class Arguments
     private $sAction;
 
     /**
-     * Internal error text.
-     * @var string
-     */
-    private $sError;
-
-    /**
-     * Constructor.
-     * @param array $aArguments Command line arguments.
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function __construct(array $aArguments)
-    {
-        // Delete first element (path file).
-        array_shift($aArguments);
-
-        $this->bArgumentsOk = false;
-        $this->aArguments   = $aArguments;
-        $this->iArguments   = count($aArguments);
-    }
-
-    /**
-     * Arguments Ok.
-     * @return boolean
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function argumentsOk()
-    {
-        $this->checkArguments();
-
-        return $this->bArgumentsOk;
-    }
-
-    /**
      * Return complete hook type.
      * @return string
      * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -225,26 +164,6 @@ class Arguments
     public function getSubType()
     {
         return $this->sSubType;
-    }
-
-    /**
-     * Return repository path.
-     * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function getRepository()
-    {
-        return $this->sRepository;
-    }
-
-    /**
-     * Return the repository name.
-     * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function getRepositoryName()
-    {
-        return $this->sRepositoryName;
     }
 
     /**
@@ -318,31 +237,21 @@ class Arguments
     }
 
     /**
-     * Returns error text.
-     * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function getError()
-    {
-        return $this->sError;
-    }
-
-    /**
      * Check the arguments.
      * @return void
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    private function checkArguments()
+    protected function checkArguments()
     {
-        if ($this->checkMainHook() === true) {
-            if ($this->checkArgumentCount() === true) {
-                if ($this->checkArgumentTypes() === true) {
+        if (true === $this->checkMainHook()) {
+            if (true === $this->checkArgumentCount()) {
+                if (true === $this->checkArgumentTypes()) {
                     $this->bArgumentsOk = true;
 
                     return;
-                } // if
-            } // if
-        } // if
+                }
+            }
+        }
 
         $this->bArgumentsOk = false;
     }
@@ -359,7 +268,7 @@ class Arguments
             $this->sError = 'Empty Arguments';
 
             return false;
-        } // if
+        }
 
         $sMain = $this->aArguments[($this->iArguments - 1)];
 
@@ -367,7 +276,7 @@ class Arguments
             $this->sError .= 'MainHook ';
 
             return false;
-        } // if
+        }
 
         $aHook           = explode('-', $sMain, 2);
         $this->sMainType = $aHook[0];
@@ -391,7 +300,7 @@ class Arguments
 
         if ($this->iArguments === count($aTypes)) {
             return true;
-        } // if
+        }
 
         $this->sError .= 'Argument Count ';
 
@@ -414,12 +323,12 @@ class Arguments
 
             if (false === $bResult) {
                 $iErrors++;
-            } // if
-        } // foreach
+            }
+        }
 
         if (0 === $iErrors) {
             return true;
-        } // if
+        }
 
         return false;
     }
@@ -437,7 +346,7 @@ class Arguments
 
         if (true === method_exists($this, $sFunction)) {
             return $this->$sFunction($sArgument);
-        } // if
+        }
 
         $bResult = false;
         $this->sError .= 'Check Type Error for ' . $sType;
@@ -459,7 +368,7 @@ class Arguments
             $this->sRepositoryName = basename($sRepository);
 
             return true;
-        } // if
+        }
 
         $this->sError .= 'Repository ' . $sRepository . ' does not exists.';
 
@@ -478,7 +387,7 @@ class Arguments
             $this->sUser = $sUser;
 
             return true;
-        } // if
+        }
 
         $this->sError .= 'User ';
 
@@ -497,7 +406,7 @@ class Arguments
             $this->sTxn = $sTransaction;
 
             return true;
-        } // if
+        }
 
         $this->sError .= 'Transaction ';
 
@@ -516,7 +425,7 @@ class Arguments
             $this->iRev = (int)$sRevision;
 
             return true;
-        } // if
+        }
 
         $this->sError .= 'Revision ';
 
@@ -561,7 +470,7 @@ class Arguments
             $this->sAction = $sAction;
 
             return true;
-        } // if
+        }
 
         $this->sError .= 'Action false, not (A, M, D)';
 

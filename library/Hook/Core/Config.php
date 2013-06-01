@@ -1,13 +1,13 @@
 <?php
 /**
- * Configuration object for repositories.
+ * Configuration object.
  * @category   Core
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 2.1.0
  */
@@ -15,12 +15,12 @@
 namespace Hook\Core;
 
 /**
- * Configuration object for repositories.
+ * Configuration object.
  * @category   Core
  * @package    Main
  * @subpackage Core
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
@@ -52,7 +52,7 @@ class Config
         $this->divideSections();
 
         return true;
-    } // function
+    }
 
     /**
      * Divide sections to main hook and listener name.
@@ -67,13 +67,13 @@ class Config
 
             if (false === isset($aNew[$aTmp[0]])) {
                 $aNew[$aTmp[0]] = array();
-            } // if
+            }
 
             $this->divideValues($aNew, $aTmp, $mSection);
-        } // foreach
+        }
 
         $this->aCfg = $aNew;
-    } // function
+    }
 
     /**
      * Divide the value lines.
@@ -87,21 +87,30 @@ class Config
     {
         // Analyze value.
         foreach ($mSection as $sIdentifier => $aValues) {
+
             // No Point, leave as is and go to next.
             if (false === strpos($sIdentifier, '.')) {
-                $aNew[$aSection[0]][$aSection[1]][$sIdentifier] = $aValues;
+
+                if (true === isset($aSection[1])) {
+
+                    $aNew[$aSection[0]][$aSection[1]][$sIdentifier] = $aValues;
+                } else {
+
+                    $aNew[$aSection[0]][$sIdentifier] = $aValues;
+                }
+
                 continue;
-            } // if
+            }
 
             $aTmp = explode('.', $sIdentifier);
 
             if (false === isset($aNew[$aSection[0]][$aSection[1]][$aTmp[0]])) {
                 $aNew[$aSection[0]][$aSection[1]][$aTmp[0]] = array();
-            } // if
+            }
 
             $aNew[$aSection[0]][$aSection[1]][$aTmp[0]][$aTmp[1]] = $aValues;
-        } // foreach
-    } // function
+        }
+    }
 
     /**
      * Get the data for the listener.
@@ -115,9 +124,9 @@ class Config
         if (true === isset($this->aCfg[$sMain])) {
             if (true === isset($this->aCfg[$sMain][$sListener])) {
                 return $this->aCfg[$sMain][$sListener];
-            } // if
-        } // if
+            }
+        }
 
         return false;
-    } // function
-} // class
+    }
+}

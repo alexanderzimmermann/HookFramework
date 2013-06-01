@@ -5,22 +5,22 @@
  * @package    Listener
  * @subpackage Pre
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id:$
+ * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
  */
 
 namespace HookTest\Listener\Pre;
 
-use Hook\Commit\Data\Object;
+use Hook\Commit\Object;
 
-use Example\Pre\Id;
+use ExampleSvn\Pre\Id;
 
 require_once __DIR__ . '/../../../Bootstrap.php';
 
-require_once __DIR__ . '/../../../../Repositories/Example/Pre/Id.php';
+require_once __DIR__ . '/../../../../Repositories/ExampleSvn/Pre/Id.php';
 
 /**
  * Property Tests.
@@ -28,7 +28,7 @@ require_once __DIR__ . '/../../../../Repositories/Example/Pre/Id.php';
  * @package    Listener
  * @subpackage Pre
  * @author     Alexander Zimmermann <alex@azimmermann.com>
- * @copyright  2008-2012 Alexander Zimmermann <alex@azimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: 2.1.0
  * @link       http://www.azimmermann.com/
@@ -36,278 +36,282 @@ require_once __DIR__ . '/../../../../Repositories/Example/Pre/Id.php';
  */
 class IdTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * Test object Property Listener.
-	 * @var Id
-	 */
-	private $oIdListener;
+    /**
+     * Test object Property Listener.
+     * @var Id
+     */
+    private $oIdListener;
 
-	/**
-	 * SetUp operations.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@zimmemann.com>
-	 */
-	protected function setUp()
-	{
-		$this->oIdListener = new Id();
-	} // function
+    /**
+     * SetUp operations.
+     * @return void
+     * @author Alexander Zimmermann <alex@zimmemann.com>
+     */
+    protected function setUp()
+    {
+        $this->oIdListener = new Id();
+    }
 
-	/**
-	 * Simple test the object.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function testObject()
-	{
-		$this->assertEquals('Example\Pre\Id', get_class($this->oIdListener));
-	} // function
+    /**
+     * Simple test the object.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testObject()
+    {
+        $this->assertEquals('ExampleSvn\Pre\Id', get_class($this->oIdListener));
+    }
 
-	/**
-	 * Test the listener that everything is ok.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 * @ddepends testObject
-	 */
-	public function testAddActionOk()
-	{
-		// Mock the property object.
-		$oProperty = $this->getMock('Hook\Commit\Data\Diff\Property', array(), array('svn:keywords'));
-		$oProperty->expects($this->any())
-				  ->method('getOldValue')
-				  ->will($this->returnValue(''));
+    /**
+     * Test the listener that everything is ok.
+     * @return void
+     * @author   Alexander Zimmermann <alex@azimmermann.com>
+     * @ddepends testObject
+     */
+    public function testAddActionOk()
+    {
+        // Mock the property object.
+        $oProperty = $this->getMock('Hook\Commit\Diff\Property', array(), array('svn:keywords'));
+        $oProperty->expects($this->any())
+            ->method('getOldValue')
+            ->will($this->returnValue(''));
 
-		$oProperty->expects($this->any())
-				  ->method('getNewValue')
-				  ->will($this->returnValue('Id'));
+        $oProperty->expects($this->any())
+            ->method('getNewValue')
+            ->will($this->returnValue('Id'));
 
-		$aParams = array(
-					'txn'    => '666-1',
-					'rev'    => 666,
-					'action' => 'A',
-					'item'   => 'file.php',
-					'real'   => 'file.php',
-					'isdir'  => false,
-					'props'  => array('svn:keywords' => $oProperty),
-					'lines'  => null,
-					'info'   => null
-				   );
+        $aParams = array(
+            'txn'    => '666-1',
+            'rev'    => 666,
+            'action' => 'A',
+            'item'   => 'file.php',
+            'real'   => 'file.php',
+            'ext'    => 'php',
+            'isdir'  => false,
+            'props'  => array('svn:keywords' => $oProperty),
+            'lines'  => null,
+            'info'   => null
+        );
 
-		$oObject = new Object($aParams);
+        $oObject = new Object($aParams);
 
-		$this->oIdListener->processAction($oObject);
+        $this->oIdListener->processAction($oObject);
 
-		// Check.
-		$aErrors = $oObject->getErrorLines();
+        // Check.
+        $aErrors = $oObject->getErrorLines();
 
-		$this->assertTrue(empty($aErrors));
-	} // function
+        $this->assertTrue(empty($aErrors));
+    }
 
-	/**
-	 * Test when the svn:keywords tag is not set.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 * @ddepends testObject
-	 */
-	public function testAddActionAndNoKeyword()
-	{
-		// Mock the property object.
-		$oProperty = $this->getMock('Hook\Commit\Data\Diff\Property', array(), array('tag'));
-		$oProperty->expects($this->any())
-				  ->method('getOldValue')
-				  ->will($this->returnValue(''));
+    /**
+     * Test when the svn:keywords tag is not set.
+     * @return void
+     * @author   Alexander Zimmermann <alex@azimmermann.com>
+     * @ddepends testObject
+     */
+    public function testAddActionAndNoKeyword()
+    {
+        // Mock the property object.
+        $oProperty = $this->getMock('Hook\Commit\Diff\Property', array(), array('tag'));
+        $oProperty->expects($this->any())
+            ->method('getOldValue')
+            ->will($this->returnValue(''));
 
-		$oProperty->expects($this->any())
-				  ->method('getNewValue')
-				  ->will($this->returnValue(''));
+        $oProperty->expects($this->any())
+            ->method('getNewValue')
+            ->will($this->returnValue(''));
 
-		$aParams = array(
-					'txn'    => '666-1',
-					'rev'    => 666,
-					'action' => 'A',
-					'item'   => 'file.php',
-					'real'   => 'file.php',
-					'isdir'  => false,
-					'props'  => array('tag' => $oProperty),
-					'lines'  => null,
-					'info'   => null
-				   );
+        $aParams = array(
+            'txn'    => '666-1',
+            'rev'    => 666,
+            'action' => 'A',
+            'item'   => 'file.php',
+            'real'   => 'file.php',
+            'ext'    => 'php',
+            'isdir'  => false,
+            'props'  => array('tag' => $oProperty),
+            'lines'  => null,
+            'info'   => null
+        );
 
-		$oObject = new Object($aParams);
+        $oObject = new Object($aParams);
 
-		$this->oIdListener->processAction($oObject);
+        $this->oIdListener->processAction($oObject);
 
-		// Check.
-		$aErrors = $oObject->getErrorLines();
+        // Check.
+        $aErrors = $oObject->getErrorLines();
 
-		$this->assertSame(1, count($aErrors), 'Error count not 1.');
-		$sMsg = 'Please add the "svn:keywords - Id" tag to the file.';
-		$this->assertSame($sMsg, $aErrors[0], 'Error wrong.');
-	} // function
+        $this->assertSame(1, count($aErrors), 'Error count not 1.');
+        $sMsg = 'Please add the "svn:keywords - Id" tag to the file.';
+        $this->assertSame($sMsg, $aErrors[0], 'Error wrong.');
+    }
 
-	/**
-	 * Test that the svn:keywords is set but not with Id Value.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 * @ddepends testObject
-	 */
-	public function testAddActionAndKeyword()
-	{
-		// Mock the property object.
-		$oProperty = $this->getMock('Hook\Commit\Data\Diff\Property', array(), array('svn:keywords'));
-		$oProperty->expects($this->any())
-				  ->method('getOldValue')
-				  ->will($this->returnValue(''));
+    /**
+     * Test that the svn:keywords is set but not with Id Value.
+     * @return void
+     * @author   Alexander Zimmermann <alex@azimmermann.com>
+     * @ddepends testObject
+     */
+    public function testAddActionAndKeyword()
+    {
+        // Mock the property object.
+        $oProperty = $this->getMock('Hook\Commit\Diff\Property', array(), array('svn:keywords'));
+        $oProperty->expects($this->any())
+            ->method('getOldValue')
+            ->will($this->returnValue(''));
 
-		$oProperty->expects($this->any())
-				  ->method('getNewValue')
-				  ->will($this->returnValue(''));
+        $oProperty->expects($this->any())
+            ->method('getNewValue')
+            ->will($this->returnValue(''));
 
-		$aParams = array(
-					'txn'    => '666-1',
-					'rev'    => 666,
-					'action' => 'A',
-					'item'   => 'file.php',
-					'real'   => 'file.php',
-					'isdir'  => false,
-					'props'  => array('svn:keywords' => $oProperty),
-					'lines'  => null,
-					'info'   => null
-				   );
+        $aParams = array(
+            'txn'    => '666-1',
+            'rev'    => 666,
+            'action' => 'A',
+            'item'   => 'file.php',
+            'real'   => 'file.php',
+            'ext'    => 'php',
+            'isdir'  => false,
+            'props'  => array('svn:keywords' => $oProperty),
+            'lines'  => null,
+            'info'   => null
+        );
 
-		$oObject = new Object($aParams);
+        $oObject = new Object($aParams);
 
-		$this->oIdListener->processAction($oObject);
+        $this->oIdListener->processAction($oObject);
 
-		// Check.
-		$aErrors = $oObject->getErrorLines();
+        // Check.
+        $aErrors = $oObject->getErrorLines();
 
-		$this->assertSame(1, count($aErrors), 'Error count not 1.');
-		$sMsg = 'Please add the "Id" value to the svn:keywords tag.';
-		$this->assertSame($sMsg, $aErrors[0], 'Error wrong.');
-	} // function
-
-
+        $this->assertSame(1, count($aErrors), 'Error count not 1.');
+        $sMsg = 'Please add the "Id" value to the svn:keywords tag.';
+        $this->assertSame($sMsg, $aErrors[0], 'Error wrong.');
+    }
 
 
-	/**
-	 * Test the listener that everything is ok.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 * @ddepends testObject
-	 */
-	public function testUpdateActionOk()
-	{
-		// Mock the property object.
-		$oProperty = $this->getMock('Hook\Commit\Data\Diff\Property', array(), array('svn:keywords'));
-		$oProperty->expects($this->any())
-				  ->method('getOldValue')
-				  ->will($this->returnValue(''));
+    /**
+     * Test the listener that everything is ok.
+     * @return void
+     * @author   Alexander Zimmermann <alex@azimmermann.com>
+     * @ddepends testObject
+     */
+    public function testUpdateActionOk()
+    {
+        // Mock the property object.
+        $oProperty = $this->getMock('Hook\Commit\Diff\Property', array(), array('svn:keywords'));
+        $oProperty->expects($this->any())
+            ->method('getOldValue')
+            ->will($this->returnValue(''));
 
-		$oProperty->expects($this->any())
-				  ->method('getNewValue')
-				  ->will($this->returnValue('Id'));
+        $oProperty->expects($this->any())
+            ->method('getNewValue')
+            ->will($this->returnValue('Id'));
 
-		$aParams = array(
-					'txn'    => '666-1',
-					'rev'    => 666,
-					'action' => 'U',
-					'item'   => 'file.php',
-					'real'   => 'file.php',
-					'isdir'  => false,
-					'props'  => array('svn:keywords' => $oProperty),
-					'lines'  => null,
-					'info'   => null
-				   );
+        $aParams = array(
+            'txn'    => '666-1',
+            'rev'    => 666,
+            'action' => 'U',
+            'item'   => 'file.php',
+            'real'   => 'file.php',
+            'ext'    => 'php',
+            'isdir'  => false,
+            'props'  => array('svn:keywords' => $oProperty),
+            'lines'  => null,
+            'info'   => null
+        );
 
-		$oObject = new Object($aParams);
+        $oObject = new Object($aParams);
 
-		$this->oIdListener->processAction($oObject);
+        $this->oIdListener->processAction($oObject);
 
-		// Check.
-		$aErrors = $oObject->getErrorLines();
+        // Check.
+        $aErrors = $oObject->getErrorLines();
 
-		$this->assertTrue(empty($aErrors));
-	} // function
+        $this->assertTrue(empty($aErrors));
+    }
 
-	/**
-	 * Test when the svn:keywords tag is not set.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 * @ddepends testObject
-	 */
-	public function testUpdateActionAndNoKeyword()
-	{
-		// Mock the property object.
-		$oProperty = $this->getMock('Hook\Commit\Data\Diff\Property', array(), array('tag'));
-		$oProperty->expects($this->any())
-				  ->method('getOldValue')
-				  ->will($this->returnValue(''));
+    /**
+     * Test when the svn:keywords tag is not set.
+     * @return void
+     * @author   Alexander Zimmermann <alex@azimmermann.com>
+     * @ddepends testObject
+     */
+    public function testUpdateActionAndNoKeyword()
+    {
+        // Mock the property object.
+        $oProperty = $this->getMock('Hook\Commit\Diff\Property', array(), array('tag'));
+        $oProperty->expects($this->any())
+            ->method('getOldValue')
+            ->will($this->returnValue(''));
 
-		$oProperty->expects($this->any())
-				  ->method('getNewValue')
-				  ->will($this->returnValue(''));
+        $oProperty->expects($this->any())
+            ->method('getNewValue')
+            ->will($this->returnValue(''));
 
-		$aParams = array(
-					'txn'    => '666-1',
-					'rev'    => 666,
-					'action' => 'U',
-					'item'   => 'file.php',
-					'real'   => 'file.php',
-					'isdir'  => false,
-					'props'  => array('tag' => $oProperty),
-					'lines'  => null,
-					'info'   => null
-				   );
+        $aParams = array(
+            'txn'    => '666-1',
+            'rev'    => 666,
+            'action' => 'U',
+            'item'   => 'file.php',
+            'real'   => 'file.php',
+            'ext'    => 'php',
+            'isdir'  => false,
+            'props'  => array('tag' => $oProperty),
+            'lines'  => null,
+            'info'   => null
+        );
 
-		$oObject = new Object($aParams);
+        $oObject = new Object($aParams);
 
-		$this->oIdListener->processAction($oObject);
+        $this->oIdListener->processAction($oObject);
 
-		// Check.
-		$aErrors = $oObject->getErrorLines();
+        // Check.
+        $aErrors = $oObject->getErrorLines();
 
-		$this->assertTrue(empty($aErrors));
-	} // function
+        $this->assertTrue(empty($aErrors));
+    }
 
-	/**
-	 * Test that the svn:keywords is set but not with Id Value.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 * @ddepends testObject
-	 */
-	public function testUpdateActionAndKeyword()
-	{
-		// Mock the property object.
-		$oProperty = $this->getMock('Hook\Commit\Data\Diff\Property', array(), array('svn:keywords'));
-		$oProperty->expects($this->any())
-				  ->method('getOldValue')
-				  ->will($this->returnValue(''));
+    /**
+     * Test that the svn:keywords is set but not with Id Value.
+     * @return void
+     * @author   Alexander Zimmermann <alex@azimmermann.com>
+     * @ddepends testObject
+     */
+    public function testUpdateActionAndKeyword()
+    {
+        // Mock the property object.
+        $oProperty = $this->getMock('Hook\Commit\Diff\Property', array(), array('svn:keywords'));
+        $oProperty->expects($this->any())
+            ->method('getOldValue')
+            ->will($this->returnValue(''));
 
-		$oProperty->expects($this->any())
-				  ->method('getNewValue')
-				  ->will($this->returnValue(''));
+        $oProperty->expects($this->any())
+            ->method('getNewValue')
+            ->will($this->returnValue(''));
 
-		$aParams = array(
-					'txn'    => '666-1',
-					'rev'    => 666,
-					'action' => 'U',
-					'item'   => 'file.php',
-					'real'   => 'file.php',
-					'isdir'  => false,
-					'props'  => array('svn:keywords' => $oProperty),
-					'lines'  => null,
-					'info'   => null
-				   );
+        $aParams = array(
+            'txn'    => '666-1',
+            'rev'    => 666,
+            'action' => 'U',
+            'item'   => 'file.php',
+            'real'   => 'file.php',
+            'ext'    => 'php',
+            'isdir'  => false,
+            'props'  => array('svn:keywords' => $oProperty),
+            'lines'  => null,
+            'info'   => null
+        );
 
-		$oObject = new Object($aParams);
+        $oObject = new Object($aParams);
 
-		$this->oIdListener->processAction($oObject);
+        $this->oIdListener->processAction($oObject);
 
-		// Check.
-		$aErrors = $oObject->getErrorLines();
+        // Check.
+        $aErrors = $oObject->getErrorLines();
 
-		$this->assertSame(1, count($aErrors), 'Error count not 1.');
-		$sMsg = 'Do not delete the "Id" tag of the file.';
-		$this->assertSame($sMsg, $aErrors[0], 'Error wrong.');
-	} // function
-} // class
+        $this->assertSame(1, count($aErrors), 'Error count not 1.');
+        $sMsg = 'Do not delete the "Id" tag of the file.';
+        $this->assertSame($sMsg, $aErrors[0], 'Error wrong.');
+    }
+}
