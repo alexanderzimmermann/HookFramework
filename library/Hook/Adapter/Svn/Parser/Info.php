@@ -68,7 +68,7 @@ class Info
             }
 
             $aInfo[$aProperties[$iFor]] = trim($aData[$iFor]);
-        } // for
+        }
 
         $oInfo = new InfoObject(
             $aInfo['txn'],
@@ -99,7 +99,7 @@ class Info
             $sChr     = $aMatches[0][$iFor];
             $iChr     = (int)$aMatches[1][$iFor];
             $sMessage = str_replace($sChr, chr($iChr), $sMessage);
-        } // for
+        }
 
         return $sMessage;
     }

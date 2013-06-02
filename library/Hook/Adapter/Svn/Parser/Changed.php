@@ -76,7 +76,7 @@ class Changed extends ChangedAbstract implements ChangedInterface
             );
 
             $this->addItem($aTmp);
-        } // for
+        }
     }
 
     /**
