@@ -101,16 +101,6 @@ abstract class ControllerAbstract
     protected $aListener;
 
     /**
-     * Return commit data object.
-     * @return Data
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function getCommitDataObject()
-    {
-        return $this->oData;
-    }
-
-    /**
      * Shows usage of hook framework.
      * @return void
      */
@@ -165,6 +155,7 @@ abstract class ControllerAbstract
     private function runListenerInfo()
     {
         if (empty($this->aListener['info']) === true) {
+
             return;
         }
 
