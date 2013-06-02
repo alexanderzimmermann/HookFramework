@@ -116,6 +116,6 @@ class File
 
             $sMessage = 'delete: ' . $this->aFiles[$iFor];
             $this->oLog->writeLog(Log::HF_DEBUG, $sMessage);
-        } // for
+        }
     }
 }
