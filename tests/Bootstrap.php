@@ -24,18 +24,17 @@ require_once 'PHPUnit/Runner/Version.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 require_once 'PHPUnit/Util/Filter.php';
 
-/*
-    Set Error Reporting to E_ALL | E_STRICT.
-*/
-
+// Set Error Reporting to E_ALL | E_STRICT.
 error_reporting(E_ALL | E_STRICT);
 
-/*
-    Determine the root directories of the framework.
-*/
+// Determine the root directories of the tests of hook framework.
 
-$sRoot      = dirname(__DIR__) . '/';
-$sRootTests = __DIR__ . '/';
+// Define as in Hook file in root directory.
+define('HF_ROOT', dirname(__DIR__) . '/');
+define('HF_TEST_DIR', __DIR__ . '/');
+
+// For simple access on test files.
+define('HF_TEST_FILES_DIR', HF_TEST_DIR . 'HookTest/_files/');
 
 /*
     Prepend the Framework Core/ and tests/ directories to the include_path.
@@ -44,15 +43,12 @@ $sRootTests = __DIR__ . '/';
 */
 
 $aPath = array(
-    $sRoot,
-    $sRootTests,
+    HF_ROOT,
+    HF_TEST_DIR,
     get_include_path()
 );
 set_include_path(implode(PATH_SEPARATOR, $aPath));
 
-// For simple access on files.
-define('HF_TEST_DIR', $sRootTests);
-define('HF_TEST_FILES_DIR', $sRootTests . 'HookTest/_files/');
 
 /**
  * Define Example SVN directory and subversion test binary.
@@ -79,7 +75,7 @@ if (false === file_exists($sFile)) {
     $sFile = 'config-dist.ini';
 }
 
-$aCfg = parse_ini_file($sRootTests . $sFile);
+$aCfg = parse_ini_file(HF_TEST_DIR . $sFile);
 $oLog = Log::getInstance();
 
 if (false === isset($aCfg['logfile'])) {

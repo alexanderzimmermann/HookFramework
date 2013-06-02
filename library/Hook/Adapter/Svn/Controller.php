@@ -195,6 +195,7 @@ class Controller extends ControllerAbstract
 
     /**
      * Start to parse the commit, info and objects.
+     * @return boolean
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     protected function parse()
@@ -215,11 +216,20 @@ class Controller extends ControllerAbstract
 
             $this->oData->setInfo($oInfo->parse($aInfo, $sTxn, $iRev));
 
-            return;
+            return true;
         }
 
         // First contact.
         $aInfo = $this->oCommand->getInfo();
+
+        // If an error occurred we abort here.
+        if (true === $this->oCommand->hasError()) {
+
+            $this->oResponse->setResult(1);
+            $this->oResponse->setText(implode($aInfo));
+
+            return false;
+        }
 
         // Parse info from commit.
         $this->oData->setInfo($oInfo->parse($aInfo, $sTxn, $iRev));
@@ -234,6 +244,8 @@ class Controller extends ControllerAbstract
         $oParser->parse();
 
         $this->createObjects($oChanged, $oParser);
+
+        return true;
     }
 
     /**

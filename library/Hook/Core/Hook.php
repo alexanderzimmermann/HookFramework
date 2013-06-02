@@ -77,7 +77,7 @@ class Hook
     private function init()
     {
         // Main Configuration.
-        $sConfigFile   = __DIR__ . '/../../../config.ini';
+        $sConfigFile   = HF_ROOT . 'config.ini';
         $this->oConfig = new Config();
         $bConfigLoaded = $this->oConfig->loadConfigFile($sConfigFile);
 

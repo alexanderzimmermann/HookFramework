@@ -129,6 +129,7 @@ abstract class ControllerAbstract
 
     /**
      * Start to parse the commit.
+     * @return boolean
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     abstract protected function parse();
@@ -143,11 +144,13 @@ abstract class ControllerAbstract
 
         $this->oError = new Error();
 
-        $this->parse();
-        $this->runListenerInfo();
-        $this->runListenerObject();
-        $this->handleErrors();
-        $this->shutDown();
+        if (true === $this->parse()) {
+
+            $this->runListenerInfo();
+            $this->runListenerObject();
+            $this->handleErrors();
+            $this->shutDown();
+        }
 
         $this->oLog->writeLog(Log::HF_INFO, 'controller run end');
 

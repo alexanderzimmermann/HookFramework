@@ -43,6 +43,12 @@ abstract class CommandAbstract implements CommandInterface
     protected $sCommand = '';
 
     /**
+     * Error during command execution.
+     * @var boolean
+     */
+    protected $bError;
+
+    /**
      * Constructor.
      * @param string $sBinPath Path to the subversion executable.
      * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -54,7 +60,7 @@ abstract class CommandAbstract implements CommandInterface
 
     /**
      * Execute the svn command line.
-     * @param string $sCommand SVN Command.
+     * @param string $sCommand VCS Command.
      * @return array
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
@@ -65,8 +71,28 @@ abstract class CommandAbstract implements CommandInterface
 
         exec($sCommand, $aData);
 
+        // Check the result for errors.
+        $aData = $this->checkResult($aData);
+
         $oLog->writeLog(Log::HF_VARDUMP, 'result lines', $aData);
 
         return $aData;
+    }
+
+    /**
+     * Check the result for errors.
+     * @param array $aData Data from exec command.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    abstract protected function checkResult(array $aData);
+
+    /**
+     * Indicates whether errors have occurred.
+     * @return boolean
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function hasError()
+    {
+        return $this->bError;
     }
 }

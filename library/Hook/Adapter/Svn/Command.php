@@ -76,18 +76,29 @@ class Command extends CommandAbstract
     }
 
     /**
-     * Gets the items of a commit that were changed (file, directory list).
-     * @return array
+     * Check the result for errors.
+     * @param array $aData Data from exec command.
+     * @return array|bool
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function getCommitChanged()
+    protected function checkResult(array $aData)
     {
-        $sCommand = $this->sCommand;
-        $sCommand .= ' changed ';
-        $sCommand .= $this->sLookParams;
-        $sCommand .= ' ' . $this->sRepository;
+        // Empty must be an error.
+        if (true === empty($aData)) {
 
-        return $this->execCommand($sCommand);
+            $this->bError = true;
+            return array();
+        }
+
+        // Check error code.
+        if (preg_match('/E[0-9]+/', $aData[0])) {
+
+            $this->bError = true;
+            return $aData;
+        }
+
+        $this->bError = false;
+        return $aData;
     }
 
     /**
@@ -99,6 +110,21 @@ class Command extends CommandAbstract
     {
         $sCommand = $this->sCommand;
         $sCommand .= ' info';
+        $sCommand .= $this->sLookParams;
+        $sCommand .= ' ' . $this->sRepository;
+
+        return $this->execCommand($sCommand);
+    }
+
+    /**
+     * Gets the items of a commit that were changed (file, directory list).
+     * @return array
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function getCommitChanged()
+    {
+        $sCommand = $this->sCommand;
+        $sCommand .= ' changed ';
         $sCommand .= $this->sLookParams;
         $sCommand .= ' ' . $this->sRepository;
 

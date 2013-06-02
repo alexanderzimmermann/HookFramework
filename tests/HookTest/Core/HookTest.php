@@ -166,4 +166,23 @@ class HookTest extends \PHPUnit_Framework_TestCase
         // Post is always 0, cause an abort does not make sense here.
         $this->assertEquals(0, $iExit);
     }
+
+    /**
+     * Test a non existing revision.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testNonExistingRevision()
+    {
+        $aData = array(
+            0 => '/var/local/svn/hooks/Hook',
+            1 => HF_TEST_SVN_EXAMPLE,
+            2 => 10,
+            3 => 'post-commit',
+        );
+
+        $oHook = new Hook($aData);
+        $iExit = $oHook->run();
+
+        $this->assertEquals(1, $iExit);
+    }
 }
