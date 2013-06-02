@@ -22,6 +22,7 @@ use Hook\Listener\AbstractObject;
 use HookTest\Commit\DataTestHelper;
 
 require_once __DIR__ . '/../../Bootstrap.php';
+require_once 'DataTestHelper.php';
 
 /**
  * Commit Data Tests.
@@ -206,24 +207,32 @@ class DataTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUpListener(array $aRegister)
     {
+        $oStub = new DataTestHelper;
+        $oStub->setRegister($aRegister);
+
         // Create a stub for the SomeClass class.
+        /*
         $aFunctions = array(
             'register',
             'getObjectFilter'
-
         );
 
-        $oStub = $this->getMock('HookTest\Commit\DataTestHelper', $aFunctions);
+        $oStub = $this->getMock(
+            'HookTest\Commit\DataTestHelper',
+            $aFunctions,
+            array(),
+            'Hook\Listener\AbstractObject'
+        );
 
         // Configure the stub.
-        $oStub->expects($this->any())
+        $oStub->expects($this->once())
             ->method('register')
             ->will($this->returnValue($aRegister));
 
         $oStub->expects($this->any())
             ->method('getObjectFilter')
             ->will($this->returnValue(new ObjectFilter()));
-
+        */
         return $oStub;
     }
 
@@ -241,13 +250,91 @@ class DataTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test with empty file action. Will cause all fileactions default.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testEmptyRegister()
+    {
+        $oListener = $this->setUpListener(array());
+        $aFiles    = $this->oData->getObjects($oListener);
+
+        $this->assertCount(0, $aFiles, '$aFiles count wrong');
+    }
+
+    /**
+     * Test with empty file action. Will cause all fileactions default.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testEmptyActionAndExtension()
+    {
+        // Test register data.
+        $aRegister = array(
+            'action'     => 'commit',
+            'fileaction' => array(),
+            'extensions' => array(),
+            'withdirs'   => false
+        );
+
+        $oListener = $this->setUpListener($aRegister);
+        $aFiles    = $this->oData->getObjects($oListener);
+
+        $this->assertCount(0, $aFiles, '$aFiles count wrong');
+    }
+
+    /**
+     * Test with empty file action. Will cause all fileactions default.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testEmptyFileAction()
+    {
+        // Test register data.
+        $aRegister = array(
+            'action'     => 'commit',
+            'fileaction' => array(),
+            'extensions' => array('ALL'),
+            'withdirs'   => false
+        );
+
+        $oListener = $this->setUpListener($aRegister);
+        $aFiles    = $this->oData->getObjects($oListener);
+
+        $this->assertCount(6, $aFiles, '$aFiles count wrong');
+        $this->assertEquals('/path/zabu-3.php', $aFiles[4]->getObjectPath(), 'objectpath wrong');
+    }
+
+    /**
+     * Test with empty extensions. Will cause all extensions default.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testEmptyExtension()
+    {
+        // Test register data.
+        $aRegister = array(
+            'action'     => 'commit',
+            'fileaction' => array(
+                'A'
+            ),
+            'extensions' => array(),
+            'withdirs'   => false
+        );
+
+        $oListener = $this->setUpListener($aRegister);
+        $aFiles    = $this->oData->getObjects($oListener);
+
+        $this->assertCount(2, $aFiles, '$aFiles count wrong');
+        $this->assertEquals('/path/zabu-1.html', $aFiles[1]->getObjectPath(), 'objectpath wrong');
+        $this->assertEquals('A', $aFiles[0]->getAction(), 'action #1 wrong');
+        $this->assertEquals('A', $aFiles[1]->getAction(), 'action #2 wrong');
+    }
+
+    /**
      * Test to give the correct files for the listener.
      * @return void
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function testGetObjectsForListener()
     {
-        // Test listener.
+        // Test register data.
         $aRegister = array(
             'action'     => 'commit',
             'fileaction' => array(
@@ -271,7 +358,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetFilesWithDirs()
     {
-        // Test listener.
+        // Test register data.
         $aRegister = array(
             'action'     => 'commit',
             'fileaction' => array(
@@ -295,7 +382,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetFilesActionTypes()
     {
-        // Test listener.
+        // Test register data.
         $aRegister = array(
             'action'     => 'commit',
             'fileaction' => array(
@@ -310,6 +397,10 @@ class DataTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(4, $aFiles, 'count $aFiles wrong');
         $this->assertEquals('/path/zabu-1.html', $aFiles[1]->getObjectPath(), 'objectpath wrong');
+        $this->assertEquals('A', $aFiles[0]->getAction(), 'action #0 wrong');
+        $this->assertEquals('A', $aFiles[1]->getAction(), 'action #1 wrong');
+        $this->assertEquals('U', $aFiles[2]->getAction(), 'action #2 wrong');
+        $this->assertEquals('U', $aFiles[3]->getAction(), 'action #3 wrong');
     }
 
     /**
@@ -319,7 +410,7 @@ class DataTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetFilesExtensions()
     {
-        // Test listener.
+        // Test register data.
         $aRegister = array(
             'action'     => 'commit',
             'fileaction' => array(
@@ -334,5 +425,27 @@ class DataTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(3, $aFiles, 'file count wrong');
         $this->assertEquals('/path/zabu-1.html', $aFiles[0]->getObjectPath(), 'objectpath wrong');
+    }
+
+    /**
+     * Test that no action, extension or directory will match
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testNothingMatches()
+    {
+        // Test register data.
+        $aRegister = array(
+            'action'     => 'commit',
+            'fileaction' => array(
+                'D'
+            ),
+            'extensions' => array('sh'),
+            'withdirs'   => false
+        );
+
+        $oListener = $this->setUpListener($aRegister);
+        $aFiles    = $this->oData->getObjects($oListener);
+
+        $this->assertCount(0, $aFiles);
     }
 }

@@ -17,7 +17,7 @@ namespace Hook\Commit;
 use Hook\Commit\Info;
 use Hook\Commit\Object;
 use Hook\Filter\Filter;
-use Hook\Listener\ListenerInterface;
+use Hook\Listener\AbstractObject;
 
 /**
  * Data in the transaction.
@@ -103,44 +103,75 @@ class Data
     }
 
     /**
-     * Return the objects depending on the action.
-     * @param mixed $oListener Listener Object.
-     * @return array
-     * @author Alexander Zimmermann <alex@azimmermann.com>
+     * Check the register data.
+     * @param AbstractObject $oListener Listener object.
+     * @return array|string
+     * @author   Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function getObjects($oListener)
+    protected function checkRegisterData(AbstractObject $oListener)
     {
-        $aRegister    = $oListener->register();
-        $aActionTypes = $aRegister['fileaction'];
-        $aExtensions  = $aRegister['extensions'];
-        $bWithDirs    = (bool) $aRegister['withdirs'];
+        $aRegister = $oListener->register();
 
-        $aObjects = array();
+        // Defaults.
+        if (false === isset($aRegister['fileaction'])) {
 
-        // If both arrays are empty, then there is no data, maybe just property.
-        if ((true === empty($aActionTypes)) && (true === empty($aExtensions))) {
+            $aRegister['fileaction'] = array();
+        }
 
-            return $aObjects;
+        if (false === isset($aRegister['extensions'])) {
+
+            $aRegister['extensions'] = array();
+        }
+
+        if (false === isset($aRegister['withdirs'])) {
+
+            $aRegister['withdirs'] = true;
         }
 
         // If one of the arrays is empty, then the other not set to all.
-        if ((true === empty($aActionTypes)) && (false === empty($aExtensions))) {
+        if ((true === empty($aRegister['fileaction'])) &&
+            (false === empty($aRegister['extensions']))) {
 
-            $aActionTypes = $this->aAvailableActions;
+            $aRegister['fileaction'] = $this->aAvailableActions;
         }
 
         // If extensions is empty, then we want all files.
-        if ((false === empty($aActionTypes)) && (true === empty($aExtensions))) {
+        if ((false === empty($aRegister['fileaction'])) &&
+            (true === empty($aRegister['extensions']))) {
 
-            $aExtensions = array('ALL');
+            $aRegister['extensions'] = array('ALL');
         }
 
+        $aRegister['withdirs'] = (bool) $aRegister['withdirs'];
+
+        return $aRegister;
+    }
+
+    /**
+     * Return the objects depending on the action.
+     * @param AbstractObject $oListener Listener Object.
+     * @return array
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function getObjects(AbstractObject $oListener)
+    {
+        $aRegister = $this->checkRegisterData($oListener);
+
+        // If both arrays are empty, then there is no data, maybe just property.
+        if ((true === empty($aRegister['fileaction'])) &&
+            (true === empty($aRegister['extensions']))) {
+
+            return array();
+        }
+
+        $aObjects = array();
+
         // Search for the requested objects.
-        foreach ($aActionTypes as $iIndex => $sAction) {
+        foreach ($aRegister['fileaction'] as $sAction) {
 
             if (true === isset($this->aObjects[$sAction])) {
 
-                foreach ($aExtensions as $iIndex => $sExt) {
+                foreach ($aRegister['extensions'] as $sExt) {
 
                     if (true === isset($this->aObjects[$sAction]['FILES'][$sExt])) {
 
@@ -150,7 +181,7 @@ class Data
                 }
 
                 // Add directories if required.
-                if (true === $bWithDirs) {
+                if (true === $aRegister['withdirs']) {
 
                     $aAddDirs = $this->aObjects[$sAction]['DIRS'];
                     $aObjects = array_merge($aObjects, $aAddDirs);

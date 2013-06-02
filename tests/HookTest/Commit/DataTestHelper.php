@@ -14,6 +14,7 @@
 namespace HookTest\Commit;
 
 use Hook\Commit\Object;
+use Hook\Filter\ObjectFilter;
 use Hook\Listener\AbstractObject;
 use Hook\Listener\ListenerInterface;
 
@@ -32,37 +33,34 @@ use Hook\Listener\ListenerInterface;
 class DataTestHelper extends AbstractObject implements ListenerInterface
 {
     /**
+     * Test register data.
+     * @var array
+     */
+    private $aRegister = array();
+
+    /**
+     * It is not nice, but it works.
+     * @param array $aRegister Test register data.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function setRegister(array $aRegister)
+    {
+        $this->aRegister = $aRegister;
+    }
+
+    /**
      * Register the action and the file actions and file types that are needed.
-     * Example for info listener type.
-     * <pre>
-     * return 'commit';
-     * </pre>
-     * Example for object listener type.
-     * <pre>
-     * return array(
-     *           'action'     => 'commit',
-     *           'fileaction' => array(
-     *                            'A', 'U'
-     *                           ),
-     *           'extensions' => array(
-     *                            'PHP'
-     *                           )
-     *          );
-     * </pre>
-     * Values for <i>action:</i> depend on the used vcs.
-     * Values for <i>extensions:</i>
-     * PHP, C, TXT, CSS, usw.
-     * @return string
+     * @return array
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function register()
     {
-        return array();
+        return $this->aRegister;
     }
 
     /**
      * Execute the action.
-     * @param Object $oObject Object of the commit.
+     * @param \Hook\Commit\Object|Object $oObject Object of the commit.
      * @return void
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
@@ -70,5 +68,14 @@ class DataTestHelper extends AbstractObject implements ListenerInterface
     {
         unset($oObject);
         return;
+    }
+
+    /**
+     *
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function getObjectFilter()
+    {
+        return new ObjectFilter();
     }
 }
