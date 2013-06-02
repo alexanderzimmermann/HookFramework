@@ -128,7 +128,7 @@ class Mailing extends AbstractInfo
             }
 
             $sFileList .= "\n";
-        } // for
+        }
 
         $sMailBody = 'Directories, Fileinformations:' . "\n";
         $sMailBody .= str_repeat('-', 40) . "\n";
