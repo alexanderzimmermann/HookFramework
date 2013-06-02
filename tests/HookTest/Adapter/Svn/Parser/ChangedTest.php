@@ -61,7 +61,7 @@ class ChangedTest extends \PHPUnit_Framework_TestCase
     public function testParseFilesSimple()
     {
         $aObjects = array();
-        $aLines   = file(__DIR__ . '/../../../_files/txn/74-1/changed.txt');
+        $aLines   = file(HF_TEST_FILES_DIR . 'txn/74-1/changed.txt');
 
         $this->oChanged->parseFiles($aLines);
         $oActual = $this->oChanged->getObjects();
@@ -85,10 +85,9 @@ class ChangedTest extends \PHPUnit_Framework_TestCase
      */
     public function testParseFilesExample()
     {
-        $aLines = file(__DIR__ . '/../../../_files/txn/110-1/changed.txt');
+        $aLines = file(HF_TEST_FILES_DIR . 'txn/110-1/changed.txt');
 
         $this->oChanged->parseFiles($aLines);
-
 
         $aElements = $this->oChanged->getObjects();
 
@@ -117,5 +116,77 @@ class ChangedTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertSame($aExpected, $aElements[13], 'Element 14 failed');
+    }
+
+    /**
+     * Test parse realpath correctly.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testParseRealPath()
+    {
+        $aLines = file(__DIR__ . '/_files/realpath-changed.txt');
+
+        $this->oChanged->parseFiles($aLines);
+
+        $aElements = $this->oChanged->getObjectsArray();
+
+        // We check 3 lines.
+        $aExpected = array(
+            array(
+                'txn'    => '',
+                'rev'    => '',
+                'action' => 'U',
+                'item'   => '/trunk/NewFolder/NewFolder-1/NewFolder-1-1/File-1.php',
+                'real'   => 'NewFolder/NewFolder-1/NewFolder-1-1/File-1.php',
+                'ext'    => 'PHP',
+                'isdir'  => false,
+            ),
+            array(
+                'txn'    => '',
+                'rev'    => '',
+                'action' => 'U',
+                'item'   => '/branches/1.0/NewFolder/NewFolder-1/NewFolder-1-1/File-2.php',
+                'real'   => 'NewFolder/NewFolder-1/NewFolder-1-1/File-2.php',
+                'ext'    => 'PHP',
+                'isdir'  => false,
+            ),
+            array(
+                'txn'    => '',
+                'rev'    => '',
+                'action' => 'U',
+                'item'   => '/tags/1.1.1/NewFolder/NewFolder-1/NewFolder-1-1/File-3.php',
+                'real'   => 'NewFolder/NewFolder-1/NewFolder-1-1/File-3.php',
+                'ext'    => 'PHP',
+                'isdir'  => false,
+            ),
+            array(
+                'txn'    => '',
+                'rev'    => '',
+                'action' => 'U',
+                'item'   => 'trunk/NewFolder/NewFolder-1/NewFolder-1-1/File-1.php',
+                'real'   => 'NewFolder/NewFolder-1/NewFolder-1-1/File-1.php',
+                'ext'    => 'PHP',
+                'isdir'  => false,
+            ),
+            array(
+                'txn'    => '',
+                'rev'    => '',
+                'action' => 'U',
+                'item'   => 'branches/1.0/NewFolder/NewFolder-1/NewFolder-1-1/File-2.php',
+                'real'   => 'NewFolder/NewFolder-1/NewFolder-1-1/File-2.php',
+                'ext'    => 'PHP',
+                'isdir'  => false,
+            ),
+            array(
+                'txn'    => '',
+                'rev'    => '',
+                'action' => 'U',
+                'item'   => 'tags/1.1.1/NewFolder/NewFolder-1/NewFolder-1-1/File-3.php',
+                'real'   => 'NewFolder/NewFolder-1/NewFolder-1-1/File-3.php',
+                'ext'    => 'PHP',
+                'isdir'  => false,
+            )
+        );
+        $this->assertSame($aExpected, $aElements);
     }
 }

@@ -1,0 +1,6 @@
+UU  /trunk/NewFolder/NewFolder-1/NewFolder-1-1/File-1.php
+UU  /branches/1.0/NewFolder/NewFolder-1/NewFolder-1-1/File-2.php
+UU  /tags/1.1.1/NewFolder/NewFolder-1/NewFolder-1-1/File-3.php
+UU  trunk/NewFolder/NewFolder-1/NewFolder-1-1/File-1.php
+UU  branches/1.0/NewFolder/NewFolder-1/NewFolder-1-1/File-2.php
+UU  tags/1.1.1/NewFolder/NewFolder-1/NewFolder-1-1/File-3.php

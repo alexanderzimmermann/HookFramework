@@ -90,17 +90,20 @@ class Changed extends ChangedAbstract implements ChangedInterface
         // Real path (without the common dirs "trunk" and "branches").
         $aPath = explode('/', $sObject);
 
-        array_shift($aPath);
+        if ('' === $aPath[0]) {
+
+            array_shift($aPath);
+        }
 
         // Trunk.
         if ('trunk' === $aPath[0]) {
 
             array_shift($aPath);
-        } else if (('branches' === $aPath[0]) && ('tags' === $aPath[0])) {
+        } else if (('branches' === $aPath[0]) || ('tags' === $aPath[0])) {
 
+            // We assume that the branch, tag identifier follows the key words branches and tags.
             array_shift($aPath);
             array_shift($aPath);
-
         }
 
         $sObject = implode('/', $aPath);
