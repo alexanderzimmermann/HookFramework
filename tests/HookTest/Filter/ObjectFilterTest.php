@@ -97,7 +97,7 @@ class ObjectFilterTest extends \PHPUnit_Framework_TestCase
         $iMax = count($aData);
         for ($iFor = 0; $iFor < $iMax; $iFor++) {
             $this->oObjectFilter->addDirectoryToFilter($aData[$iFor]);
-        } // for
+        }
 
         $iActual = count($this->oObjectFilter->getFilteredDirectories());
         $this->assertEquals($iExpected, $iActual);
@@ -144,7 +144,7 @@ class ObjectFilterTest extends \PHPUnit_Framework_TestCase
         $iMax = count($aData);
         for ($iFor = 0; $iFor < $iMax; $iFor++) {
             $this->oObjectFilter->addFileToFilter($aData[$iFor]);
-        } // for
+        }
 
         $iActual = count($this->oObjectFilter->getFilteredFiles());
         $this->assertEquals($iExpected, $iActual);
@@ -199,7 +199,7 @@ class ObjectFilterTest extends \PHPUnit_Framework_TestCase
         $iMax = count($aData);
         for ($iFor = 0; $iFor < $iMax; $iFor++) {
             $this->oObjectFilter->addDirectoryToWhiteList($aData[$iFor]);
-        } // for
+        }
 
         $iActual = count($this->oObjectFilter->getWhiteListDirectories());
         $this->assertEquals($iExpected, $iActual);
@@ -260,7 +260,7 @@ class ObjectFilterTest extends \PHPUnit_Framework_TestCase
         $iMax = count($aData);
         for ($iFor = 0; $iFor < $iMax; $iFor++) {
             $this->oObjectFilter->addFileToWhiteList($aData[$iFor]);
-        } // for
+        }
 
         $iActual = count($this->oObjectFilter->getWhiteListFiles());
         $this->assertEquals($iExpected, $iActual);

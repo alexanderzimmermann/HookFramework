@@ -108,7 +108,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
             );
 
             $aObjects[] = new Object($aParams);
-        } // for
+        }
 
         // Create filter object.
         $oObjectFilter = new ObjectFilter();
@@ -208,7 +208,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
             );
 
             $aObjects[] = new Object($aParams);
-        } // for
+        }
 
         // Create filter object.
         $oObjectFilter = new ObjectFilter();
