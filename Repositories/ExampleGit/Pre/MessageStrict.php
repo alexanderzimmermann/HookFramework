@@ -117,7 +117,7 @@ class MessageStrict extends AbstractInfo
         $iLen = 0;
         for ($iFor = 0; $iFor < $iMax; $iFor++) {
             $iLen += strlen($aMessage[$iFor]);
-        } // for
+        }
 
         $iSqr = round(($iLen / $iMax), 0);
 
