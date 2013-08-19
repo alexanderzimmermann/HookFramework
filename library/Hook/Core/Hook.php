@@ -28,7 +28,7 @@ use Hook\Core\Response;
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 2.1.0
+ * @version    Release: 3.0.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -120,15 +120,15 @@ class Hook
             $oController->init($this->oConfig);
             $this->oResponse = $oController->run();
 
-            $this->oLog->writeLog(Log::HF_INFO, 'hook response code: ' . $this->oResponse->getResult());
-
             // And we are done.
+            $this->oLog->writeLog(Log::HF_INFO, 'hook response code: ' . $this->oResponse->getResult());
+            $this->oLog->writeLog(Log::HF_INFO, 'hook response message: ' . $this->oResponse->getText());
             $this->oLog->writeLog(Log::HF_INFO, 'hook run end');
 
             $this->oResponse->send();
             return $this->oResponse->getResult();
 
-        } catch (Exception $oE) {
+        } catch (\Exception $oE) {
 
             $this->oLog->writeLog(Log::HF_INFO, 'hook error: ' . $oE->getMessage());
 
