@@ -22,7 +22,7 @@ namespace Hook\Adapter;
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 0.0.0
+ * @version    Release: 3.0.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -78,39 +78,11 @@ interface ArgumentsInterface
     public function getUser();
 
     /**
-     * Return Transaction number.
+     * Return the transaction number.
      * @return string
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function getTransaction();
-
-    /**
-     * Return version number.
-     * @return integer
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function getRevision();
-
-    /**
-     * Return the file on lock call.
-     * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function getFile();
-
-    /**
-     * Return property name that is required on a Revprop-Change hook call.
-     * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function getPropertyName();
-
-    /**
-     * Returns action name.
-     * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function getAction();
 
     /**
      * Returns all available sub actions from the main action.

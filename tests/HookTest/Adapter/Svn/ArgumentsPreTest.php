@@ -31,7 +31,6 @@ require_once __DIR__ . '/../../../Bootstrap.php';
  */
 class ArgumentsPreTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * Test if values are returned correctly.
      * @return void
@@ -48,7 +47,7 @@ class ArgumentsPreTest extends \PHPUnit_Framework_TestCase
 
         $oArguments = new Arguments($aData);
 
-        $this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
+        $this->assertTrue($oArguments->argumentsOk(), 'Arguments false');
         $this->assertEquals(HF_TEST_SVN_EXAMPLE, $oArguments->getRepository(), 'Repository false');
         $this->assertEquals('ExampleSvn', $oArguments->getRepositoryName(), 'ReposName false');
         $this->assertEquals('666-1', $oArguments->getTransaction(), 'Transcatino false');
@@ -75,7 +74,7 @@ class ArgumentsPreTest extends \PHPUnit_Framework_TestCase
         $oArguments = new Arguments($aData);
 
         $sHook = '/hookframework/trunk/Core/Hook.php';
-        $this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
+        $this->assertTrue($oArguments->argumentsOk(), 'Arguments false');
         $this->assertEquals(HF_TEST_SVN_EXAMPLE, $oArguments->getRepository(), 'Repository false');
         $this->assertEquals('ExampleSvn', $oArguments->getRepositoryName(), 'ReposName false');
         $this->assertEquals($sHook, $oArguments->getFile(), 'File false');
@@ -94,8 +93,8 @@ class ArgumentsPreTest extends \PHPUnit_Framework_TestCase
         $aData = array(
             0 => '/var/local/svn/hooks/Hook',
             1 => HF_TEST_SVN_EXAMPLE,
-            2 => 2009,
-            3 => 'testuser',
+            2 => '201-3',
+            3 => 'Zilli',
             4 => 'ignore',
             5 => 'A',
             6 => 'pre-revprop-change',
@@ -103,10 +102,10 @@ class ArgumentsPreTest extends \PHPUnit_Framework_TestCase
 
         $oArguments = new Arguments($aData);
 
-        $this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
+        $this->assertTrue($oArguments->argumentsOk(), $oArguments->getError());
         $this->assertEquals(HF_TEST_SVN_EXAMPLE, $oArguments->getRepository(), 'Repos path false');
         $this->assertEquals('ExampleSvn', $oArguments->getRepositoryName(), 'ReposName false');
-        $this->assertEQuals(2009, $oArguments->getRevision(), 'Revision false');
+        $this->assertEQuals('201-3', $oArguments->getTransaction(), 'Revision false');
         $this->assertEquals('pre-revprop-change', $oArguments->getMainHook(), 'Main Hook false');
         $this->assertEquals('pre', $oArguments->getMainType(), 'Main Type false');
         $this->assertEquals('revprop-change', $oArguments->getSubType(), 'Sub Type false');
@@ -124,8 +123,8 @@ class ArgumentsPreTest extends \PHPUnit_Framework_TestCase
         $aData = array(
             0 => '/var/local/svn/hooks/Hook',
             1 => HF_TEST_SVN_EXAMPLE,
-            2 => 2009,
-            3 => 'testuser',
+            2 => '201-3',
+            3 => 'Zilli',
             4 => 'ignore',
             5 => 'X',
             6 => 'pre-revprop-change',

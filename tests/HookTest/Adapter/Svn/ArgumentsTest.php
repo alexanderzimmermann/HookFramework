@@ -50,6 +50,21 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test totally wrong arguments.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testWrongArguments()
+    {
+        $aData = array(
+                  '/path/to/Hook', 'io', 'zilli-caramello'
+        );
+
+        $oArguments = new Arguments($aData);
+
+        $this->assertFalse($oArguments->argumentsOk());
+    }
+
+    /**
      * Test with no arguments provided.
      * @return void
      * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -59,6 +74,36 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
         $oArguments = new Arguments(array());
 
         $this->assertFalse($oArguments->argumentsOk());
+    }
+
+    /**
+     * Test if values are returned correctly.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testCorrectParameter()
+    {
+        $sTxn  = '666-1';
+        $aData = array(
+            0 => '/var/local/svn/hooks/Hook',
+            1 => HF_TEST_SVN_EXAMPLE,
+            2 => $sTxn,
+            3 => 'Caramello',
+            4 => 'Id',
+            5 => 'A',
+            6 => 'pre-revprop-change',
+        );
+
+        $oArguments = new Arguments($aData);
+
+        // Now check all data.
+        $this->assertTrue($oArguments->argumentsOk(), $oArguments->getError());
+        $this->assertSame('pre-revprop-change', $oArguments->getMainHook(), 'Main hook false.');
+        $this->assertSame('revprop-change', $oArguments->getSubType(), 'Sub type false.');
+        $this->assertSame('pre', $oArguments->getMainType(), 'Main type false.');
+        $this->assertSame(HF_TEST_SVN_EXAMPLE, $oArguments->getRepository(), 'Repository false.');
+        $this->assertSame('ExampleSvn', $oArguments->getRepositoryName(), 'Repository Name false.');
+        $this->assertSame($sTxn, $oArguments->getTransaction(), 'Txn false.');
     }
 
     /**
@@ -81,7 +126,7 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
 
         $oArguments = new Arguments($aData);
 
-        $this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
+        $this->assertTrue($oArguments->argumentsOk(), 'Arguments false');
         $this->assertEquals($aExpect, $oArguments->getSubActions(), 'Subaction false');
     }
 
@@ -105,7 +150,7 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
 
         $oArguments = new Arguments($aData);
 
-        $this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
+        $this->assertTrue($oArguments->argumentsOk(), 'Arguments false');
         $this->assertEquals($aExpect, $oArguments->getSubActions(), 'Subaction false');
     }
 
@@ -119,7 +164,7 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
         $aData = array(
             0 => '/var/local/svn/hooks/Hook',
             1 => HF_TEST_SVN_EXAMPLE,
-            2 => 'testuser12',
+            2 => 'Zilli',
             3 => 'start-commit'
         );
 

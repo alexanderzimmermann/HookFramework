@@ -47,7 +47,7 @@ class ArgumentsPostTest extends \PHPUnit_Framework_TestCase
 
         $oArguments = new Arguments($aData);
 
-        $this->assertTrue($oArguments->argumentsOk(), 'Arguemtns false');
+        $this->assertTrue($oArguments->argumentsOk(), 'Arguments false');
         $this->assertEquals(HF_TEST_SVN_EXAMPLE, $oArguments->getRepository(), 'Repository false');
         $this->assertEquals('ExampleSvn', $oArguments->getRepositoryName(), 'ReposName false');
         $this->assertEquals(666, $oArguments->getRevision(), 'Revision false');

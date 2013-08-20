@@ -15,6 +15,7 @@
 namespace Hook\Adapter\Svn;
 
 use Hook\Adapter\ArgumentsInterface;
+use Hook\Adapter\ArgumentsAbstract;
 
 /**
  * Class for handling the arguments of a hook call.
@@ -24,7 +25,7 @@ use Hook\Adapter\ArgumentsInterface;
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 2.1.0
+ * @version    Release: 3.0.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -34,83 +35,59 @@ class Arguments extends ArgumentsAbstract implements ArgumentsInterface
      * Valid hooks (complete name).
      * @var array
      */
-    private $aHooks = array(
-                       'post-commit', 'post-lock', 'post-revprop-change',
-                       'post-unlock', 'pre-commit', 'pre-lock',
-                       'pre-revprop-change', 'pre-unlock', 'start-commit'
+    protected $aHooks = array(
+                         'post-commit', 'post-lock', 'post-revprop-change',
+                         'post-unlock', 'pre-commit', 'pre-lock',
+                         'pre-revprop-change', 'pre-unlock', 'start-commit'
                       );
 
     /**
      * Available svn actions and their expected parameters.
      * @var array
      */
-    private $aActions = array(
-                         'start' => array(
-                                     'commit' => array(
-                                                  'repos', 'user'
-                                                 )
-                                    ),
-                         'pre'   => array(
-                                     'commit'         => array(
-                                                          'repos', 'txn'
-                                                         ),
-                                     'lock'           => array(
-                                                          'repos', 'user',
-                                                          'file'
-                                                         ),
-                                     'revprop-change' => array(
-                                                          'repos', 'rev',
-                                                          'user', 'propname',
-                                                          'action'
-                                                         ),
+    protected $aActions = array(
+                           'start' => array(
+                                       'commit' => array(
+                                                    'repos', 'user'
+                                                   )
+                                      ),
+                           'pre'   => array(
+                                       'commit'         => array(
+                                                            'repos', 'txn'
+                                                           ),
+                                       'lock'           => array(
+                                                            'repos', 'user',
+                                                            'file'
+                                                           ),
+                                       'revprop-change' => array(
+                                                            'repos', 'txn',
+                                                            'user', 'propname',
+                                                            'action'
+                                                           ),
 
-                                     'unlock'         => array(
-                                                          'repos', 'user'
-                                                         )
-                                    ),
+                                       'unlock'         => array(
+                                                            'repos', 'user'
+                                                           )
+                                      ),
 
-                         'post'  => array(
-                                     'commit'         => array(
-                                                          'repos', 'rev'
-                                                         ),
-                                     'lock'           => array(
-                                                          'repos', 'user'
-                                                         ),
-                                     'revprop-change' => array(
-                                                          'repos', 'rev',
-                                                          'user', 'propname',
-                                                          'action'
-                                                         ),
+                           'post'  => array(
+                                       'commit'         => array(
+                                                            'repos', 'rev'
+                                                           ),
+                                       'lock'           => array(
+                                                            'repos', 'user'
+                                                           ),
+                                       'revprop-change' => array(
+                                                            'repos', 'rev',
+                                                            'user', 'propname',
+                                                            'action'
+                                                           ),
 
-                                     'unlock'         => array(
-                                                          'repos', 'user'
-                                                         )
-                                    )
-    );
-
-    /**
-     * main type for hook call (start, pre, post).
-     * @var string
-     */
-    private $sMainType;
-
-    /**
-     * Subtype for Hook (commit, lock).
-     * @var string
-     */
-    private $sSubType;
-
-    /**
-     * Username of commit.
-     * @var string
-     */
-    private $sUser;
-
-    /**
-     * Transaction number.
-     * @var string
-     */
-    private $sTxn;
+                                       'unlock'         => array(
+                                                            'repos', 'user'
+                                                           )
+                                      )
+                          );
 
     /**
      * Revision number.
@@ -135,56 +112,6 @@ class Arguments extends ArgumentsAbstract implements ArgumentsInterface
      * @var string
      */
     private $sAction;
-
-    /**
-     * Return complete hook type.
-     * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function getMainHook()
-    {
-        return $this->sMainType . '-' . $this->sSubType;
-    }
-
-    /**
-     * Return only main type string.
-     * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function getMainType()
-    {
-        return $this->sMainType;
-    }
-
-    /**
-     * Return subtype.
-     * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function getSubType()
-    {
-        return $this->sSubType;
-    }
-
-    /**
-     * Return user.
-     * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function getUser()
-    {
-        return $this->sUser;
-    }
-
-    /**
-     * Return Transaction number.
-     * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function getTransaction()
-    {
-        return $this->sTxn;
-    }
 
     /**
      * Return version number.
@@ -237,110 +164,13 @@ class Arguments extends ArgumentsAbstract implements ArgumentsInterface
     }
 
     /**
-     * Check the arguments.
-     * @return void
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    protected function checkArguments()
-    {
-        if (true === $this->checkMainHook()) {
-            if (true === $this->checkArgumentCount()) {
-                if (true === $this->checkArgumentTypes()) {
-                    $this->bArgumentsOk = true;
-
-                    return;
-                }
-            }
-        }
-
-        $this->bArgumentsOk = false;
-    }
-
-    /**
-     * Check if the initial hook call is correct.
-     * The last element of the parameters should contain the correct value.
-     * @return boolean
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    private function checkMainHook()
-    {
-        if (true === empty($this->aArguments)) {
-            $this->sError = 'Empty Arguments';
-
-            return false;
-        }
-
-        $sMain = $this->aArguments[($this->iArguments - 1)];
-
-        if (in_array($sMain, $this->aHooks) === false) {
-            $this->sError .= 'MainHook ';
-
-            return false;
-        }
-
-        $aHook           = explode('-', $sMain, 2);
-        $this->sMainType = $aHook[0];
-        $this->sSubType  = $aHook[1];
-
-        // MainHook Argument entfernen.
-        array_pop($this->aArguments);
-        $this->iArguments--;
-
-        return true;
-    }
-
-    /**
-     * Compare count of arguments.
-     * @return boolean
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    private function checkArgumentCount()
-    {
-        $aTypes = $this->aActions[$this->sMainType][$this->sSubType];
-
-        if ($this->iArguments === count($aTypes)) {
-            return true;
-        }
-
-        $this->sError .= 'Argument Count ';
-
-        return false;
-    }
-
-    /**
-     * Check the arguments.
-     * @return boolean
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    private function checkArgumentTypes()
-    {
-        $iErrors = 0;
-        $aTypes  = $this->aActions[$this->sMainType][$this->sSubType];
-
-        foreach ($aTypes as $iIndex => $sType) {
-            $sArgument = $this->aArguments[$iIndex];
-            $bResult   = $this->checkType($sType, $sArgument);
-
-            if (false === $bResult) {
-                $iErrors++;
-            }
-        }
-
-        if (0 === $iErrors) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Call check routine after the type value.
      * @param string $sType     Type parameter.
      * @param string $sArgument Value of parameter.
      * @return boolean
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    private function checkType($sType, $sArgument)
+    protected function checkType($sType, $sArgument)
     {
         $sFunction = 'check' . ucfirst($sType);
 
