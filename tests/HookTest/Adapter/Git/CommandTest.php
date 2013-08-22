@@ -3,7 +3,7 @@
  * Command Tests.
  * @category   Tests
  * @package    Adapter
- * @subpackage Svn
+ * @subpackage Git
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
@@ -11,9 +11,9 @@
  * @since      File available since Release 3.0.0
  */
 
-namespace HookTest\Adapter\Svn;
+namespace HookTest\Adapter\Git;
 
-use Hook\Adapter\Svn\Command;
+use Hook\Adapter\Git\Command;
 
 require_once __DIR__ . '/../../../Bootstrap.php';
 
@@ -21,7 +21,7 @@ require_once __DIR__ . '/../../../Bootstrap.php';
  * Command Tests.
  * @category   Tests
  * @package    Adapter
- * @subpackage Svn
+ * @subpackage Git
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
@@ -62,35 +62,36 @@ class CommandTest extends \PHPUnit_Framework_TestCase
                 0 => '/var/local/svn/hooks/Hook',
                 1 => HF_TEST_SVN_EXAMPLE,
                 2 => 'Zora',
-                3 => 'pre-commit'
+                3 => 'client.pre-commit'
             )
         );
 
         // Main type usually is pre, post and start but here Failures to check listener.
-        $oArguments = $this->getMock('Hook\Adapter\Svn\Arguments', $aFunctions, $aArguments);
+        $oArguments = $this->getMock('Hook\Adapter\Git\Arguments', $aFunctions, $aArguments);
 
         $oArguments->expects($this->once())
             ->method('getRepository')
-            ->will($this->returnValue('ExampleSvn'));
+            ->will($this->returnValue('ExampleGit'));
 
-        $oArguments->expects($this->onnce())
-            ->method('getMainType')
-            ->will($this->returnValue('pre'));
-
-
+        // This should be called once.
         $oArguments->expects($this->once())
             ->method('getTransaction')
-            ->will($this->returnValue('10-1'));
-
-
-        $oArguments->expects($this->once())
-            ->method('getRevision')
-            ->will($this->returnValue('10'));
+            ->will($this->returnValue('234523454'));
 
         $this->oCommand->init($oArguments);
 
-        $aExpected = array(0 => 'svnlook: E160007: No such transaction 10-1');
+        $aExpected = array(
+                      0 => 'fatal: ambiguous argument \'234523454\': unknown revision or path not '
+                           . 'in the working tree.',
+                      1 => 'Use \'--\' to separate paths from revisions'
+                     );
 
-        $this->assertSame($aExpected, $this->oCommand->getInfo());
+        /*
+            alexander@alexander:~/Projekte/HookFramework/tests/HookTest/Adapter/Git/Parser$ git diff 89aa8234
+            fatal: ambiguous argument '89aa8234': unknown revision or path not in the working tree.
+            Use '--' to separate paths from revisions
+        */
+
+        $this->assertSame($aExpected, $this->oCommand->getCommitDiff());
     }
 }

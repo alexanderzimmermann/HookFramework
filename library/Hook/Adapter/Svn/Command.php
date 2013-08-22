@@ -1,9 +1,9 @@
 <?php
 /**
  * SVN- class for executing the svn commands to collect data from commit.
- * @category   Core
- * @package    Main
- * @subpackage Main
+ * @category   Adapter
+ * @package    Svn
+ * @subpackage Svn
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
@@ -15,28 +15,22 @@
 namespace Hook\Adapter\Svn;
 
 use Hook\Adapter\CommandAbstract;
-use Hook\Adapter\Svn\Arguments;
+use Hook\Adapter\ArgumentsAbstract;
 
 /**
  * SVN- class for executing the svn commands to collect data from commit.
- * @category   Core
- * @package    Main
- * @subpackage Main
+ * @category   Adapter
+ * @package    Svn
+ * @subpackage Svn
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 2.1.0
+ * @version    Release: 3.0.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
 class Command extends CommandAbstract
 {
-    /**
-     * Repository.
-     * @var string
-     */
-    private $sRepository;
-
     /**
      * Svn Param (Transaction [-t TXN] or Revision [-r REV]).
      * @var string
@@ -55,11 +49,11 @@ class Command extends CommandAbstract
 
     /**
      * Initialize.
-     * @param Arguments $oArguments Command line arguments.
+     * @param ArgumentsAbstract $oArguments Command line arguments.
      * @return void
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function init(Arguments $oArguments)
+    public function init(ArgumentsAbstract $oArguments)
     {
         $this->sRepository = $oArguments->getRepository();
         $this->sCommand    = $this->sBinPath . 'svnlook';

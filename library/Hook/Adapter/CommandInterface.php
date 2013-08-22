@@ -1,9 +1,9 @@
 <?php
 /**
  * Interface file for the adapter for the git version control system.
- * @category   Category
- * @package    Package
- * @subpackage Subpackage
+ * @category   Adapter
+ * @package    Adapter
+ * @subpackage Adapter
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
@@ -15,13 +15,13 @@
 namespace Hook\Adapter;
 
 use Hook\Adapter;
-use Hook\Adapter\Svn\Arguments;
+use Hook\Adapter\ArgumentsAbstract;
 
 /**
  * Interface file for the adapter for the git version control system.
- * @category   Category
- * @package    Package
- * @subpackage Subpackage
+ * @category   Adapter
+ * @package    Adapter
+ * @subpackage Adapter
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
@@ -33,11 +33,11 @@ interface CommandInterface
 {
     /**
      * Initialize the adapter.
-     * @param Arguments $oArguments Command line arguments.
+     * @param ArgumentsAbstract $oArguments Command line arguments.
      * @return void
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function init(Arguments $oArguments);
+    public function init(ArgumentsAbstract $oArguments);
 
     /**
      * Gets the items of a commit that were changed (file, directory list).
@@ -68,23 +68,4 @@ interface CommandInterface
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function getContent($sFile, $sTmpFile);
-
-    /**
-     * Get list of properties to the item.
-     * @param string $sItem Element for the properties (Directory or file).
-     * @return array
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     * @since  1.0.0
-     */
-    public function getPropertyList($sItem);
-
-    /**
-     * Get the property value.
-     * @param string $sItem     Element for the properties (Directory or file).
-     * @param string $sProperty Name of property of value to get.
-     * @return array
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     * @since  1.0.0
-     */
-    public function getPropertyValue($sItem, $sProperty);
-} // interface
+}

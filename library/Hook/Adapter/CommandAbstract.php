@@ -1,9 +1,9 @@
 <?php
 /**
  * Abstract class for the adapter for the git version control system..
- * @category   Category
- * @package    Package
- * @subpackage Subpackage
+ * @category   Adapter
+ * @package    Adapter
+ * @subpackage Adapter
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
@@ -18,9 +18,9 @@ use Hook\Core\Log;
 
 /**
  * Abstract class for the adapter for the git version control system.
- * @category   Category
- * @package    Package
- * @subpackage Subpackage
+ * @category   Adapter
+ * @package    Adapter
+ * @subpackage Adapter
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
@@ -47,6 +47,12 @@ abstract class CommandAbstract implements CommandInterface
      * @var boolean
      */
     protected $bError;
+
+    /**
+     * Repository.
+     * @var string
+     */
+    protected $sRepository;
 
     /**
      * Constructor.

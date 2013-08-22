@@ -1,9 +1,9 @@
 <?php
 /**
  * Git- class for executing the git commands to collect data from commit.
- * @category   Category
- * @package    Package
- * @subpackage Subpackage
+ * @category   Adapter
+ * @package    Git
+ * @subpackage Git
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
@@ -15,13 +15,13 @@
 namespace Hook\Adapter\Git;
 
 use Hook\Adapter\CommandAbstract;
-use Hook\Adapter\Svn\Arguments;
+use Hook\Adapter\ArgumentsAbstract;
 
 /**
  * Git- class for executing the git commands to collect data from commit.
- * @category   Category
- * @package    Package
- * @subpackage Subpackage
+ * @category   Adapter
+ * @package    Git
+ * @subpackage Git
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
@@ -32,15 +32,22 @@ use Hook\Adapter\Svn\Arguments;
 class Command extends CommandAbstract
 {
     /**
+     * Against which commit to check.
+     * @var string
+     */
+    protected $sAgainst = 'HEAD';
+
+    /**
      * Initialize.
-     * @param Arguments $oArguments Command line arguments.
+     * @param ArgumentsAbstract $oArguments Command line arguments.
      * @return void
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function init(Arguments $oArguments)
+    public function init(ArgumentsAbstract $oArguments)
     {
         $this->sRepository = $oArguments->getRepository();
         $this->sCommand    = $this->sBinPath . 'git';
+        $this->sAgainst    = $oArguments->getTransaction();
     }
 
     /**
@@ -65,9 +72,7 @@ class Command extends CommandAbstract
     public function getInfo()
     {
         $sCommand = $this->sCommand;
-        $sCommand .= ' info';
-        $sCommand .= $this->sLookParams;
-        $sCommand .= ' ' . $this->sRepository;
+        $sCommand .= ' var GIT_AUTHOR_IDENT';
 
         return $this->execCommand($sCommand);
     }
@@ -80,9 +85,8 @@ class Command extends CommandAbstract
     public function getCommitDiff()
     {
         $sCommand = $this->sCommand;
-        $sCommand .= ' diff';
-        $sCommand .= $this->sLookParams;
-        $sCommand .= ' ' . $this->sRepository;
+        $sCommand .= ' diff ';
+        $sCommand .= $this->sAgainst;
 
         return $this->execCommand($sCommand);
     }
@@ -92,13 +96,14 @@ class Command extends CommandAbstract
      * @param string $sFile    File from TXN.
      * @param string $sTmpFile Temporary file on disk.
      * @return array
-     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function getContent($sFile, $sTmpFile)
     {
+        var_dump($sFile); // einfach die datei von der platte lesen.
+        $sContent = file_get_contents($sFile);
         $sCommand = $this->sCommand;
         $sCommand .= ' cat';
-        $sCommand .= $this->sLookParams;
+
         $sCommand .= ' ' . $this->sRepository;
         $sCommand .= ' ' . $sFile;
         $sCommand .= ' > ' . $sTmpFile;
@@ -107,40 +112,28 @@ class Command extends CommandAbstract
     }
 
     /**
-     * Get list of properties to the item.
-     * @param string $sItem Element for the properties (Directory or file).
-     * @return array
+     * Check the result for errors.
+     * @param array $aData Data from exec command.
+     * @return array|bool
      * @author Alexander Zimmermann <alex@azimmermann.com>
-     * @since  1.0.0
      */
-    public function getPropertyList($sItem)
+    protected function checkResult(array $aData)
     {
-        $sCommand = $this->sCommand;
-        $sCommand .= ' proplist';
-        $sCommand .= $this->sLookParams;
-        $sCommand .= ' ' . $this->sRepository;
-        $sCommand .= ' ' . $sItem;
+        // Empty must be an error.
+        if (true === empty($aData)) {
 
-        return $this->execCommand($sCommand);
-    }
+            $this->bError = true;
+            return array();
+        }
 
-    /**
-     * Get the property value.
-     * @param string $sItem     Element for the properties (Directory or file).
-     * @param string $sProperty Name of property of value to get.
-     * @return array
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     * @since  1.0.0
-     */
-    public function getPropertyValue($sItem, $sProperty)
-    {
-        $sCommand = $this->sCommand;
-        $sCommand .= ' propget';
-        $sCommand .= $this->sLookParams;
-        $sCommand .= ' ' . $this->sRepository;
-        $sCommand .= ' ' . $sProperty;
-        $sCommand .= ' ' . $sItem;
+        // Check command line output. If any of this words is in the result, an error occurred.
+        if ((strpos($aData[0], 'git --help')) ||
+            (strpos($aData[0], 'usage'))) {
+            $this->bError = true;
+            return $aData;
+        }
 
-        return $this->execCommand($sCommand);
+        $this->bError = false;
+        return $aData;
     }
 }
