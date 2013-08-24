@@ -15,9 +15,8 @@
 namespace Hook\Adapter;
 
 use \DirectoryIterator;
-use Hook\Adapter\Svn\Arguments;
+use Hook\Adapter\ArgumentsAbstract;
 use Hook\Core\Config;
-use Hook\Core\Log;
 
 use Hook\Listener\AbstractInfo;
 use Hook\Listener\AbstractObject;
@@ -45,7 +44,7 @@ abstract class LoaderAbstract
 {
     /**
      * Main Hook.
-     * @var Arguments
+     * @var ArgumentsAbstract
      */
     protected $oArguments;
 
@@ -99,9 +98,10 @@ abstract class LoaderAbstract
 
     /**
      * Sets the Arguments.
+     * @param ArgumentsAbstract $oArguments The argument object.
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function setArguments(Arguments $oArguments)
+    public function setArguments(ArgumentsAbstract $oArguments)
     {
         $this->oArguments = $oArguments;
     }
@@ -134,6 +134,16 @@ abstract class LoaderAbstract
     abstract public function init();
 
     /**
+     * Get the used listener files.
+     * @return array
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function getListenerFiles()
+    {
+        return $this->aListenerFiles;
+    }
+
+    /**
      * Return listener objects.
      * @return array
      * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -154,6 +164,16 @@ abstract class LoaderAbstract
     }
 
     /**
+     * Get the errors that occur during loading the listener files
+     * @return string
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function getErrors()
+    {
+        return $this->sError;
+    }
+
+    /**
      * Read the files for the actual main hook action in directory.
      * @return void
      * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -164,12 +184,14 @@ abstract class LoaderAbstract
 
         // If directory does not exists, return.
         if (false === is_dir($this->sPath . $sType)) {
+
             return;
         }
 
         $oIterator = new \DirectoryIterator($this->sPath . $sType);
         $aListener = array();
 
+        /** @var \SplFileInfo $oFile */
         foreach ($oIterator as $oFile) {
             if (true === $oFile->isFile()) {
                 if ('php' === $oFile->getExtension()) {
@@ -197,7 +219,7 @@ abstract class LoaderAbstract
 
                 unset($this->aListenerInfo[$iFor]);
             }
-        } // for
+        }
 
         $this->aListenerInfo = array_values($this->aListenerInfo);
     }
@@ -218,7 +240,7 @@ abstract class LoaderAbstract
             if ($bOk === false) {
                 unset($this->aListenerObject[$iFor]);
             }
-        } // for
+        }
 
         $this->aListenerObject = array_values($this->aListenerObject);
     }
@@ -236,24 +258,24 @@ abstract class LoaderAbstract
 
         // Correct Types?
         if (is_string($sRegister) === false) {
-            $this->sError .= $sListener . ' Register not a String for InfoType';
+            $this->sError .= $sListener . ' Register not a String for InfoType' . PHP_EOL;
 
             return false;
         }
 
         // Types empty?
         if ($sRegister === '') {
-            $this->sError .= $sListener . ' Error Register String Empty';
+            $this->sError .= $sListener . ' Error Register String Empty' . PHP_EOL;
 
             return false;
         }
 
-        // Correct values?
-        $aSvnActions = $this->oArguments->getSubActions();
+        // Correct register values? @todo Is like in the registerlistnerobject cpd
+        $aVcsActions = $this->oArguments->getSubActions();
 
-        if (in_array($sRegister, $aSvnActions) === false) {
-            $this->sError .= $sListener . ' Register Action ';
-            $this->sError .= $sRegister . ' not available!';
+        if (in_array($sRegister, $aVcsActions) === false) {
+            $this->sError .= '`' . $sListener . '` register action demands ';
+            $this->sError .= '`' . $sRegister . '` but not available in vcs sub actions!' . PHP_EOL;
 
             return false;
         }
@@ -277,7 +299,7 @@ abstract class LoaderAbstract
             (isset($aRegister['extensions']) === false) ||
             (isset($aRegister['fileaction']) === false)) {
 
-            $this->sError .= $sListener . ' Error Register Key Elements';
+            $this->sError .= $sListener . ' Error Register Key Elements' . PHP_EOL;
 
             return false;
         }
@@ -287,7 +309,7 @@ abstract class LoaderAbstract
             (is_array($aRegister['extensions']) === false) ||
             (is_array($aRegister['fileaction']) === false)
         ) {
-            $this->sError .= $sListener . ' Error Register Array Types';
+            $this->sError .= $sListener . ' Error Register Array Types' . PHP_EOL;
 
             return false;
         }
@@ -297,7 +319,7 @@ abstract class LoaderAbstract
             (empty($aRegister['extension']) === true) &&
             (empty($aRegister['fileaction']) === true)
         ) {
-            $this->sError .= $sListener . ' Error Register Array Empty';
+            $this->sError .= $sListener . ' Error Register Array Empty' . PHP_EOL;
 
             return false;
         }
@@ -307,8 +329,8 @@ abstract class LoaderAbstract
         $aVcsActions = $this->oArguments->getSubActions();
 
         if (in_array($sAction, $aVcsActions) === false) {
-            $this->sError .= $sListener . ' Register Action ';
-            $this->sError .= $sAction . ' not available!';
+            $this->sError .= '`' . $sListener . '` register action demands ';
+            $this->sError .= '`' . $sAction . '` but not available in vcs sub actions!' . PHP_EOL;
 
             return false;
         }
@@ -327,34 +349,33 @@ abstract class LoaderAbstract
 
         $iMax = count($this->aListenerFiles);
         for ($iFor = 0; $iFor < $iMax; $iFor++) {
-            if (true === file_exists($this->aListenerFiles[$iFor])) {
-                // Include the listener file.
-                include_once $this->aListenerFiles[$iFor];
 
-                // Extract listener name from filename.
-                $sListener = basename($this->aListenerFiles[$iFor]);
-                $sListener = str_replace('.php', '', $sListener);
+            // No need to check files available. They came with DirectoryIterator.
+            // Include the listener file.
+            include_once $this->aListenerFiles[$iFor];
 
-                // Check the listener is available after including. If the file contains other code
-                // like Helper for a listener, we don't want to use it..
-                // Create the listener and put in category (info, object) list.
-                try {
-                    if (false === $this->checkListenerImplementation($sListener)) {
-                        unset($this->aListenerFiles[$iFor]);
-                    } else {
-                        $aListener[] = $sListener;
-                    }
-                } catch (\Exception $oException) {
-                    $this->sError .= $oException->getMessage() . PHP_EOL
-                                   . $oException->getTraceAsString() . PHP_EOL;
-                } // try
+            // Extract listener name from filename.
+            $sListener = basename($this->aListenerFiles[$iFor]);
+            $sListener = str_replace('.php', '', $sListener);
+
+            // Check the listener is available after including. If the file contains other code
+            // like Helper for a listener, we don't want to use it..
+            // Create the listener and put in category (info, object) list.
+            try {
+                if (false === $this->checkListenerImplementation($sListener)) {
+                    unset($this->aListenerFiles[$iFor]);
+                } else {
+                    $aListener[] = $sListener;
+                }
+            } catch (\Exception $oException) {
+                $this->sError .= 'Failed to check listener' . PHP_EOL
+                               . $oException->getMessage() . PHP_EOL
+                               . $oException->getTraceAsString() . PHP_EOL;
             }
-        } // for
+        }
 
         // Sets the listener.
         $this->aListenerFiles = $aListener;
-
-        Log::getInstance()->writeLog(Log::HF_VARDUMP, 'Accepted Listeners', $this->aListenerFiles);
     }
 
     /**
@@ -370,10 +391,8 @@ abstract class LoaderAbstract
             . ucfirst($this->oArguments->getMainType()) . '\\' . $sListener;
 
         if (false === class_exists($sClass, false)) {
-            $sMsg = $sClass . ' class and filename doesn\'t match!';
+            $sMsg = $sClass . ' class, namespace or filename doesn\'t match!' .PHP_EOL;
             $this->sError .= $sMsg . "\n";
-
-            Log::getInstance()->writeLog(Log::HF_DEBUG, $sMsg);
 
             return false;
         }
@@ -399,9 +418,7 @@ abstract class LoaderAbstract
         }
 
         $sError = $sListener . ' does not implement or extend correct ';
-        $sError .= 'interface or abstract class.!' . "\n";
-
-        Log::getInstance()->writeLog(Log::HF_DEBUG, $sError);
+        $sError .= 'interface or abstract class.!' . PHP_EOL;
 
         $this->sError .= $sError;
 

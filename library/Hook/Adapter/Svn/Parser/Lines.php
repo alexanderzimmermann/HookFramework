@@ -25,7 +25,7 @@ use Hook\Commit\Diff\Diff;
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 2.1.0
+ * @version    Release: 3.0.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -141,9 +141,10 @@ class Lines
         $iNew = 0;
         $iOld = 0;
         foreach ($aLines as $sLine) {
+
             // Lines @@ -32,5 +34,19 @@
             if ('@@' === substr($sLine, 0, 2)) {
-                // $this->aLines[$this->iId][] = $oDiffLines;
+
                 if (null !== $this->oActualLines) {
                     $this->addNewArea();
                 }
@@ -157,7 +158,7 @@ class Lines
                 $iNew = $oDiffInfo->getNewStart();
                 $iOld = $oDiffInfo->getOldStart();
 
-                // This line will be now skipped.
+                // This line will be skipped now.
                 continue;
             }
 
@@ -170,6 +171,7 @@ class Lines
                 continue;
             }
 
+            $iLineLength = (strlen($sLine) - 1);
             if (('+' !== $sLine[0]) && ('-' !== $sLine[0])) {
                 $iNew++;
                 $iOld++;
@@ -177,13 +179,25 @@ class Lines
 
             // Added lines with +.
             if ('+' === $sLine[0]) {
-                $this->aNew[$iNew] = substr($sLine, 1, (strlen($sLine) - 1));
+
+                if (0 < $iLineLength) {
+
+                    $this->aNew[$iNew] = substr($sLine, 1, $iLineLength);
+                } else {
+                    $this->aNew[$iNew] = '';
+                }
                 $iNew++;
             }
 
             // Deleted lines with -.
             if ('-' === $sLine[0]) {
-                $this->aOld[$iOld] = substr($sLine, 1, (strlen($sLine) - 1));
+
+                if (0 < $iLineLength) {
+
+                    $this->aOld[$iOld] = substr($sLine, 1, $iLineLength);
+                } else {
+                    $this->aOld[$iOld] = '';
+                }
                 $iOld++;
             }
         }

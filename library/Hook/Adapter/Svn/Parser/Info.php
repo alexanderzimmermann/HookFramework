@@ -12,7 +12,7 @@
  * @since      File available since Release 1.0.0
  */
 
-namespace HooK\Adapter\Svn\Parser;
+namespace Hook\Adapter\Svn\Parser;
 
 use Hook\Commit\Info as InfoObject;
 

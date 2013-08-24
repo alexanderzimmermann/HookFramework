@@ -17,6 +17,7 @@ namespace Hook\Adapter\Svn;
 use \Exception;
 use Hook\Adapter\ControllerAbstract;
 use Hook\Adapter\Svn\Arguments;
+use Hook\Adapter\Svn\Command;
 use Hook\Adapter\Svn\Parser\Changed;
 use Hook\Adapter\Svn\Parser\Parser;
 use Hook\Adapter\Svn\Parser\Info;
@@ -47,6 +48,12 @@ class Controller extends ControllerAbstract
     protected $aAdapterActions = array('A', 'U', 'D');
 
     /**
+     * git command object.
+     * @var Command
+     */
+    protected $oCommand;
+
+    /**
      * Constructor.
      * @param array $aArguments Arguments from command line.
      * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -63,16 +70,16 @@ class Controller extends ControllerAbstract
      * - Init the repository data.
      * - Load the listener
      * @param Config $oConfig Main configuration.
+     * @param Log    $oLog    The log we need to log debug information and errors.
      * @throws \Exception
      * @return boolean
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function init(Config $oConfig)
+    public function init(Config $oConfig, Log $oLog)
     {
-        parent::init($oConfig);
-        $this->oLog = Log::getInstance('repository');
+        parent::init($oConfig, $oLog);
 
-        if ($this->oArguments->argumentsOk() === false) {
+        if (false === $this->oArguments->argumentsOk()) {
 
             $this->showUsage();
             $this->oLog->writeLog(Log::HF_INFO, 'Arguments Error');
@@ -83,7 +90,7 @@ class Controller extends ControllerAbstract
         $sDirector = $this->initRepository();
 
         // Create command object.
-        $this->oCommand = new Command($this->oConfig->getConfiguration('vcs', 'binpath'));
+        $this->oCommand = new Command($this->oConfig->getConfiguration('vcs', 'binary_path'));
         $this->oCommand->init($this->oArguments);
 
         // A file writer that handles all temporary created files.
@@ -150,7 +157,7 @@ class Controller extends ControllerAbstract
 
     /**
      * Init the listener loader and load the listener.
-     * @param string $sDirectory Directory of repository.
+     * @param string $sDirectory Directory of hookframework repository.
      * @return boolean
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */

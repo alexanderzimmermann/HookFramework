@@ -14,12 +14,11 @@
 
 namespace Hook\Adapter\Svn;
 
-use \DirectoryIterator;
 use Hook\Adapter\LoaderAbstract;
 
 /**
  * Loading the different listener types.
- * There are 3 types of transactions.
+ * There are 3 types of main hooks.
  * One for Start (start), before a transaction is started.
  * One after the transaction is stared, but not commit to the repository (pre).
  * One after the transaction is commit to the repository and the work is done (post).
@@ -51,33 +50,5 @@ class Loader extends LoaderAbstract
         $this->checkListener();
         $this->registerListenerInfo();
         $this->registerListenerObject();
-    }
-
-    /**
-     * Read the files for the actual main hook action in directory.
-     * @return void
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    protected function readDirectory()
-    {
-        $sType = ucfirst($this->oArguments->getMainType());
-
-        // If directory does not exists, return.
-        if (false === is_dir($this->sPath . $sType)) {
-            return;
-        }
-
-        $oIterator = new \DirectoryIterator($this->sPath . $sType);
-        $aListener = array();
-
-        foreach ($oIterator as $oFile) {
-            if (true === $oFile->isFile()) {
-                if ('php' === $oFile->getExtension()) {
-                    $aListener[] = $oFile->getPathname();
-                }
-            }
-        }
-
-        $this->aListenerFiles = $aListener;
     }
 }

@@ -22,7 +22,8 @@ function hfautoload($sClass)
 
     if ($aClasses === null) {
         $aClasses = array(
-            'hook\\adapter\\argumentsinterface' => '/Adapter/ArgumentsInterface.php',
+            'hook\\adapter\\argumentsabstract' => '/Adapter/ArgumentsAbstract.php',
+   'hook\\adapter\\argumentsinterface' => '/Adapter/ArgumentsInterface.php',
    'hook\\adapter\\changedabstract' => '/Adapter/ChangedAbstract.php',
    'hook\\adapter\\changedinterface' => '/Adapter/ChangedInterface.php',
    'hook\\adapter\\commandabstract' => '/Adapter/CommandAbstract.php',
@@ -31,11 +32,14 @@ function hfautoload($sClass)
    'hook\\adapter\\git\\arguments' => '/Adapter/Git/Arguments.php',
    'hook\\adapter\\git\\command' => '/Adapter/Git/Command.php',
    'hook\\adapter\\git\\controller' => '/Adapter/Git/Controller.php',
+   'hook\\adapter\\git\\loader' => '/Adapter/Git/Loader.php',
    'hook\\adapter\\git\\parser\\changed' => '/Adapter/Git/Parser/Changed.php',
+   'hook\\adapter\\git\\parser\\info' => '/Adapter/Git/Parser/Info.php',
+   'hook\\adapter\\git\\parser\\lines' => '/Adapter/Git/Parser/Lines.php',
+   'hook\\adapter\\git\\parser\\parser' => '/Adapter/Git/Parser/Parser.php',
    'hook\\adapter\\git\\usage' => '/Adapter/Git/Usage.php',
    'hook\\adapter\\loaderabstract' => '/Adapter/LoaderAbstract.php',
    'hook\\adapter\\svn\\arguments' => '/Adapter/Svn/Arguments.php',
-   'hook\\adapter\\svn\\argumentsabstract' => '/Adapter/ArgumentsAbstract.php',
    'hook\\adapter\\svn\\command' => '/Adapter/Svn/Command.php',
    'hook\\adapter\\svn\\controller' => '/Adapter/Svn/Controller.php',
    'hook\\adapter\\svn\\loader' => '/Adapter/Svn/Loader.php',

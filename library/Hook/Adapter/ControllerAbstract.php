@@ -9,12 +9,11 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
- * @since      File available since Release 1.0.0
+ * @since      File available since Release 3.0.0
  */
 
 namespace Hook\Adapter;
 
-use Hook\Adapter\Svn\Command;
 use Hook\Core\Error;
 use Hook\Core\File;
 use Hook\Core\Response;
@@ -54,7 +53,7 @@ abstract class ControllerAbstract
 
     /**
      * Arguments from hook call.
-     * @var Arguments
+     * @var ArgumentsAbstract
      */
     protected $oArguments;
 
@@ -63,12 +62,6 @@ abstract class ControllerAbstract
      * @var Log
      */
     protected $oLog;
-
-    /**
-     * The command object for executing VCS commands.
-     * @var Command
-     */
-    protected $oCommand;
 
     /**
      * Data Object.
@@ -109,12 +102,17 @@ abstract class ControllerAbstract
     /**
      * Initialize controller.
      * @param Config $oConfig Main configuration.
+     * @param Log    $oLog    The log we need to log debug information and errors.
+     * @return boolean
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function init(Config $oConfig)
+    public function init(Config $oConfig, Log $oLog)
     {
+        $oLog->writeLog(Log::HF_DEBUG, 'controller init');
         $this->oConfig   = $oConfig;
         $this->oResponse = new Response;
+
+        return true;
     }
 
     /**
@@ -163,7 +161,7 @@ abstract class ControllerAbstract
         for ($iFor = 0; $iFor < $iMax; $iFor++) {
 
             $this->processInfoListener($this->aListener['info'][$iFor]);
-        } // for
+        }
     }
 
     /**
@@ -174,6 +172,7 @@ abstract class ControllerAbstract
     private function runListenerObject()
     {
         if (empty($this->aListener['object']) === true) {
+
             return;
         }
 
@@ -186,7 +185,7 @@ abstract class ControllerAbstract
             $this->oLog->writeLog(Log::HF_DEBUG, $sLog);
 
             $this->processObjectListener($this->aListener['object'][$iFor]);
-        } // for
+        }
     }
 
     /**
@@ -229,7 +228,7 @@ abstract class ControllerAbstract
 
             $this->oError->setListener($oListener->getListenerName());
             $this->oError->processActionObject($aObjects[$iFor]);
-        } // for
+        }
     }
 
     /**
