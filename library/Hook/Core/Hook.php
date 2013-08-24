@@ -14,9 +14,9 @@
 
 namespace Hook\Core;
 
+use Hook\Adapter\ControllerAbstract;
 use Hook\Adapter\Git\Controller as ControllerGit;
 use Hook\Adapter\Svn\Controller as ControllerSvn;
-
 use Hook\Core\Config;
 use Hook\Core\Response;
 
@@ -115,9 +115,9 @@ class Hook
             // To log that at least the Hook was called.
             $this->oLog->writeLog(Log::HF_INFO, 'hook run start');
 
-            // TODO: Factory for the correct Adapter (git, svn).
-            $oController = new ControllerSvn($this->aArguments);
-            $oController->init($this->oConfig);
+            // Find the right controller.
+            $oController = ControllerAbstract::factory($this->aArguments);
+            $oController->init($this->oConfig, $this->oLog);
             $this->oResponse = $oController->run();
 
             // And we are done.
