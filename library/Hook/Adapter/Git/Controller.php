@@ -20,7 +20,9 @@ use Hook\Adapter\Git\Arguments;
 use Hook\Adapter\Git\Command;
 use Hook\Adapter\Git\Parser\Changed;
 use Hook\Adapter\Git\Parser\Info;
+use Hook\Adapter\Git\Parser\Parser;
 use Hook\Commit\Data;
+use Hook\Commit\Object;
 use Hook\Core\Config;
 use Hook\Core\File;
 use Hook\Core\Log;
@@ -231,7 +233,7 @@ class Controller extends ControllerAbstract
         }
 
         $this->oData->setInfo($oInfo->parse($aInfo, $sTxn, 0));
-// var_dump($this->oCommand->getCommitChanged(), $this->oCommand->getCommitDiff());
+
         // Parse array with the changed items.
         $oChanged = new Changed();
         $oChanged->parseFiles($this->oCommand->getCommitChanged());
@@ -242,19 +244,65 @@ class Controller extends ControllerAbstract
 
         $this->createObjects($oChanged, $oParser);
 
-        return true;
-
-
         $this->oLog->writeLog(Log::HF_INFO, 'controller parse end');
+
+        return true;
     }
 
     /**
-     * Show usage
+     * Creating the data for the listener.
+     * @param Changed $oChanged Changed object with all changed items in that commit.
+     * @param Parser  $oParser  Parser objects.
+     * @return void
+     * @author   Alexander Zimmermann <alex@azimmermann.com>
+     */
+    private function createObjects(Changed $oChanged, Parser $oParser)
+    {
+        $aLines = $oParser->getLines();
+
+        // Values for all items.
+        $sTxn = $this->oArguments->getTransaction();
+
+        // Get the pre parsed items.
+        $oItems = $oChanged->getObjects();
+
+        // The info object to store in each item.
+        $oInfo = $this->oData->getInfo();
+
+        $aObjects = array();
+        foreach ($oItems as $iFor => $aData) {
+
+            $aData['txn']   = $sTxn;
+            $aData['props'] = array();
+            $aData['lines'] = null;
+            $aData['info']  = $oInfo;
+
+            if (true === isset($aLines[$iFor])) {
+                $aData['lines'] = $aLines[$iFor];
+            }
+
+            // Create object and collect it to store it in the info object.
+            $oObject    = new Object($aData);
+            $aObjects[] = $oObject;
+
+            $this->oData->addObject($oObject);
+        }
+
+        // Set the commited objects for info listener.
+        $this->oData->getInfo()->setObjects($aObjects);
+    }
+
+    /**
+     * Show usage.
+     * @return void
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function showUsage()
     {
+        $sMainType = $this->oArguments->getMainType();
+        $sSubType  = $this->oArguments->getSubType();
+        $oUsage    = new Usage($sMainType, $sSubType);
 
+        echo $oUsage->getUsage();
     }
-
 }
