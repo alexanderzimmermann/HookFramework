@@ -78,16 +78,19 @@ class Controller extends ControllerAbstract
     public function init(Config $oConfig, Log $oLog)
     {
         parent::init($oConfig, $oLog);
+        $this->oLog = $oLog;
 
         if (false === $this->oArguments->argumentsOk()) {
 
             $this->showUsage();
             $this->oLog->writeLog(Log::HF_INFO, 'Arguments Error');
-            throw new Exception('Arguments Error.');
+            throw new Exception('Arguments Error. ' . $this->oArguments->getError());
         }
 
-        // Repository.
-        $sDirector = $this->initRepository();
+        $this->oLog->writeLog(Log::HF_DEBUG, 'controller init Arguments Ok');
+
+        // Initialize Repository.
+        $sDirectory = $this->initRepository();
 
         // Create command object.
         $this->oCommand = new Command($this->oConfig->getConfiguration('vcs', 'binary_path'));
@@ -97,7 +100,7 @@ class Controller extends ControllerAbstract
         $this->oFile = new File($this->oCommand, $this->oLog);
 
         // Loader.
-        return $this->initLoader($sDirector);
+        return $this->initLoader($sDirectory);
     }
 
     /**
