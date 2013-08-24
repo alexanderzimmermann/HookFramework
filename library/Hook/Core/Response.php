@@ -40,10 +40,10 @@ class Response
     private $iResult = 1;
 
     /**
-     * The text to be send to the outplut.
+     * The text to be send to the output.
      * @var string
      */
-    private $sText = 'no text';
+    private $sText = 'no response text given or exit is ok.';
 
     /**
      * Cosntructor
