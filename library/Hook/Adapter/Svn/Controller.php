@@ -1,15 +1,15 @@
 <?php
 /**
- * Data in transaction.
- * @category   Core
- * @package    Parser
- * @subpackage Main
+ * This is the main controller for the subversion adapter.
+ * @category   Adapter
+ * @package    Svn
+ * @subpackage Svn
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
- * @since      File available since Release 1.0.0
+ * @since      File available since Release 3.0.0
  */
 
 namespace Hook\Adapter\Svn;
@@ -19,8 +19,8 @@ use Hook\Adapter\ControllerAbstract;
 use Hook\Adapter\Svn\Arguments;
 use Hook\Adapter\Svn\Command;
 use Hook\Adapter\Svn\Parser\Changed;
-use Hook\Adapter\Svn\Parser\Parser;
 use Hook\Adapter\Svn\Parser\Info;
+use Hook\Adapter\Svn\Parser\Parser;
 use Hook\Commit\Data;
 use Hook\Commit\Object;
 use Hook\Core\Config;
@@ -28,10 +28,10 @@ use Hook\Core\File;
 use Hook\Core\Log;
 
 /**
- * Data in the transaction.
- * @category   Core
- * @package    Parser
- * @subpackage Main
+ * This is the main controller for the subversion adapter.
+ * @category   Adapter
+ * @package    Svn
+ * @subpackage Svn
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
