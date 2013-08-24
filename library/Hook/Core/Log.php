@@ -64,6 +64,12 @@ class Log
     private $rFile;
 
     /**
+     * A log file is set and writable.
+     * @var bool
+     */
+    private $hasLogFile = false;
+
+    /**
      * Clone not allowed.
      * @throws \Exception
      * @return void
@@ -107,11 +113,16 @@ class Log
      */
     public function setLogFile($sFile)
     {
+        $this->hasLogFile = false;
+
+        //@todo check access of file. try catch
         $this->rFile = fopen($sFile, 'a+');
 
         fwrite($this->rFile, str_repeat('=', 80) . "\n");
         fwrite($this->rFile, str_repeat(' ', 20) . date('Y-m-d H:i:s') . "\n");
         fwrite($this->rFile, str_repeat('=', 80) . "\n");
+
+        $this->hasLogFile = true;
     }
 
     /**
@@ -135,7 +146,7 @@ class Log
      */
     public function writeLog($iLogMode, $sHeadMsg = '', $mVar = null)
     {
-        if ($this->iLogMode < $iLogMode) {
+        if ($this->iLogMode <= $iLogMode) {
             return;
         }
 
@@ -149,5 +160,15 @@ class Log
         $sLogLine .= str_repeat('-', 40) . "\n";
 
         fwrite($this->rFile, $sLogLine);
+    }
+
+    /**
+     * Returns if the log file of this instance is writable so that logging is possible
+     * @return bool.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function hasLogFile()
+    {
+        return $this->hasLogFile;
     }
 }
