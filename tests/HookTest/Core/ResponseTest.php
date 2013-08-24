@@ -52,7 +52,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreate()
     {
-        $this->assertSame('no text', $this->oResponse->getText());
+        $this->assertSame('no response text given or exit is ok.', $this->oResponse->getText());
         $this->assertSame(1, $this->oResponse->getResult());
     }
 
