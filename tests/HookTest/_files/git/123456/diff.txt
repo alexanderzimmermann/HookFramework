@@ -1,0 +1,30 @@
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..723ef36
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1 @@
++.idea
+\ No newline at end of file
+diff --git a/Filter/Filtered/Whitelist/StyleError.php b/Filter/Filtered/Whitelist/StyleError.php
+new file mode 100644
+index 0000000..b55dde0
+--- /dev/null
++++ b/Filter/Filtered/Whitelist/StyleError.php
+@@ -0,0 +1,16 @@
++<?php
++/**
++ * Style Error.
++ *
++ * This file will cause a style error on the PEAR Coding Style Guide.
++ */
++
++namespace ;
++
++/**
++ * Style Error.
++ */
++class StyleError
++{
++
++} // class

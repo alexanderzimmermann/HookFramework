@@ -16,7 +16,6 @@ namespace Hook\Adapter\Git\Parser;
 
 use Hook\Adapter\ChangedInterface;
 use Hook\Adapter\ChangedAbstract;
-use Hook\Commit\Object;
 
 /**
  * Comment.
@@ -41,7 +40,7 @@ class Changed extends ChangedAbstract implements ChangedInterface
     {
         foreach ($aLines as $sLine) {
 
-            $sLine  = trim($sLine);
+            $sLine  = str_replace('	', ' ', trim($sLine));
             $aParts = explode(' ', substr($sLine, 1, (strlen($sLine) - 1)));
 
             $aParts[2] = str_replace('.', '', $aParts[2]);
@@ -56,7 +55,7 @@ class Changed extends ChangedAbstract implements ChangedInterface
             } else {
 
                 $aParts['char']   = $aParts[4];
-                $aParts['source'] = $aParts[6];
+                $aParts['source'] = $aParts[5];
             }
 
             $this->addItem($this->createObject($aParts));

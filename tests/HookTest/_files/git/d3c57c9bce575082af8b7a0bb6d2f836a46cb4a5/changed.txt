@@ -1,0 +1,7 @@
+:100644 100644 1730f8d... 6fae6a9... M	library/Hook/Adapter/CommandAbstract.php
+:100644 100644 d9cbddc... aec9e80... M	library/Hook/Adapter/CommandInterface.php
+:100644 100644 58a21b0... 3bfb6bc... M	library/Hook/Adapter/Git/Command.php
+:100644 100644 b3fc5e5... 95b1570... M	library/Hook/Adapter/Svn/Command.php
+:100644 000000 2e61072... 0000000... D	tests/HookTest/Adapter/Git/CommandTest.php
+:100644 100644 7857465... c39d26c... M	tests/HookTest/Adapter/Svn/CommandTest.php
+:100755 000000 f6cc9f7... 0000000... D	tests/HookTest/_files/bin/git

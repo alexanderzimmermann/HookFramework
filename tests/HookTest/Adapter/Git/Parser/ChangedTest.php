@@ -56,18 +56,46 @@ class ChangedTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test this single line commit.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testParseSingleLine()
+    {
+        $aLines = array(':000000 100644 0000000... b55dde0... A	Filter/Filtered/Whitelist/StyleError.php');
+
+        $this->oChanged->parseFiles($aLines);
+
+        // Check object.
+        $aElements = $this->oChanged->getObjects();
+
+        $aExpected = array(
+            'isdir'  => false,
+            'txn'    => '',
+            'rev'    => '',
+            'action' => 'A',
+            'item'   => 'Filter/Filtered/Whitelist/StyleError.php',
+            'real'   => 'Filter/Filtered/Whitelist/StyleError.php',
+            'ext'    => 'PHP',
+            'info'   => '',
+            'props'  => null,
+            'lines'  => array()
+        );
+
+        $this->assertSame($aExpected, $aElements[0]);
+    }
+
+    /**
      * Test that the git diff raw output is parsed correctly.
-     * @covers Hook\Adapter\Git\Parser\Changed::parseFiles
      */
     public function testParseFilesSimple()
     {
         $aObjects = array();
-        $aLines   = file(__DIR__ . '/../../../_files/git/Parser/Changed/git-diff-simple.txt');
+        $aLines   = file(__DIR__ . '/_files/Changed/diff-simple.txt');
         $this->oChanged->parseFiles($aLines);
         $oActual = $this->oChanged->getObjects();
 
         // Includes $aObjects array.
-        include __DIR__ . '/_files/expected-simple.php';
+        include __DIR__ . '/_files/Changed/expected-simple.php';
 
         $oExpected = new \ArrayObject();
         foreach ($aObjects as $aObject) {
@@ -81,11 +109,10 @@ class ChangedTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test that the git diff raw output is parsed correctly.
-     * @covers Hook\Adapter\Git\Parser\Changed::parseFiles
      */
     public function testParseFilesExample()
     {
-        $aLines = file(__DIR__ . '/../../../_files/git/Parser/Changed/git-diff-example.txt');
+        $aLines = file(__DIR__ . '/_files/Changed/diff-example.txt');
 
         $this->oChanged->parseFiles($aLines);
 

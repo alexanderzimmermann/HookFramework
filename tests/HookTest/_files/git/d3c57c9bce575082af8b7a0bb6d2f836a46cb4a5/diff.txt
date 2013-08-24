@@ -1,0 +1,588 @@
+diff --git a/library/Hook/Adapter/CommandAbstract.php b/library/Hook/Adapter/CommandAbstract.php
+index 1730f8d..6fae6a9 100644
+--- a/library/Hook/Adapter/CommandAbstract.php
++++ b/library/Hook/Adapter/CommandAbstract.php
+@@ -1,9 +1,9 @@
+ <?php
+ /**
+  * Abstract class for the adapter for the git version control system..
+- * @category   Adapter
+- * @package    Adapter
+- * @subpackage Adapter
++ * @category   Category
++ * @package    Package
++ * @subpackage Subpackage
+  * @author     Alexander Zimmermann <alex@azimmermann.com>
+  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
+  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+@@ -18,9 +18,9 @@
+
+ /**
+  * Abstract class for the adapter for the git version control system.
+- * @category   Adapter
+- * @package    Adapter
+- * @subpackage Adapter
++ * @category   Category
++ * @package    Package
++ * @subpackage Subpackage
+  * @author     Alexander Zimmermann <alex@azimmermann.com>
+  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
+  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+@@ -49,12 +49,6 @@
+     protected $bError;
+
+     /**
+-     * Repository.
+-     * @var string
+-     */
+-    protected $sRepository;
+-
+-    /**
+      * Constructor.
+      * @param string $sBinPath Path to the subversion executable.
+      * @author Alexander Zimmermann <alex@azimmermann.com>
+diff --git a/library/Hook/Adapter/CommandInterface.php b/library/Hook/Adapter/CommandInterface.php
+index d9cbddc..aec9e80 100644
+--- a/library/Hook/Adapter/CommandInterface.php
++++ b/library/Hook/Adapter/CommandInterface.php
+@@ -1,9 +1,9 @@
+ <?php
+ /**
+  * Interface file for the adapter for the git version control system.
+- * @category   Adapter
+- * @package    Adapter
+- * @subpackage Adapter
++ * @category   Category
++ * @package    Package
++ * @subpackage Subpackage
+  * @author     Alexander Zimmermann <alex@azimmermann.com>
+  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
+  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+@@ -15,13 +15,13 @@
+ namespace Hook\Adapter;
+
+ use Hook\Adapter;
+-use Hook\Adapter\ArgumentsAbstract;
++use Hook\Adapter\Svn\Arguments;
+
+ /**
+  * Interface file for the adapter for the git version control system.
+- * @category   Adapter
+- * @package    Adapter
+- * @subpackage Adapter
++ * @category   Category
++ * @package    Package
++ * @subpackage Subpackage
+  * @author     Alexander Zimmermann <alex@azimmermann.com>
+  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
+  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+@@ -33,11 +33,11 @@
+ {
+     /**
+      * Initialize the adapter.
+-     * @param ArgumentsAbstract $oArguments Command line arguments.
++     * @param Arguments $oArguments Command line arguments.
+      * @return void
+      * @author Alexander Zimmermann <alex@azimmermann.com>
+      */
+-    public function init(ArgumentsAbstract $oArguments);
++    public function init(Arguments $oArguments);
+
+     /**
+      * Gets the items of a commit that were changed (file, directory list).
+@@ -68,4 +68,23 @@ public function getCommitDiff();
+      * @author Alexander Zimmermann <alex@azimmermann.com>
+      */
+     public function getContent($sFile, $sTmpFile);
+-}
++
++    /**
++     * Get list of properties to the item.
++     * @param string $sItem Element for the properties (Directory or file).
++     * @return array
++     * @author Alexander Zimmermann <alex@azimmermann.com>
++     * @since  1.0.0
++     */
++    public function getPropertyList($sItem);
++
++    /**
++     * Get the property value.
++     * @param string $sItem     Element for the properties (Directory or file).
++     * @param string $sProperty Name of property of value to get.
++     * @return array
++     * @author Alexander Zimmermann <alex@azimmermann.com>
++     * @since  1.0.0
++     */
++    public function getPropertyValue($sItem, $sProperty);
++} // interface
+diff --git a/library/Hook/Adapter/Git/Command.php b/library/Hook/Adapter/Git/Command.php
+index 58a21b0..3bfb6bc 100644
+--- a/library/Hook/Adapter/Git/Command.php
++++ b/library/Hook/Adapter/Git/Command.php
+@@ -1,9 +1,9 @@
+ <?php
+ /**
+  * Git- class for executing the git commands to collect data from commit.
+- * @category   Adapter
+- * @package    Git
+- * @subpackage Git
++ * @category   Category
++ * @package    Package
++ * @subpackage Subpackage
+  * @author     Alexander Zimmermann <alex@azimmermann.com>
+  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
+  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+@@ -15,13 +15,13 @@
+ namespace Hook\Adapter\Git;
+
+ use Hook\Adapter\CommandAbstract;
+-use Hook\Adapter\ArgumentsAbstract;
++use Hook\Adapter\Svn\Arguments;
+
+ /**
+  * Git- class for executing the git commands to collect data from commit.
+- * @category   Adapter
+- * @package    Git
+- * @subpackage Git
++ * @category   Category
++ * @package    Package
++ * @subpackage Subpackage
+  * @author     Alexander Zimmermann <alex@azimmermann.com>
+  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
+  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+@@ -32,22 +32,15 @@
+ class Command extends CommandAbstract
+ {
+     /**
+-     * Against which commit to check.
+-     * @var string
+-     */
+-    protected $sAgainst = 'HEAD';
+-
+-    /**
+      * Initialize.
+-     * @param ArgumentsAbstract $oArguments Command line arguments.
++     * @param Arguments $oArguments Command line arguments.
+      * @return void
+      * @author Alexander Zimmermann <alex@azimmermann.com>
+      */
+-    public function init(ArgumentsAbstract $oArguments)
++    public function init(Arguments $oArguments)
+     {
+         $this->sRepository = $oArguments->getRepository();
+         $this->sCommand    = $this->sBinPath . 'git';
+-        $this->sAgainst    = $oArguments->getTransaction();
+     }
+
+     /**
+@@ -72,7 +65,9 @@ public function getCommitChanged()
+     public function getInfo()
+     {
+         $sCommand = $this->sCommand;
+-        $sCommand .= ' var GIT_AUTHOR_IDENT';
++        $sCommand .= ' info';
++        $sCommand .= $this->sLookParams;
++        $sCommand .= ' ' . $this->sRepository;
+
+         return $this->execCommand($sCommand);
+     }
+@@ -85,8 +80,9 @@ public function getInfo()
+     public function getCommitDiff()
+     {
+         $sCommand = $this->sCommand;
+-        $sCommand .= ' diff ';
+-        $sCommand .= $this->sAgainst;
++        $sCommand .= ' diff';
++        $sCommand .= $this->sLookParams;
++        $sCommand .= ' ' . $this->sRepository;
+
+         return $this->execCommand($sCommand);
+     }
+@@ -96,14 +92,13 @@ public function getCommitDiff()
+      * @param string $sFile    File from TXN.
+      * @param string $sTmpFile Temporary file on disk.
+      * @return array
++     * @author Alexander Zimmermann <alex@azimmermann.com>
+      */
+     public function getContent($sFile, $sTmpFile)
+     {
+-        var_dump($sFile); // einfach die datei von der platte lesen.
+-        $sContent = file_get_contents($sFile);
+         $sCommand = $this->sCommand;
+         $sCommand .= ' cat';
+-
++        $sCommand .= $this->sLookParams;
+         $sCommand .= ' ' . $this->sRepository;
+         $sCommand .= ' ' . $sFile;
+         $sCommand .= ' > ' . $sTmpFile;
+@@ -112,28 +107,40 @@ public function getContent($sFile, $sTmpFile)
+     }
+
+     /**
+-     * Check the result for errors.
+-     * @param array $aData Data from exec command.
+-     * @return array|bool
++     * Get list of properties to the item.
++     * @param string $sItem Element for the properties (Directory or file).
++     * @return array
+      * @author Alexander Zimmermann <alex@azimmermann.com>
++     * @since  1.0.0
+      */
+-    protected function checkResult(array $aData)
++    public function getPropertyList($sItem)
+     {
+-        // Empty must be an error.
+-        if (true === empty($aData)) {
++        $sCommand = $this->sCommand;
++        $sCommand .= ' proplist';
++        $sCommand .= $this->sLookParams;
++        $sCommand .= ' ' . $this->sRepository;
++        $sCommand .= ' ' . $sItem;
+
+-            $this->bError = true;
+-            return array();
+-        }
++        return $this->execCommand($sCommand);
++    }
+
+-        // Check command line output. If any of this words is in the result, an error occurred.
+-        if ((strpos($aData[0], 'git --help')) ||
+-            (strpos($aData[0], 'usage'))) {
+-            $this->bError = true;
+-            return $aData;
+-        }
++    /**
++     * Get the property value.
++     * @param string $sItem     Element for the properties (Directory or file).
++     * @param string $sProperty Name of property of value to get.
++     * @return array
++     * @author Alexander Zimmermann <alex@azimmermann.com>
++     * @since  1.0.0
++     */
++    public function getPropertyValue($sItem, $sProperty)
++    {
++        $sCommand = $this->sCommand;
++        $sCommand .= ' propget';
++        $sCommand .= $this->sLookParams;
++        $sCommand .= ' ' . $this->sRepository;
++        $sCommand .= ' ' . $sProperty;
++        $sCommand .= ' ' . $sItem;
+
+-        $this->bError = false;
+-        return $aData;
++        return $this->execCommand($sCommand);
+     }
+ }
+diff --git a/library/Hook/Adapter/Svn/Command.php b/library/Hook/Adapter/Svn/Command.php
+index b3fc5e5..95b1570 100644
+--- a/library/Hook/Adapter/Svn/Command.php
++++ b/library/Hook/Adapter/Svn/Command.php
+@@ -1,9 +1,9 @@
+ <?php
+ /**
+  * SVN- class for executing the svn commands to collect data from commit.
+- * @category   Adapter
+- * @package    Svn
+- * @subpackage Svn
++ * @category   Core
++ * @package    Main
++ * @subpackage Main
+  * @author     Alexander Zimmermann <alex@azimmermann.com>
+  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
+  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+@@ -15,23 +15,29 @@
+ namespace Hook\Adapter\Svn;
+
+ use Hook\Adapter\CommandAbstract;
+-use Hook\Adapter\ArgumentsAbstract;
++use Hook\Adapter\Svn\Arguments;
+
+ /**
+  * SVN- class for executing the svn commands to collect data from commit.
+- * @category   Adapter
+- * @package    Svn
+- * @subpackage Svn
++ * @category   Core
++ * @package    Main
++ * @subpackage Main
+  * @author     Alexander Zimmermann <alex@azimmermann.com>
+  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
+  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    Release: 3.0.0
++ * @version    Release: 2.1.0
+  * @link       http://www.azimmermann.com/
+  * @since      Class available since Release 1.0.0
+  */
+ class Command extends CommandAbstract
+ {
+     /**
++     * Repository.
++     * @var string
++     */
++    private $sRepository;
++
++    /**
+      * Svn Param (Transaction [-t TXN] or Revision [-r REV]).
+      * @var string
+      */
+@@ -49,11 +55,11 @@ public function __construct($sBinPath)
+
+     /**
+      * Initialize.
+-     * @param ArgumentsAbstract $oArguments Command line arguments.
++     * @param Arguments $oArguments Command line arguments.
+      * @return void
+      * @author Alexander Zimmermann <alex@azimmermann.com>
+      */
+-    public function init(ArgumentsAbstract $oArguments)
++    public function init(Arguments $oArguments)
+     {
+         $this->sRepository = $oArguments->getRepository();
+         $this->sCommand    = $this->sBinPath . 'svnlook';
+diff --git a/tests/HookTest/Adapter/Git/CommandTest.php b/tests/HookTest/Adapter/Git/CommandTest.php
+deleted file mode 100644
+index 2e61072..0000000
+--- a/tests/HookTest/Adapter/Git/CommandTest.php
++++ /dev/null
+@@ -1,97 +0,0 @@
+-<?php
+-/**
+- * Command Tests.
+- * @category   Tests
+- * @package    Adapter
+- * @subpackage Git
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @link       http://www.azimmermann.com/
+- * @since      File available since Release 3.0.0
+- */
+-
+-namespace HookTest\Adapter\Git;
+-
+-use Hook\Adapter\Git\Command;
+-
+-require_once __DIR__ . '/../../../Bootstrap.php';
+-
+-/**
+- * Command Tests.
+- * @category   Tests
+- * @package    Adapter
+- * @subpackage Git
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    Release: 3.0.0
+- * @link       http://www.azimmermann.com/
+- * @since      Class available since Release 3.0.0
+- */
+-class CommandTest extends \PHPUnit_Framework_TestCase
+-{
+-    /**
+-     * Command object.
+-     * @var Command
+-     */
+-    protected $oCommand;
+-
+-    /**
+-     * Setup.
+-     * @author Alexander Zimmermann <alex@azimmermann.com>
+-     */
+-    public function setUp()
+-    {
+-        $sCommand = HF_TEST_FILES_DIR . 'bin/';
+-        $this->oCommand = new Command($sCommand);
+-    }
+-
+-    /**
+-     * Test no valid revision or transaction
+-     * @author Alexander Zimmermann <alex@azimmermann.com>
+-     */
+-    public function testNoValidTransactionOrRevision()
+-    {
+-        $aFunctions = array(
+-            'getRepository', 'getMainType', 'getTransaction', 'getRevision'
+-        );
+-
+-        $aArguments = array(
+-            array(
+-                0 => '/var/local/svn/hooks/Hook',
+-                1 => HF_TEST_SVN_EXAMPLE,
+-                2 => 'Zora',
+-                3 => 'client.pre-commit'
+-            )
+-        );
+-
+-        // Main type usually is pre, post and start but here Failures to check listener.
+-        $oArguments = $this->getMock('Hook\Adapter\Git\Arguments', $aFunctions, $aArguments);
+-
+-        $oArguments->expects($this->once())
+-            ->method('getRepository')
+-            ->will($this->returnValue('ExampleGit'));
+-
+-        // This should be called once.
+-        $oArguments->expects($this->once())
+-            ->method('getTransaction')
+-            ->will($this->returnValue('234523454'));
+-
+-        $this->oCommand->init($oArguments);
+-
+-        $aExpected = array(
+-                      0 => 'fatal: ambiguous argument \'234523454\': unknown revision or path not '
+-                           . 'in the working tree.',
+-                      1 => 'Use \'--\' to separate paths from revisions'
+-                     );
+-
+-        /*
+-            alexander@alexander:~/Projekte/HookFramework/tests/HookTest/Adapter/Git/Parser$ git diff 89aa8234
+-            fatal: ambiguous argument '89aa8234': unknown revision or path not in the working tree.
+-            Use '--' to separate paths from revisions
+-        */
+-
+-        $this->assertSame($aExpected, $this->oCommand->getCommitDiff());
+-    }
+-}
+diff --git a/tests/HookTest/Adapter/Svn/CommandTest.php b/tests/HookTest/Adapter/Svn/CommandTest.php
+index 7857465..c39d26c 100644
+--- a/tests/HookTest/Adapter/Svn/CommandTest.php
++++ b/tests/HookTest/Adapter/Svn/CommandTest.php
+@@ -1,34 +1,15 @@
+ <?php
+ /**
+- * Command Tests.
+- * @category   Tests
+- * @package    Adapter
+- * @subpackage Svn
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @link       http://www.azimmermann.com/
+- * @since      File available since Release 3.0.0
++ * Created by JetBrains PhpStorm.
++ * User: alexander
++ * Date: 02.06.13
++ * Time: 17:03
+  */
+
+ namespace HookTest\Adapter\Svn;
+
+ use Hook\Adapter\Svn\Command;
+
+-require_once __DIR__ . '/../../../Bootstrap.php';
+-
+-/**
+- * Command Tests.
+- * @category   Tests
+- * @package    Adapter
+- * @subpackage Svn
+- * @author     Alexander Zimmermann <alex@azimmermann.com>
+- * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    Release: 3.0.0
+- * @link       http://www.azimmermann.com/
+- * @since      Class available since Release 3.0.0
+- */
+ class CommandTest extends \PHPUnit_Framework_TestCase
+ {
+     /**
+@@ -69,21 +50,21 @@ public function testNoValidTransactionOrRevision()
+         // Main type usually is pre, post and start but here Failures to check listener.
+         $oArguments = $this->getMock('Hook\Adapter\Svn\Arguments', $aFunctions, $aArguments);
+
+-        $oArguments->expects($this->once())
++        $oArguments->expects($this->any())
+             ->method('getRepository')
+             ->will($this->returnValue('ExampleSvn'));
+
+-        $oArguments->expects($this->once())
++        $oArguments->expects($this->any())
+             ->method('getMainType')
+             ->will($this->returnValue('pre'));
+
+
+-        $oArguments->expects($this->once())
++        $oArguments->expects($this->any())
+             ->method('getTransaction')
+             ->will($this->returnValue('10-1'));
+
+
+-        $oArguments->expects($this->once())
++        $oArguments->expects($this->any())
+             ->method('getRevision')
+             ->will($this->returnValue('10'));
+
+diff --git a/tests/HookTest/_files/bin/git b/tests/HookTest/_files/bin/git
+deleted file mode 100755
+index f6cc9f7..0000000
+--- a/tests/HookTest/_files/bin/git
++++ /dev/null
+@@ -1,69 +0,0 @@
+-#!/usr/bin/php
+-<?php
+-/**
+- * Executable for the hook tests.
+- * @category   Tests
+- * @package    Main
+- * @subpackage Core
+- * @author     Alexander Zimmermann <alex@zimmermann.com>
+- * @copyright  2008-2013 Alexander Zimmermann <alex@zimmermann.com>
+- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version    PHP 5.4
+- * @link       http://www.azimmermann.com/
+- * @since      File available since Release 3.0.0
+- */
+-
+-/**
+-    The check for the params can be skipped, cause the script is only used in the test environment.
+-    Example: git diff --raw acdef098776554
+- */
+-
+-$aCommands = array(
+-    'diff', 'var'
+-);
+-
+-if (false === isset($argv[1])) {
+-    exit;
+-}
+-
+-// Check commands
+-$sCommand = $argv[1];
+-if (in_array($sCommand, $aCommands) === false) {
+-
+-    exit;
+-}
+-// var_dump($argv);
+-
+-// DIFF Elements
+-if (strpos($argc[2], '--')) {
+-
+-    $sOption = $argv[2];
+-    $sTxn    = $argv[3];
+-} else {
+-    $sTxn = $argv[2];
+-}
+-
+-$sOption = $argv[2];
+-
+-
+-// Path to _files directory.
+-$sPath = str_replace('bin', '', __DIR__);
+-
+-// Determine file.
+-$sCatFile = basename($sCatFile);
+-
+-// Prepare file for svn fake.
+-$sFile = $sPath . $sTxn . '.txt';
+-
+-// Send an error that the commit doesn't exists, when the file isn't available.
+-if (false === file_exists($sFile)) {
+-
+-    $sResult = 'fatal: ambiguous argument \'' . $sTxn
+-               . '\': unknown revision or path not in the working tree.' . PHP_EOL
+-               . 'Use \'--\' to separate paths from revisions' . PHP_EOL;
+-
+-    echo $sResult;
+-    exit(1);
+-}
+-
+-echo file_get_contents($sFile);
