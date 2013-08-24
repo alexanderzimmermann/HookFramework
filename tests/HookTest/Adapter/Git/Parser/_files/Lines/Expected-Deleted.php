@@ -82,7 +82,6 @@ $aRaw = array(
          '-}',
          '-',
          '-echo file_get_contents($sFile);',
-         '',
          ''
         );
 
