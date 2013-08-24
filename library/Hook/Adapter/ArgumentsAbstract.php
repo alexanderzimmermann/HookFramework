@@ -35,6 +35,18 @@ abstract class ArgumentsAbstract
     protected $sDelimiter = '-';
 
     /**
+     * All available hooks for validation.
+     * @var array
+     */
+    protected $aHooks = array();
+
+    /**
+     * All available sub actions for validation.
+     * @var array
+     */
+    protected $aActions = array();
+
+    /**
      * Arguments of hook call.
      * @var array
      */
@@ -63,6 +75,12 @@ abstract class ArgumentsAbstract
      * @var string
      */
     protected $sSubType;
+
+    /**
+     * User.
+     * @var string
+     */
+    protected $sUser;
 
     /**
      * Repository path.
@@ -218,6 +236,15 @@ abstract class ArgumentsAbstract
         $this->checkArguments();
 
         return $this->bArgumentsOk;
+    }
+
+    /**
+     * Get the available hooks.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function getAvailableHooks()
+    {
+        return $this->aHooks;
     }
 
     /**
