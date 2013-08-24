@@ -73,7 +73,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
             ->method('getRepository')
             ->will($this->returnValue('ExampleSvn'));
 
-        $oArguments->expects($this->once())
+        $oArguments->expects($this->exactly(2))
             ->method('getMainType')
             ->will($this->returnValue('pre'));
 
@@ -83,7 +83,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('10-1'));
 
 
-        $oArguments->expects($this->once())
+        $oArguments->expects($this->never())
             ->method('getRevision')
             ->will($this->returnValue('10'));
 
