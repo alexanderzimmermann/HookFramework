@@ -26,7 +26,7 @@ require_once __DIR__ . '/../../Bootstrap.php';
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 2.1.0
+ * @version    Release: 3.0.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 2.1.0
  */
@@ -109,6 +109,6 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $this->oConfig->loadConfigFile(__DIR__ . '/_files/test-config.ini');
 
         $sExpected = '/path/to/hookframework/tests/Core/svn/';
-        $this->assertSame($sExpected, $this->oConfig->getConfiguration('vcs', 'binpath'));
+        $this->assertSame($sExpected, $this->oConfig->getConfiguration('vcs', 'binary_path'));
     }
 }

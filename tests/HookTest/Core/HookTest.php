@@ -26,7 +26,7 @@ require_once HF_TEST_DIR . 'Bootstrap.php';
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 2.1.0
+ * @version    Release: 3.0.0
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
@@ -56,6 +56,7 @@ class HookTest extends \PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         if (true === $this->bObStart) {
+
             ob_end_clean();
         }
     }
@@ -66,8 +67,6 @@ class HookTest extends \PHPUnit_Framework_TestCase
      */
     public function testWrongArguments()
     {
-        $this->setExpectedException('Exception', 'Arguments Error');
-
         $aData = array(
             0 => '/var/local/svn/hooks/Hook',
             1 => HF_TEST_SVN_EXAMPLE,
