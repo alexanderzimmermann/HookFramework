@@ -14,6 +14,8 @@
 
 namespace Hook\Adapter;
 
+use Hook\Adapter\Git\Controller as GitController;
+use Hook\Adapter\Svn\Controller as SvnController;
 use Hook\Core\Error;
 use Hook\Core\File;
 use Hook\Core\Response;
@@ -267,5 +269,24 @@ abstract class ControllerAbstract
     {
         // Cleanup files using destruct method of File object.
         unset($this->oFile);
+    }
+
+    /**
+     * Determine the right controller.
+     *
+     * We simply check the little difference between git and subversion.
+     * That is the "." in the git hook identifier.
+     * @param array $aArguments The arguments ship with this hook call.
+     * @return GitController|SvnController
+     */
+    public static function factory(array $aArguments)
+    {
+        $sHook = $aArguments[(count($aArguments) - 1)];
+
+        if (true === strpos($sHook, '.')) {
+            return new GitController($aArguments);
+        } else {
+            return new SvnController($aArguments);
+        }
     }
 }
