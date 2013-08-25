@@ -56,8 +56,8 @@ class Arguments extends ArgumentsAbstract implements ArgumentsInterface
     protected $aActions = array(
                          'client' => array(
                                       'pre-commit'         => array('repos', 'txn'),
-                                      'prepare-commit-msg' => array('repos'),
-                                      'commit-msg'         => array('repos'),
+                                      'prepare-commit-msg' => array('repos', 'file', 'action'),
+                                      'commit-msg'         => array('repos', 'file'),
                                       'post-commit'        => array('repos'),
                                       // E-mail workflow hooks.
                                       'applypatch-msg'     => array('repos'),
@@ -185,7 +185,7 @@ class Arguments extends ArgumentsAbstract implements ArgumentsInterface
     }
 
     /**
-     * Check the transaction number (z.B. 501-a, 501-11).
+     * Check the transaction number (e.g. beb5ba1ee12722e1c2fa552d9f34bb096f5edcec).
      * @param string $sTransaction Transaction number.
      * @return boolean
      * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -201,5 +201,27 @@ class Arguments extends ArgumentsAbstract implements ArgumentsInterface
         $this->sError .= 'Transaction ';
 
         return false;
+    }
+
+    /**
+     * Check file parameter.
+     * @param string $sFile Filename.
+     * @return boolean
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    private function checkFile($sFile)
+    {
+        return true;
+    }
+
+    /**
+     * Check the action argument.
+     * @param string $sAction Action.
+     * @return boolean
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    private function checkAction($sAction)
+    {
+        return true;
     }
 }
