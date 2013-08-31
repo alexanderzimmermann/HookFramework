@@ -9,10 +9,10 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
- * @since      File available since Release 1.0.0
+ * @since      File available since Release 3.0.0
  */
 
-namespace ExampleGit\Pre;
+namespace ExampleGit\Client;
 
 use Hook\Commit\Object;
 use Hook\Listener\AbstractObject;
@@ -25,9 +25,9 @@ use Hook\Listener\AbstractObject;
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: 2.1.0
+ * @version    Release: 3.0.0
  * @link       http://www.azimmermann.com/
- * @since      Class available since Release 1.0.0
+ * @since      Class available since Release 3.0.0
  */
 class Style extends AbstractObject
 {
@@ -82,13 +82,13 @@ class Style extends AbstractObject
         }
 
         return array(
-            'action'     => 'commit',
-            'fileaction' => array(
-                'A', 'U'
-            ),
-            'extensions' => array('PHP'),
-            'withdirs'   => false
-        );
+                'action'     => 'pre-commit',
+                'fileaction' => array(
+                                 'A', 'C', 'M', 'R', 'T', 'U'
+                                ),
+                'extensions' => array('PHP'),
+                'withdirs'   => false
+               );
     }
 
     /**
