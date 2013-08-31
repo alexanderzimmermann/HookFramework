@@ -133,7 +133,7 @@ class Log
      */
     public function setLogMode($iLogMode = self::HF_INFO)
     {
-        $this->iLogMode = $iLogMode;
+        $this->iLogMode = (int) $iLogMode;
     }
 
     /**
