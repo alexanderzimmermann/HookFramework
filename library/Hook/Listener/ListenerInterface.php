@@ -15,7 +15,6 @@
 namespace Hook\Listener;
 
 /**
- * .
  * Global interface for all listener.
  * @category   Main
  * @package    Hook
