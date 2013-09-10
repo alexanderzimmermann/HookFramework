@@ -17,8 +17,23 @@
 
 # This example catches duplicate Signed-off-by lines.
 
-test "" = "$(grep '^Signed-off-by: ' "$1" |
-	 sort | uniq -c | sed -e '/^[ 	]*1[ 	]/d')" || {
-	echo >&2 Duplicate Signed-off-by lines.
-	exit 1
-}
+# test "" = "$(grep '^Signed-off-by: ' "$1" |
+# 	 sort | uniq -c | sed -e '/^[ 	]*1[ 	]/d')" || {
+# 	echo >&2 Duplicate Signed-off-by lines.
+# 	exit 1
+# }
+
+if git rev-parse --verify HEAD >/dev/null 2>&1
+then
+	against=HEAD
+else
+	# Initial commit: diff against an empty tree object
+	against=4b825dc642cb6eb9a060e54bf8d69288fbee4904
+fi
+
+repository=$(git rev-parse --show-toplevel)
+commitmsgfile=$1
+
+/path/to/hookframework/Hook $repository $against $commitmsgfile client.commit-msg >&2 || exit 1
+
+exit 0

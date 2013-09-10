@@ -9,7 +9,11 @@
 #
 # To enable this hook, rename this file to "applypatch-msg".
 
-. git-sh-setup
-test -x "$GIT_DIR/hooks/commit-msg" &&
-	exec "$GIT_DIR/hooks/commit-msg" ${1+"$@"}
-:
+echo "RUN applypatch-msg" >> /home/alexander/Projekte/ExampleGit/hook.log
+
+msg=${1+"$@"}
+repository=$(git rev-parse --show-toplevel)
+
+/path/to/hookframework/Hook $repository $msg client.applypath-msg >&2 || exit 1
+
+exit 0
