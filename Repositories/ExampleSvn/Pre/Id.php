@@ -1,8 +1,8 @@
 <?php
 /**
  * Id svn keyword.
- * @category   Listener
- * @package    Pre
+ * @category   Repositories
+ * @package    ExampleSvn
  * @subpackage Pre
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
@@ -22,8 +22,8 @@ use Hook\Listener\AbstractObject;
  * The command svnlook propget /var/svn/xxxx svn:keywords
  * /trunk/path/to/file.php returns the "Id", and so we can check that
  * that the property is set.
- * @category   Listener
- * @package    Pre
+ * @category   Repositories
+ * @package    ExampleSvn
  * @subpackage Pre
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>

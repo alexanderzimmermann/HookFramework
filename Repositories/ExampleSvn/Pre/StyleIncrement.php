@@ -1,8 +1,8 @@
 <?php
 /**
  * Style Guide Listener.
- * @category   Listener
- * @package    Pre
+ * @category   Repositories
+ * @package    ExampleSvn
  * @subpackage Pre
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
@@ -20,8 +20,8 @@ use Hook\Commit\Object;
 /**
  * Style Guide Listener.
  * But only for new lines.
- * @category   Listener
- * @package    Pre
+ * @category   Repositories
+ * @package    ExampleSvn
  * @subpackage Pre
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
@@ -54,7 +54,7 @@ class StyleIncrement extends AbstractObject
      * Listener Name.
      * @var string
      */
-    protected $sListener = 'Style Guide';
+    protected $sListener = 'Style Guide Increment';
 
     /**
      * Set the filter stuff.
@@ -119,9 +119,8 @@ class StyleIncrement extends AbstractObject
     public function processAction(Object $oObject)
     {
         $sStandard = $this->aCfg['Standard'];
-
-        $aLines   = array();
-        $sCommand = 'phpcs --standard=' . $sStandard . ' ' . $oObject->getTmpObjectPath();
+        $aLines    = array();
+        $sCommand  = 'phpcs --standard=' . $sStandard . ' ' . $oObject->getTmpObjectPath();
 
         exec($sCommand, $aLines);
 
@@ -140,9 +139,16 @@ class StyleIncrement extends AbstractObject
         // Parse the code sniffer output.
         $this->parseCodeSnifferErrorLines($aLines);
 
+        // No ERROR lines found, lets skip here. WARNING are ignored so far.
+        if ((false === isset($this->aCs[self::CS_ERROR])) &&
+            (true === empty($this->aCs[self::CS_ERROR]))) {
+            return;
+        }
+
         // Now we compare the parsed code sniffer lines with the changed lines.
         $aErrorLines = $this->compareChangedLines($oObject);
 
+        // Add the error lines.
         $oObject->addErrorLines($aErrorLines);
     }
 
@@ -166,11 +172,13 @@ class StyleIncrement extends AbstractObject
         // Now we compare this new lines with the style guide sniff lines.
         // Notice: Only the errors are important in this listener.
         $aErrorLines = array();
-        foreach ($this->aCs[self::CS_ERROR] as $iLine => $sMessage) {
+        foreach ($this->aCs[self::CS_ERROR] as $iLine => $aMessage) {
             if (false !== in_array($iLine, $aLines)) {
-                $aErrorLines[] = $sMessage;
+                $aErrorLines[] = implode("\n", $aMessage);
             }
         }
+
+        $aErrorLines[] = "\n";
 
         return $aErrorLines;
     }
@@ -191,15 +199,16 @@ class StyleIncrement extends AbstractObject
         $iLast = 0;
 
         // Now we analyze the lines.
+        $this->aCs = array();
         foreach ($aLines as $sLine) {
             // Split the parts of the line.
             $aParts = explode(' | ', $sLine);
 
             // Line number.
             // If line number is 0, then its just another message from line before.
-            $iLine = (int)trim($aParts[0]);
+            $iLine = (int) trim($aParts[0]);
             if (0 === $iLine) {
-                $this->aCs[$sType][$iLast] .= $sLine . "\n";
+                $this->aCs[$sType][$iLast][] = $sLine;
                 continue;
             }
 
@@ -208,7 +217,7 @@ class StyleIncrement extends AbstractObject
 
             // Now we store the line information.
             // Error and Warning are separated. For this listener only errors are important.
-            $this->aCs[$sType][$iLine] = $sLine . "\n";
+            $this->aCs[$sType][$iLine][] = $sLine;
 
             $iLast = $iLine;
         }

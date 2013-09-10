@@ -1,9 +1,9 @@
 <?php
 /**
  * Style Guide Listener.
- * @category   Listener
- * @package    Pre
- * @subpackage Pre
+ * @category   Repositories
+ * @package    ExampleGit
+ * @subpackage Client
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
@@ -19,9 +19,9 @@ use Hook\Listener\AbstractObject;
 
 /**
  * Style Guide Listener.
- * @category   Listener
- * @package    Pre
- * @subpackage Pre
+ * @category   Repositories
+ * @package    ExampleGit
+ * @subpackage Client
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
@@ -124,11 +124,8 @@ class Style extends AbstractObject
         $iResult = $this->determineErrorWarnings($aLines);
 
         if (($iResult & 1) === 1) {
-            // Trim empty lines at start and end.
-            unset($aLines[0]);
-            unset($aLines[1]);
-            unset($aLines[2]);
-
+            // Trim empty lines at start and remove the status lines at the end.
+            $aLines = array_slice($aLines, 3, (count($aLines) - 5));
             $oObject->addErrorLines($aLines);
         }
     }

@@ -1,9 +1,9 @@
 <?php
 /**
  * Style Guide Listener.
- * @category   Listener
- * @package    Post
- * @subpackage Post
+ * @category   Repositories
+ * @package    ExampleGit
+ * @subpackage Client
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
@@ -19,9 +19,9 @@ use Hook\Listener\AbstractObject;
 
 /**
  * Style Guide Listener.
- * @category   Listener
- * @package    Post
- * @subpackage Post
+ * @category   Repositories
+ * @package    ExampleGit
+ * @subpackage Client
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License

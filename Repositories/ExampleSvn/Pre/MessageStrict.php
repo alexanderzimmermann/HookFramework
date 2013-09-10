@@ -1,8 +1,8 @@
 <?php
 /**
  * Message Listener.
- * @category   Listener
- * @package    Pre
+ * @category   Repositories
+ * @package    ExampleSvn
  * @subpackage Pre
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
@@ -19,8 +19,8 @@ use Hook\Listener\AbstractInfo;
 
 /**
  * Message Listener.
- * @category   Listener
- * @package    Pre
+ * @category   Repositories
+ * @package    ExampleSvn
  * @subpackage Pre
  * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
