@@ -1,0 +1,23 @@
+diff --git a/Filter/NotFiltered/NonPsr2File.php b/Filter/NotFiltered/NonPsr2File.php
+new file mode 100644
+index 0000000..cecf811
+--- /dev/null
++++ b/Filter/NotFiltered/NonPsr2File.php
+@@ -0,0 +1,16 @@
++<?php
++class Psr2
++{
++ protected $file;
++
++ function construct()
++ {
++   $this->file;
++ }
++
++ public function loadFile()
++ {
++   // Load yourself.
++  $this->file = file(__FILE__);
++ }
++}
+\ No newline at end of file
