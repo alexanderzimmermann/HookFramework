@@ -42,7 +42,7 @@ class InfoTest extends \PHPUnit_Framework_TestCase
     /**
      * Set up method.
      * @return void
-     * @author Alexander Zimmermann <alex@zimmemann.com>
+     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     protected function setUp()
     {

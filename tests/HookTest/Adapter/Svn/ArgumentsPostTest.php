@@ -59,7 +59,7 @@ class ArgumentsPostTest extends \PHPUnit_Framework_TestCase
     /**
      * Dataprovider.
      * @return array
-     * @author Alexander Zimmermann <alex@zimmemann.com>
+     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public static function getPostCommitArguments()
     {
