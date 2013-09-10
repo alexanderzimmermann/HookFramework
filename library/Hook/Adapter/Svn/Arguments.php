@@ -219,7 +219,7 @@ class Arguments extends ArgumentsAbstract implements ArgumentsInterface
             return true;
         }
 
-        $this->sError .= 'User ';
+        $this->sError .= 'User missing or wrong format.';
 
         return false;
     }
@@ -238,7 +238,7 @@ class Arguments extends ArgumentsAbstract implements ArgumentsInterface
             return true;
         }
 
-        $this->sError .= 'Transaction ';
+        $this->sError .= 'Transaction missing or wrong format.';
 
         return false;
     }
@@ -257,7 +257,7 @@ class Arguments extends ArgumentsAbstract implements ArgumentsInterface
             return true;
         }
 
-        $this->sError .= 'Revision ';
+        $this->sError .= 'Revision missing wrong format.';
 
         return false;
     }

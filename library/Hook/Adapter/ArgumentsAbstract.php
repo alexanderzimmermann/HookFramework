@@ -141,7 +141,6 @@ abstract class ArgumentsAbstract
         $this->bArgumentsOk = false;
     }
 
-
     /**
      * Check if the initial hook call is correct.
      * The last element of the parameters should contain the correct value.

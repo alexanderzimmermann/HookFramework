@@ -56,8 +56,8 @@ class Arguments extends ArgumentsAbstract implements ArgumentsInterface
     protected $aActions = array(
                          'client' => array(
                                       'pre-commit'         => array('repos', 'txn'),
-                                      'prepare-commit-msg' => array('repos', 'file', 'action'),
-                                      'commit-msg'         => array('repos', 'file'),
+                                      'prepare-commit-msg' => array('repos', 'txn', 'file', 'action'),
+                                      'commit-msg'         => array('repos', 'txn', 'file'),
                                       'post-commit'        => array('repos'),
                                       // E-mail workflow hooks.
                                       'applypatch-msg'     => array('repos'),
@@ -75,6 +75,18 @@ class Arguments extends ArgumentsAbstract implements ArgumentsInterface
                                        'post-receive'      => array('repos'),
                                       ),
                         );
+
+    /**
+     * The file that contains the commit message.
+     * @var string
+     */
+    private $sCommitMessageFile;
+
+    /**
+     * The commit message action identifier.
+     * @var string
+     */
+    private $sCommitMessageAction;
 
     /**
      * Constructor.
@@ -121,6 +133,25 @@ class Arguments extends ArgumentsAbstract implements ArgumentsInterface
     public function getSubActions()
     {
         return array_keys($this->aActions[$this->sMainType]);
+    }
+
+    /**
+     * Returns the parameter from commit-message for the commit message file.
+     * @return string
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function getCommitMessageFile()
+    {
+        return $this->sCommitMessageFile;
+    }
+
+    /**
+     * Returns the commit message action.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function getCommitMessageAction()
+    {
+        return $this->sCommitMessageAction;
     }
 
     /**
@@ -211,6 +242,7 @@ class Arguments extends ArgumentsAbstract implements ArgumentsInterface
      */
     private function checkFile($sFile)
     {
+        $this->sCommitMessageFile = $sFile;
         return true;
     }
 
@@ -222,6 +254,7 @@ class Arguments extends ArgumentsAbstract implements ArgumentsInterface
      */
     private function checkAction($sAction)
     {
+        $this->sCommitMessageAction = $sAction;
         return true;
     }
 }

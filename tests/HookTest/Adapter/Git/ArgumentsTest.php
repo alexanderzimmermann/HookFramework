@@ -118,14 +118,36 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
     public function testSubActions1()
     {
         $aData = array(
-            0 => '/var/local/svn/hooks/Hook',
-            1 => HF_TEST_GIT_EXAMPLE,
-            2 => '4b825dc642cb6eb9a060e54bf8d69288fbee4904',
-            3 => 'client.pre-commit',
-        );
+                  0 => '/var/local/svn/hooks/Hook',
+                  1 => HF_TEST_GIT_EXAMPLE,
+                  2 => '4b825dc642cb6eb9a060e54bf8d69288fbee4904',
+                  3 => 'client.pre-commit',
+                 );
 
         $oArguments = new Arguments($aData);
 
         $this->assertTrue($oArguments->argumentsOk(), 'Arguments false');
+    }
+
+    /**
+     * Test the values for a prepare commit message hook.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testPrepareCommitMessage()
+    {
+        $aData = array(
+                  0 => '/path/to/Hook',
+                  1 => HF_TEST_GIT_EXAMPLE,
+                  2 => 'd3c57c9bce575082af8b7a0bb6d2f836a46cb4a5',
+                  3 => '.git/COMMIT_EDITMSG',
+                  4 => 'message',
+                  5 => 'client.prepare-commit-msg'
+                 );
+
+        $oArguments = new Arguments($aData);
+
+        $this->assertTrue($oArguments->argumentsOk(), 'Arguments false');
+        $this->assertSame($aData[3], $oArguments->getCommitMessageFile(), 'Message File false');
+        $this->assertSame($aData[4], $oArguments->getCommitMessageAction(), 'Action false');
     }
 }
