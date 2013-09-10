@@ -4,7 +4,7 @@
  * @category   Tests
  * @package    Main
  * @subpackage Help
- * @author     Alexander Zimmermann <alex@zimmemann.com>
+ * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @copyright  2008-2013 Alexander Zimmermann <alex@azimmermann.com>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link       http://www.azimmermann.com/
@@ -54,7 +54,7 @@ set_include_path(implode(PATH_SEPARATOR, $aPath));
  * Define Example SVN directory and subversion test binary.
  */
 
-define('HF_TEST_SVN_BIN', __DIR__ . '/HookTest//_files/bin/');
+define('HF_TEST_SVN_BIN', __DIR__ . '/HookTest/_files/bin/');
 define('HF_TEST_SVN_EXAMPLE', __DIR__ . '/HookTest/_files/ExampleSvn/');
 define('HF_TEST_SVN_REPOSITORY', __DIR__ . '/../Repositories/');
 
@@ -62,7 +62,7 @@ define('HF_TEST_SVN_REPOSITORY', __DIR__ . '/../Repositories/');
  * Define Example GIT directory and git test binary.
  */
 
-define('HF_TEST_GIT_BIN', __DIR__ . '/HookTest//_files/bin/');
+define('HF_TEST_GIT_BIN', __DIR__ . '/HookTest/_files/bin/');
 define('HF_TEST_GIT_EXAMPLE', __DIR__ . '/HookTest/_files/ExampleGit/');
 define('HF_TEST_GIT_REPOSITORY', __DIR__ . '/../Repositories/');
 
@@ -75,11 +75,14 @@ if (false === file_exists($sFile)) {
     $sFile = 'config-dist.ini';
 }
 
-$aCfg = parse_ini_file(HF_TEST_DIR . $sFile);
-$oLog = Log::getInstance();
+$aCfg = array();
+if (true === file_exists(HF_TEST_DIR . $sFile)) {
+    $aCfg = parse_ini_file(HF_TEST_DIR . $sFile);
+}
 
-if (false === isset($aCfg['logfile'])) {
+if ((true === empty($aCfg)) || (false === isset($aCfg['logfile']))) {
     $aCfg['logfile'] = __DIR__ . '/common-test.log';
+    $aCfg['logmode'] = Log::HF_VARDUMP;
 }
 
 exec('echo > ' . $aCfg['logfile']);
@@ -88,6 +91,8 @@ if (false === isset($aCfg['logmode'])) {
     $aCfg['logmode'] = Log::HF_VARDUMP;
 }
 
+// Create a log object.
+$oLog = Log::getInstance();
 $oLog->setLogFile($aCfg['logfile']);
 $oLog->setLogMode($aCfg['logmode']);
 
