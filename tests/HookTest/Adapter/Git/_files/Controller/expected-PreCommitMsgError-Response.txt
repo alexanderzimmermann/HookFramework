@@ -1,0 +1,12 @@
+
+/+++++++++++++++++++++++++++++++
+ +  HOOK: Strict Commit Message
+
+
+Please provide a comment for the commit
+The comment should be like:
++ If you add something.
+- If you delete something.
+* If you changed something.
+
+

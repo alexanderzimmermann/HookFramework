@@ -1,0 +1,44 @@
+
+/********************************************
+ *  FILE: Filter/NotFiltered/NonPsr2File.php
+
+/+++++++++++++++++++++++++++++++
+ +  HOOK: Style Guide Increment
+
+
+  2 | ERROR | Each class must be in a namespace of at least one level (a
+    |       | top-level vendor name)
+  4 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 0
+  6 | ERROR | Line indented incorrectly; expected 4 spaces, found 0
+  6 | ERROR | No scope modifier specified for function "construct"
+  8 | ERROR | Line indented incorrectly; expected at least 8 spaces, found 0
+ 11 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 0
+ 11 | ERROR | Line indented incorrectly; expected 4 spaces, found 0
+ 13 | ERROR | Line indented incorrectly; expected at least 8 spaces, found 0
+ 14 | ERROR | Line indented incorrectly; expected at least 8 spaces, found 0
+ 16 | ERROR | Expected 1 newline at end of file; 0 found
+
+
+
+
+/+++++++++++++++++++++
+ +  HOOK: Style Guide
+
+
+FOUND 10 ERROR(S) AFFECTING 8 LINE(S)
+--------------------------------------------------------------------------------
+  2 | ERROR | Each class must be in a namespace of at least one level (a
+    |       | top-level vendor name)
+  4 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 0
+  6 | ERROR | Line indented incorrectly; expected 4 spaces, found 0
+  6 | ERROR | No scope modifier specified for function "construct"
+  8 | ERROR | Line indented incorrectly; expected at least 8 spaces, found 0
+ 11 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 0
+ 11 | ERROR | Line indented incorrectly; expected 4 spaces, found 0
+ 13 | ERROR | Line indented incorrectly; expected at least 8 spaces, found 0
+ 14 | ERROR | Line indented incorrectly; expected at least 8 spaces, found 0
+ 16 | ERROR | Expected 1 newline at end of file; 0 found
+--------------------------------------------------------------------------------
+================================================================================
+
+
