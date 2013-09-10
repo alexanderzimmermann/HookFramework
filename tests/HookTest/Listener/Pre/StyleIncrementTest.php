@@ -53,7 +53,7 @@ class StyleIncrementTest extends \PHPUnit_Framework_TestCase
     /**
      * SetUp operations.
      * @return void
-     * @author Alexander Zimmermann <alex@zimmemann.com>
+     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     protected function setUp()
     {
@@ -145,20 +145,29 @@ class StyleIncrementTest extends \PHPUnit_Framework_TestCase
         $aData = $oObject->getErrorLines();
 
         $aExp = array(
-            " 38 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 2\n",
-            " 39 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 2\n",
-            " 41 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 1\n",
-            " 53 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 2\n",
-            " 54 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 2\n",
-            " 55 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 2\n",
-            " 56 | ERROR | Line indented incorrectly; expected 4 spaces, found 1\n",
-            " 57 | ERROR | Spaces must be used to indent lines; tabs are not allowed\n",
-            " 58 | ERROR | Line indented incorrectly; expected at least 8 spaces, found 2\n",
-            " 59 | ERROR | Spaces must be used to indent lines; tabs are not allowed\n",
-            " 61 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 1\n",
-            " 67 | ERROR | Line indented incorrectly; expected at least 8 spaces, found 2\n",
-            " 68 | ERROR | Line indented incorrectly; expected at least 8 spaces, found 2\n",
-            " 72 | ERROR | Line indented incorrectly; expected at least 12 spaces, found 3\n"
+            ' 38 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 2',
+            ' 39 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 2',
+            ' 41 | ERROR | Spaces must be used to indent lines; tabs are not allowed' . "\n" .
+            ' 41 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 1',
+            ' 53 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 2',
+            ' 54 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 2',
+            ' 55 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 2',
+            ' 56 | ERROR | Spaces must be used to indent lines; tabs are not allowed' . "\n" .
+            ' 56 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 1' . "\n" .
+            ' 56 | ERROR | Line indented incorrectly; expected 4 spaces, found 1',
+            ' 57 | ERROR | Spaces must be used to indent lines; tabs are not allowed',
+            ' 58 | ERROR | Spaces must be used to indent lines; tabs are not allowed' . "\n" .
+            ' 58 | ERROR | Line indented incorrectly; expected at least 8 spaces, found 2',
+            ' 59 | ERROR | Spaces must be used to indent lines; tabs are not allowed',
+            ' 61 | ERROR | Spaces must be used to indent lines; tabs are not allowed' . "\n" .
+            ' 61 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 1',
+            ' 67 | ERROR | Spaces must be used to indent lines; tabs are not allowed' . "\n" .
+            ' 67 | ERROR | Line indented incorrectly; expected at least 8 spaces, found 2',
+            ' 68 | ERROR | Spaces must be used to indent lines; tabs are not allowed' . "\n" .
+            ' 68 | ERROR | Line indented incorrectly; expected at least 8 spaces, found 2',
+            ' 72 | ERROR | Spaces must be used to indent lines; tabs are not allowed' . "\n" .
+            ' 72 | ERROR | Line indented incorrectly; expected at least 12 spaces, found 3',
+            "\n"
         );
 
         $this->assertSame($aExp, $aData);
@@ -219,10 +228,12 @@ class StyleIncrementTest extends \PHPUnit_Framework_TestCase
 
         $aExp = array(
             "  2 | ERROR | Each class must be in a namespace of at least one level (a\n" .
-            "    |       | top-level vendor name)\n",
-            "  4 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 1\n",
-            "  8 | ERROR | Line indented incorrectly; expected at least 8 spaces, found 3\n",
-            " 11 | ERROR | Line indented incorrectly; expected 4 spaces, found 1\n"
+            '    |       | top-level vendor name)',
+            '  4 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 1',
+            '  8 | ERROR | Line indented incorrectly; expected at least 8 spaces, found 3',
+            ' 11 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 1' . "\n" .
+            ' 11 | ERROR | Line indented incorrectly; expected 4 spaces, found 1',
+            "\n"
         );
 
         $this->assertSame($aExp, $aData);

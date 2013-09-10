@@ -45,7 +45,7 @@ class IdTest extends \PHPUnit_Framework_TestCase
     /**
      * SetUp operations.
      * @return void
-     * @author Alexander Zimmermann <alex@zimmemann.com>
+     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     protected function setUp()
     {

@@ -44,7 +44,7 @@ class MessageStrictTest extends \PHPUnit_Framework_TestCase
     /**
      * SetUp operations.
      * @return void
-     * @author Alexander Zimmermann <alex@zimmemann.com>
+     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     protected function setUp()
     {
@@ -114,7 +114,7 @@ class MessageStrictTest extends \PHPUnit_Framework_TestCase
     /**
      * Data provider.
      * @return array
-     * @author Alexander Zimmermann <alex@zimmemann.com>
+     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public static function getComments()
     {

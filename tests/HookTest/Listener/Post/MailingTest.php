@@ -4,7 +4,7 @@
  * @category   Tests
  * @package    Listener
  * @subpackage Post
- * @author     Alexander Zimmermann <alex@zimmemann.com>
+ * @author     Alexander Zimmermann <alex@azimmermann.com>
  * @version    PHP 5.4
  * @link       http://www.azimmermann.com/
  * @since      File available since Release 1.0.0
@@ -44,7 +44,7 @@ class MailingTest extends \PHPUnit_Framework_TestCase
     /**
      * SetUp operations.
      * @return void
-     * @author Alexander Zimmermann <alex@zimmemann.com>
+     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     protected function setUp()
     {
