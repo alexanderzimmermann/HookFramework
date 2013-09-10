@@ -83,7 +83,7 @@
 	</target>
 
 	<target name="phploc" description="Measure project size using PHPLOC">
-		<exec executable="phploc">
+		<exec executable="phploc" output="${basedir}/build/logs/phploc.txt">
 			<arg value="--log-csv" />
 			<arg value="${basedir}/build/logs/phploc.csv" />
 			<arg path="${basedir}/library/Hook" />
@@ -145,7 +145,7 @@
 	</target>
 
 	<target name="phpcpd" description="Find duplicate code using PHPCPD">
-		<exec executable="phpcpd">
+		<exec executable="phpcpd" output="${basedir}/build/logs/phpcpd.txt">
 			<arg value="--log-pmd" />
 			<arg value="${basedir}/build/logs/pmd-cpd.xml" />
 			<arg path="${basedir}/library/Hook" />
