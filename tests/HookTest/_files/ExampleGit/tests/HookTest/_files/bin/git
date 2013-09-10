@@ -1,0 +1,70 @@
+#!/usr/bin/php
+<?php
+/**
+ * Executable for the hook tests.
+ * @category   Tests
+ * @package    Main
+ * @subpackage Core
+ * @author     Alexander Zimmermann <alex@zimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@zimmermann.com>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    PHP 5.4
+ * @link       http://www.azimmermann.com/
+ * @since      File available since Release 3.0.0
+ */
+
+/**
+    The check for the params can be skipped, cause the script is only used in the test environment.
+    Example: git diff --raw acdef098776554
+ */
+
+$aCommands = array(
+    'diff', 'var'
+);
+
+if (false === isset($argv[1])) {
+    exit;
+}
+
+// Check commands
+$sCommand = $argv[1];
+if (in_array($sCommand, $aCommands) === false) {
+
+    exit;
+}
+
+// DIFF elements.
+if ('diff' === $argv[1]) {
+    // With -- means raw, and only the changed file items.
+    if (false !== strpos($argv[2], 'raw')) {
+        $sFile = $argv[3] . '/changed';
+    } else {
+        $sFile = $argv[2] . '/diff';
+    }
+}
+
+// VAR stuff.
+if ('var' === $argv[1]) {
+    if ('GIT_AUTHOR_IDENT' === $argv[2]) {
+        $sFile = 'author-ident';
+    }
+}
+
+// Path to _files directory.
+$sPath = str_replace('bin', 'git/', __DIR__);
+
+// Prepare file for svn fake.
+$sFile = $sPath . $sFile . '.txt';
+
+// Send an error that the commit doesn't exists, when the file isn't available.
+if (false === file_exists($sFile)) {
+
+    $sResult = 'fatal: ambiguous argument \'' . $sFile
+               . '\': unknown revision or path not in the working tree.' . PHP_EOL
+               . 'Use \'--\' to separate paths from revisions' . PHP_EOL;
+
+    echo $sResult;
+    exit(1);
+}
+
+echo file_get_contents($sFile);
