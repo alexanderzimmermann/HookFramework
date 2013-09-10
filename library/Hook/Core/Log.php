@@ -115,7 +115,6 @@ class Log
     {
         $this->hasLogFile = false;
 
-        //@todo check access of file. try catch
         $this->rFile = fopen($sFile, 'a+');
 
         fwrite($this->rFile, str_repeat('=', 80) . "\n");
@@ -156,8 +155,6 @@ class Log
             $sVarDump = var_export($mVar, true);
             $sLogLine .= $sVarDump . "\n";
         }
-
-        $sLogLine .= str_repeat('-', 40) . "\n";
 
         fwrite($this->rFile, $sLogLine);
     }
