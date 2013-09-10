@@ -65,16 +65,38 @@ class Command extends CommandAbstract
     }
 
     /**
+     * Get the information of that commit (user, text message).
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function getInfo()
+    {
+        $aUser = $this->getUser();
+    }
+
+    /**
      * Get information of that commit (user, text message).
      * @return array
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function getInfo()
+    public function getUser()
     {
         $sCommand = $this->sCommand;
         $sCommand .= ' var GIT_AUTHOR_IDENT';
 
         return $this->execCommand($sCommand);
+    }
+
+    /**
+     * Get information of that commit (user, text message).
+     * @param string $sFile The file that contains the commit message (passed from arguments).
+     * @return array
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function getMessage($sFile)
+    {
+        $sFile = $this->sRepository . '/' . $sFile;
+
+        return file($sFile, FILE_IGNORE_NEW_LINES);
     }
 
     /**
@@ -99,16 +121,11 @@ class Command extends CommandAbstract
      */
     public function getContent($sFile, $sTmpFile)
     {
-        var_dump($sFile); // einfach die datei von der platte lesen.
-        $sContent = file_get_contents($sFile);
-        $sCommand = $this->sCommand;
-        $sCommand .= ' cat';
+        $sFile = $this->sRepository . '/' . $sFile;
 
-        $sCommand .= ' ' . $this->sRepository;
-        $sCommand .= ' ' . $sFile;
-        $sCommand .= ' > ' . $sTmpFile;
+        copy($sFile, $sTmpFile);
 
-        return $this->execCommand($sCommand);
+        return file($sTmpFile, FILE_IGNORE_NEW_LINES);
     }
 
     /**

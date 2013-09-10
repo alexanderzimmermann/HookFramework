@@ -15,6 +15,7 @@
 namespace Hook\Adapter\Git;
 
 use Hook\Adapter\LoaderAbstract;
+use Hook\Listener\AbstractInfo;
 
 /**
  * Loading the different listener types.
@@ -49,5 +50,22 @@ class Loader extends LoaderAbstract
         $this->checkListener();
         $this->registerListenerInfo();
         $this->registerListenerObject();
+    }
+
+    /**
+     * Register values for info listener and check it.
+     * @param AbstractInfo $oListener Name of listener objects.
+     * @return boolean
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    protected function registerListenersInfo(AbstractInfo $oListener)
+    {
+        if (true === parent::registerListenersInfo($oListener)) {
+            if ($oListener->register() !== $this->oArguments->getSubType()) {
+                return false;
+            }
+            return true;
+        }
+        return false;
     }
 }
