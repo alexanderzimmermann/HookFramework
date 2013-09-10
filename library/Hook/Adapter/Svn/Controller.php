@@ -26,6 +26,7 @@ use Hook\Commit\Object;
 use Hook\Core\Config;
 use Hook\Core\File;
 use Hook\Core\Log;
+use Hook\Core\Response;
 
 /**
  * This is the main controller for the subversion adapter.
@@ -69,22 +70,25 @@ class Controller extends ControllerAbstract
      * - Create the command object.
      * - Init the repository data.
      * - Load the listener
-     * @param Config $oConfig Main configuration.
-     * @param Log    $oLog    The log we need to log debug information and errors.
+     * @param Config   $oConfig   Main configuration.
+     * @param Log      $oLog      The log we need to log debug information and errors.
+     * @param Response $oResponse Response Object from hook.
      * @throws \Exception
      * @return boolean
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function init(Config $oConfig, Log $oLog)
+    public function init(Config $oConfig, Log $oLog, Response $oResponse)
     {
-        parent::init($oConfig, $oLog);
+        parent::init($oConfig, $oLog, $oResponse);
         $this->oLog = $oLog;
 
         if (false === $this->oArguments->argumentsOk()) {
 
-            $this->showUsage();
-            $this->oLog->writeLog(Log::HF_INFO, 'Arguments Error');
-            throw new Exception('Arguments Error. ' . $this->oArguments->getError());
+            $this->oResponse->setText($this->showUsage());
+            $sError = 'Arguments Error. ' .  $this->oArguments->getError();
+            $this->oLog->writeLog(Log::HF_INFO, $sError);
+
+            throw new Exception($sError);
         }
 
         $this->oLog->writeLog(Log::HF_DEBUG, 'controller init Arguments Ok');
@@ -191,7 +195,7 @@ class Controller extends ControllerAbstract
 
     /**
      * Show usage.
-     * @return void
+     * @return string
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function showUsage()
@@ -200,7 +204,7 @@ class Controller extends ControllerAbstract
         $sSubType  = $this->oArguments->getSubType();
         $oUsage    = new Usage($sMainType, $sSubType);
 
-        echo $oUsage->getUsage();
+        return $oUsage->getUsage();
     }
 
     /**

@@ -26,6 +26,7 @@ use Hook\Commit\Object;
 use Hook\Core\Config;
 use Hook\Core\File;
 use Hook\Core\Log;
+use Hook\Core\Response;
 
 /**
  * This is the main controller for the git adapter.
@@ -69,22 +70,25 @@ class Controller extends ControllerAbstract
      * - Create the command object.
      * - Init the repository data.
      * - Load the listener
-     * @param Config $oConfig Main configuration.
-     * @param Log    $oLog    The log we need to log debug information and errors.
+     * @param Config   $oConfig   Main configuration.
+     * @param Log      $oLog      The log we need to log debug information and errors.
+     * @param Response $oResponse Response Object from hook.
      * @throws \Exception
      * @return boolean
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function init(Config $oConfig, Log $oLog)
+    public function init(Config $oConfig, Log $oLog, Response $oResponse)
     {
-        parent::init($oConfig, $oLog);
+        parent::init($oConfig, $oLog, $oResponse);
         $this->oLog = $oLog;
 
         if (false === $this->oArguments->argumentsOk()) {
 
-            $this->showUsage();
-            $this->oLog->writeLog(Log::HF_INFO, 'Arguments Error');
-            throw new Exception('Arguments Error. ' . $this->oArguments->getError());
+            $this->oResponse->setText($this->showUsage());
+            $sError = 'Arguments Error. ' .  $this->oArguments->getError();
+            $this->oLog->writeLog(Log::HF_INFO, $sError);
+
+            throw new Exception($sError);
         }
 
         $this->oLog->writeLog(Log::HF_DEBUG, 'controller init Arguments Ok');
@@ -126,7 +130,7 @@ class Controller extends ControllerAbstract
         if (false === is_dir($sDirectory)) {
 
             // Use the Listener that come with the hookframework.
-            $sDirectory = $sRepositoryDir . 'ExampleSvn/';
+            $sDirectory = $sRepositoryDir . 'ExampleGit/';
 
             // If this directory is missing, then we are screwed.
             if (false === is_dir($sDirectory)) {
@@ -194,13 +198,13 @@ class Controller extends ControllerAbstract
                 $bResult = false;
             } else {
 
-                $this->oLog->writeLog(Log::HF_DEBUG, $oLoader->getErrors());
+                $this->oLog->writeLog(Log::HF_DEBUG, 'controller errors: ' . $oLoader->getErrors());
 
                 $bResult = false;
             }
         }
 
-        $this->oLog->writeLog(Log::HF_DEBUG, $oLoader->getErrors());
+        $this->oLog->writeLog(Log::HF_DEBUG, 'controller errors: ' . $oLoader->getErrors());
         $this->oLog->writeLog(Log::HF_VARDUMP, 'Accepted Listeners', $oLoader->getListenerFiles());
         $this->oLog->writeLog(Log::HF_INFO, 'controller Listener loaded');
         unset($oLoader);
@@ -220,23 +224,38 @@ class Controller extends ControllerAbstract
         $this->oData = new Data($this->aAdapterActions);
 
         // First contact.
-        $oInfo = new Info();
-        $aInfo = $this->oCommand->getInfo();
+        $oInfo = new Info($sTxn);
+        $aUser = $this->oCommand->getUser();
 
         // If an error occurred we abort here.
         if (true === $this->oCommand->hasError()) {
 
             $this->oResponse->setResult(1);
-            $this->oResponse->setText(implode($aInfo));
+            $this->oResponse->setText(implode($aUser));
 
             return false;
         }
 
-        $this->oData->setInfo($oInfo->parse($aInfo, $sTxn, 0));
+        // In message hooks, get the message text.
+        $aMsg = array();
+        if (false !== strpos($this->oArguments->getSubType(), 'msg')) {
+
+            $sFile = $this->oArguments->getCommitMessageFile();
+            $aMsg  = $this->oCommand->getMessage($sFile);
+        }
+
+        $oInfo->parseUser($aUser);
+        $oInfo->parseMessage($aMsg);
+        $this->oData->setInfo($oInfo->getInfoObject());
 
         // Parse array with the changed items.
         $oChanged = new Changed();
         $oChanged->parseFiles($this->oCommand->getCommitChanged());
+
+        // Log.
+        $aFiles = $oChanged->getFiles();
+        $iFiles = count($aFiles);
+        $this->oLog->writeLog(Log::HF_VARDUMP, 'controller parse found ' . $iFiles . ' files.');
 
         $aDiffLines = $this->oCommand->getCommitDiff();
         $oParser    = new Parser($oChanged->getFiles(), $aDiffLines);
@@ -303,6 +322,6 @@ class Controller extends ControllerAbstract
         $sSubType  = $this->oArguments->getSubType();
         $oUsage    = new Usage($sMainType, $sSubType);
 
-        echo $oUsage->getUsage();
+        return $oUsage->getUsage();
     }
 }

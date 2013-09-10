@@ -21,8 +21,6 @@ use Hook\Core\File;
 use Hook\Core\Response;
 use Hook\Core\Config;
 use Hook\Core\Log;
-use Hook\Commit\Info;
-use Hook\Commit\Object;
 use Hook\Commit\Data;
 use Hook\Listener\AbstractInfo;
 use Hook\Listener\AbstractObject;
@@ -103,16 +101,17 @@ abstract class ControllerAbstract
 
     /**
      * Initialize controller.
-     * @param Config $oConfig Main configuration.
-     * @param Log    $oLog    The log we need to log debug information and errors.
+     * @param Config   $oConfig   Main configuration.
+     * @param Log      $oLog      The log we need to log debug information and errors.
+     * @param Response $oResponse Response Object from hook.
      * @return boolean
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function init(Config $oConfig, Log $oLog)
+    public function init(Config $oConfig, Log $oLog, Response $oResponse)
     {
         $oLog->writeLog(Log::HF_DEBUG, 'controller init');
         $this->oConfig   = $oConfig;
-        $this->oResponse = new Response;
+        $this->oResponse = $oResponse;
 
         return true;
     }
@@ -173,8 +172,7 @@ abstract class ControllerAbstract
      */
     private function runListenerObject()
     {
-        if (empty($this->aListener['object']) === true) {
-
+        if (true === empty($this->aListener['object'])) {
             return;
         }
 
@@ -220,11 +218,15 @@ abstract class ControllerAbstract
     {
         $aObjects = $this->oData->getObjects($oListener);
 
+        $this->oLog->writeLog(Log::HF_VARDUMP, 'files ' . count($aObjects));
+
         $iMax = count($aObjects);
         for ($iFor = 0; $iFor < $iMax; $iFor++) {
 
             // Write the file to disk for the listener to "play" with it.
             $this->oFile->writeFile($aObjects[$iFor]);
+
+            $this->oLog->writeLog(Log::HF_VARDUMP, $aObjects[$iFor]);
 
             $oListener->processAction($aObjects[$iFor]);
 
@@ -250,15 +252,11 @@ abstract class ControllerAbstract
             // $sErrors = $this->oError->getMessages();
             // fwrite(STDERR, $sErrors);
 
-            $this->oLog->writeLog(Log::HF_INFO, 'errors', $sErrors);
-            $this->oLog->writeLog(Log::HF_INFO, 'exit 1');
             return;
         }
 
         $this->oResponse->setText('');
         $this->oResponse->setResult(0);
-
-        $this->oLog->writeLog(Log::HF_INFO, 'exit 0');
     }
 
     /**
@@ -274,7 +272,7 @@ abstract class ControllerAbstract
     /**
      * Determine the right controller.
      *
-     * We simply check the little difference between git and subversion.
+     * We simply check the little difference between git and subversion hook identifier.
      * That is the "." in the git hook identifier.
      * @param array $aArguments The arguments ship with this hook call.
      * @return GitController|SvnController
@@ -283,10 +281,10 @@ abstract class ControllerAbstract
     {
         $sHook = $aArguments[(count($aArguments) - 1)];
 
-        if (true === strpos($sHook, '.')) {
-            return new GitController($aArguments);
-        } else {
+        if (false === strpos($sHook, '.')) {
             return new SvnController($aArguments);
+        } else {
+            return new GitController($aArguments);
         }
     }
 }
