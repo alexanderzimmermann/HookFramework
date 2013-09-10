@@ -92,6 +92,19 @@ class Error
     }
 
     /**
+     * Print listener header.
+     * @return string
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    private function getListenerHeader()
+    {
+        $sMessage  = '/' . str_repeat('+', (strlen($this->sListener) + 10)) . "\n";
+        $sMessage .= ' +  HOOK: ' . $this->sListener . "\n\n";
+
+        return $sMessage;
+    }
+
+    /**
      * Format the info listener error messages.
      * @param Info $oInfo Commit Info Object.
      * @return void
@@ -106,10 +119,8 @@ class Error
                 $this->aInfoLines = array();
             }
 
-            $this->aInfoLines[] = $this->sListener;
-            $this->aInfoLines[] = str_repeat('=', 80);
-
-            $this->aInfoLines = array_merge($this->aInfoLines, $aLines);
+            $this->aInfoLines[] = $this->getListenerHeader();
+            $this->aInfoLines   = array_merge($this->aInfoLines, $aLines);
 
             $this->bError = true;
         }
@@ -125,16 +136,16 @@ class Error
     {
         $aLines = $oObject->getErrorLines();
 
-        if (empty($aLines) === false) {
+        if (false === empty($aLines)) {
             $sFile = $oObject->getObjectPath();
             if (false === isset($this->aLines[$sFile])) {
                 $this->aLines[$sFile] = array();
+            } else {
+                $this->aLines[$sFile][] = "\n";
             }
 
-            $this->aLines[$sFile][] = $this->sListener;
-            $this->aLines[$sFile][] = str_repeat('=', 80);
-
-            $this->aLines[$sFile] = array_merge($this->aLines[$sFile], $aLines);
+            $this->aLines[$sFile][] = $this->getListenerHeader();
+            $this->aLines[$sFile]   = array_merge($this->aLines[$sFile], $aLines);
 
             $this->bError = true;
         }
@@ -171,37 +182,38 @@ class Error
      */
     public function getMessages()
     {
-        if ((empty($this->aLines) === true) &&
-            (empty($this->aInfoLines) === true)
-        ) {
+        if ((true === empty($this->aLines)) &&
+            (true === empty($this->aInfoLines))) {
             return '';
         }
 
-        $sMessage = "\n\n" . str_repeat('~', 80) . "\n";
+        // Marks the start of the text that will be shown.
+        $sMessage = "\n";
 
         // First the Info listener lines.
-        if (empty($this->aInfoLines) === false) {
+        if (false === empty($this->aInfoLines)) {
             $sMessage .= implode("\n", $this->aInfoLines);
         }
 
         // Listener lines for the files.
-        if (empty($this->aLines) === false) {
+        if (false === empty($this->aLines)) {
             $bPrintLine = false;
             foreach ($this->aLines as $sFile => $aFileLines) {
-                if ($bPrintLine === true) {
+                if (true === $bPrintLine) {
                     $sMessage .= "\n\n";
                 }
 
-                $sMessage .= $sFile . "\n";
-                $sMessage .= str_repeat('-', 80) . "\n";
+                $sMessage .= '/' . str_repeat('*', (strlen($sFile) + 10)) . "\n";
+                $sMessage .= ' *  FILE: ' . $sFile . "\n\n";
+
                 $sMessage .= implode("\n", $aFileLines);
+                $sMessage .= str_repeat('=', 80) . "\n";
 
                 $bPrintLine = true;
             }
         }
 
         $sMessage .= "\n\n";
-        $sMessage .= str_repeat('~', 80) . "\n";
 
         $this->aLines = array();
         $this->bError = false;

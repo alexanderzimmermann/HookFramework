@@ -1,9 +1,0 @@
-Kommentar bitte wie folgt einleiten:
-+ Wenn etwas neues hinzugefuegt wird.
-- Wenn etwas entfernt wird.
-* Bei Aenduerungen der Datei
-Der Kommentar sollte aussagekraeftig sein!
-Bitte vollstaendige Saetze!
-Subjekt, Praedikat, Objekt!
-Bitte vollstaendige Saetze und Woerter!
-Subjekt, Praedikat, Objekt!

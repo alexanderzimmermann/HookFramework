@@ -41,7 +41,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
     /**
      * SetUp Operations.
      * @return void
-     * @author Alexander Zimmermann <alex@zimmemann.com>
+     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     protected function setUp()
     {
@@ -103,37 +103,24 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
      */
     public function testErrorInfo()
     {
-        // Create objects for Info and Object.
-        $aFunctions = array(
-            'getObjectPath', 'getErrorLines'
-        );
-
-        $sFile      = __DIR__ . '/_files/error_lines_info.txt';
+        $sFile      = __DIR__ . '/_files/Error/lines_info.txt';
         $sErrorInfo = file_get_contents($sFile);
         $aErrorInfo = explode("\n", $sErrorInfo);
 
-        $aArguments = array(
-            '666-1', 666, 'Duchess', '21.12.2008', 'Test'
-        );
-
-        $oInfo = $this->getMock('Hook\Commit\Info', $aFunctions, $aArguments);
+        $oInfo = $this->getMock('Hook\Commit\Info', array(), array(), '', false);
         $oInfo->expects($this->any())
-            ->method('getObjectPath')
-            ->will($this->returnValue('/path/to/a/file/in/svn.ext'));
+              ->method('getObjectPath')
+              ->will($this->returnValue('/path/to/a/file/in/svn.ext'));
 
         $oInfo->expects($this->any())
-            ->method('getErrorLines')
-            ->will($this->returnValue($aErrorInfo));
+              ->method('getErrorLines')
+              ->will($this->returnValue($aErrorInfo));
 
-        $sExpected = "\n\n";
-        $sExpected .= str_repeat('~', 80) . "\n";
-        $sExpected .= "\n";
-        $sExpected .= str_repeat('=', 80) . "\n";
-        $sExpected .= $sErrorInfo;
-        $sExpected .= "\n\n";
-        $sExpected .= str_repeat('~', 80) . "\n";
-
+        $this->oError->setListener('ErrorTest Listener');
         $this->oError->processActionInfo($oInfo);
+
+        $sExpected = __DIR__ . '/_files/Error/expected-' . __FUNCTION__  .'.txt';
+        $sExpected = file_get_contents($sExpected);
 
         $this->assertEquals($sExpected, $this->oError->getMessages());
     }
@@ -145,58 +132,28 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
      */
     public function testErrorObject()
     {
-        // Create objects for Info and Object.
-        $aArguments = array(
-            '666-1', 666, 'Duchess', '21.12.2008', 'Test'
-        );
-
-        $oInfo = $this->getMock('Hook\Commit\Info', array(), $aArguments);
-
         // Commit Object.
-        $sFile        = __DIR__ . '/_files/error_lines_object.txt';
+        $sFile        = __DIR__ . '/_files/Error/lines_object.txt';
         $sFile        = file_get_contents($sFile);
         $aErrorObject = explode("\n", $sFile);
 
-        $aFunctions = array(
-            'getObjectPath', 'getErrorLines'
-        );
-
-        $aParams = array(
-            array(
-                'txn'    => '666-1',
-                'rev'    => 666,
-                'action' => 'U',
-                'item'   => '/path/to/file',
-                'real'   => '/path/to/file',
-                'ext'    => '',
-                'isdir'  => false,
-                'info'   => $oInfo,
-                'props'  => array(),
-                'lines'  => array()
-            )
-        );
-
-        $oObject = $this->getMock('Hook\Commit\Object', $aFunctions, $aParams);
+        $oObject = $this->getMock('Hook\Commit\Object', array(), array(), '', false);
         $oObject->expects($this->any())
-            ->method('getObjectPath')
-            ->will($this->returnValue('/path/to/a/file/in/svn.txt'));
+                 ->method('getObjectPath')
+                 ->will($this->returnValue('/path/to/a/file/in/svn.txt'));
 
         $oObject->expects($this->any())
-            ->method('getErrorLines')
-            ->will($this->returnValue($aErrorObject));
+                ->method('getErrorLines')
+                ->will($this->returnValue($aErrorObject));
 
+        $this->oError->setListener('ErrorTest Listener');
         $this->oError->processActionObject($oObject);
 
         // Tests.
         $this->assertTrue($this->oError->hasError(), 'getError not true.');
 
-        $sExpected = "\n\n" . str_repeat('~', 80) . "\n";
-        $sExpected .= '/path/to/a/file/in/svn.txt' . "\n";
-        $sExpected .= str_repeat('-', 80) . "\n\n";
-        $sExpected .= str_repeat('=', 80) . "\n";
-        $sExpected .= $sFile;
-        $sExpected .= "\n\n";
-        $sExpected .= str_repeat('~', 80) . "\n";
+        $sExpected = __DIR__ . '/_files/Error/expected-' . __FUNCTION__  .'.txt';
+        $sExpected = file_get_contents($sExpected);
 
         $this->assertEquals($sExpected, $this->oError->getMessages(), 'getMessage false.');
     }
@@ -208,77 +165,42 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
      */
     public function testErrorObjectTwoObjects()
     {
-        // Create objects for Info and Object.
-        $aArguments = array(
-            '666-1', 666, 'alexander', '21.12.2008', 'Test'
-        );
-
-        $oInfo = $this->getMock('Hook\Commit\Info', array(), $aArguments);
-
         // Commit Object.
-        $sFile        = __DIR__ . '/_files/error_lines_object.txt';
+        $sFile        = __DIR__ . '/_files/Error/lines_object.txt';
         $sFile        = file_get_contents($sFile);
         $aErrorObject = explode("\n", $sFile);
 
-        $aFunctions = array(
-            'getObjectPath', 'getErrorLines'
-        );
 
-        $aParams = array(
-            array(
-                'txn'    => '666-1',
-                'rev'    => 666,
-                'action' => 'U',
-                'item'   => '/path/to/file',
-                'real'   => '/path/to/file',
-                'ext'    => '',
-                'isdir'  => false,
-                'info'   => $oInfo,
-                'props'  => array(),
-                'lines'  => array()
-            )
-        );
-
-        $oObject = $this->getMock('Hook\Commit\Object', $aFunctions, $aParams);
+        $oObject = $this->getMock('Hook\Commit\Object', array(), array(), '', false);
         $oObject->expects($this->any())
-            ->method('getObjectPath')
-            ->will($this->returnValue('/path/to/a/file/in/svn.txt'));
+                ->method('getObjectPath')
+                ->will($this->returnValue('/path/to/a/file/in/svn.txt'));
 
         $oObject->expects($this->any())
-            ->method('getErrorLines')
-            ->will($this->returnValue($aErrorObject));
+                ->method('getErrorLines')
+                ->will($this->returnValue($aErrorObject));
 
+        $this->oError->setListener('ErrorTest Listener 1');
         $this->oError->processActionObject($oObject);
 
         // Simulate a 2nd file.
-        $oObject = $this->getMock('Hook\Commit\Object', $aFunctions, $aParams);
+        $oObject = $this->getMock('Hook\Commit\Object', array(), array(), '', false);
         $oObject->expects($this->any())
-            ->method('getObjectPath')
-            ->will($this->returnValue('/path/to/a/file/in/info.txt'));
+                ->method('getObjectPath')
+                ->will($this->returnValue('/path/to/a/file/in/info.txt'));
 
         $oObject->expects($this->any())
-            ->method('getErrorLines')
-            ->will($this->returnValue($aErrorObject));
+                ->method('getErrorLines')
+                ->will($this->returnValue($aErrorObject));
 
+        $this->oError->setListener('ErrorTest Listener 2');
         $this->oError->processActionObject($oObject);
 
-        // Tests.
+        // Asserts.
+        $sExpected = __DIR__ . '/_files/Error/expected-' . __FUNCTION__  .'.txt';
+        $sExpected = file_get_contents($sExpected);
+
         $this->assertTrue($this->oError->hasError(), 'getError not true.');
-
-        $sExpected = "\n\n" . str_repeat('~', 80) . "\n";
-        $sExpected .= '/path/to/a/file/in/svn.txt' . "\n";
-        $sExpected .= str_repeat('-', 80) . "\n\n";
-        $sExpected .= str_repeat('=', 80) . "\n";
-        $sExpected .= $sFile;
-        $sExpected .= "\n\n";
-
-        $sExpected .= '/path/to/a/file/in/info.txt' . "\n";
-        $sExpected .= str_repeat('-', 80) . "\n\n";
-        $sExpected .= str_repeat('=', 80) . "\n";
-        $sExpected .= $sFile;
-        $sExpected .= "\n\n";
-        $sExpected .= str_repeat('~', 80) . "\n";
-
         $this->assertEquals($sExpected, $this->oError->getMessages(), 'Messages not equal.');
     }
 }

@@ -1,0 +1,9 @@
+Please start the comment as follows:
++ If something new is added.
+- If something is deleted.
+* If something is changed.
+The comment should be more precisely!
+Comment should contain whole sentences!
+Subject, Predicate, Object!
+Comment should contain whole sentences and more precisely
+Subject, Predicate, Object!
