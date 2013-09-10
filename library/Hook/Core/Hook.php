@@ -70,6 +70,16 @@ class Hook
     }
 
     /**
+     * Set the response object.
+     * @param Response $oResponse The response object.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function setResponse(Response $oResponse)
+    {
+        $this->oResponse = $oResponse;
+    }
+
+    /**
      * Initialize hook.
      * @return boolean
      * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -117,12 +127,12 @@ class Hook
 
             // Find the right controller.
             $oController = ControllerAbstract::factory($this->aArguments);
-            $oController->init($this->oConfig, $this->oLog);
+            $oController->init($this->oConfig, $this->oLog, $this->oResponse);
             $this->oResponse = $oController->run();
 
             // And we are done.
             $this->oLog->writeLog(Log::HF_INFO, 'hook response code: ' . $this->oResponse->getResult());
-            $this->oLog->writeLog(Log::HF_INFO, 'hook response message: ' . $this->oResponse->getText());
+            $this->oLog->writeLog(Log::HF_INFO, 'hook response message: ' . "\n" . $this->oResponse->getText());
             $this->oLog->writeLog(Log::HF_INFO, 'hook run end');
 
             $this->oResponse->send();
@@ -130,9 +140,14 @@ class Hook
 
         } catch (\Exception $oE) {
 
-            $this->oLog->writeLog(Log::HF_INFO, 'hook error: ' . $oE->getMessage());
+            $sMsg = $oE->getMessage() . "\n" . $oE->getFile() . ':' . $oE->getLine() . "\n";
 
-            $sMsg = $oE->getMessage() . ' ' . $oE->getFile() . ':' . $oE->getLine();
+            $this->oLog->writeLog(Log::HF_INFO, 'hook error: ' . $sMsg);
+            $this->oLog->writeLog(Log::HF_INFO, 'hook run end');
+
+            $this->oResponse->send();
+
+            $sMsg = $oE->getMessage();
 
             $this->oResponse->setText($sMsg);
             $this->oResponse->send();
