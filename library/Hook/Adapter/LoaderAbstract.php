@@ -17,7 +17,6 @@ namespace Hook\Adapter;
 use \DirectoryIterator;
 use Hook\Adapter\ArgumentsAbstract;
 use Hook\Core\Config;
-
 use Hook\Listener\AbstractInfo;
 use Hook\Listener\AbstractObject;
 
