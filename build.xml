@@ -123,7 +123,7 @@
 	<target name="phpcs"
 	        description="Find coding standard violations using PHP_CodeSniffer">
 		<exec executable="phpcs">
-			<arg value="--standard=${basedir}/build/PHPCS" />
+			<arg value="--standard=PSR2" />
 			<arg value="--extensions=php" />
 			<arg value="--ignore=Autoload.php" />
 			<arg path="${basedir}/library/Hook" />
@@ -134,9 +134,9 @@
 	<target name="phpcs-ci"
 	        description="Find coding standard violations using PHP_CodeSniffer">
 		<exec executable="phpcs" output="/dev/null">
-			<arg value="--report=checkstyle" />
-			<arg value="--report-file=${basedir}/build/logs/checkstyle.xml" />
-			<arg value="--standard=${basedir}/build/PHPCS" />
+			<arg value="--report=full" />
+			<arg value="--report-file=${basedir}/build/logs/checkstyle.txt" />
+			<arg value="--standard=PSR2" />
 			<arg value="--extensions=php" />
 			<arg value="--ignore=Autoload.php" />
 			<arg path="${basedir}/library/Hook" />
