@@ -62,7 +62,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadConfiguration()
     {
-        $this->oConfig->loadConfigFile(__DIR__ . '/_files/test-config.ini');
+        $this->oConfig->loadConfigFile(__DIR__ . '/_files/Config/test-config.ini');
 
         $aExp = array(
             'Filter'   => array(
@@ -106,7 +106,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetStandardConfiguration()
     {
-        $this->oConfig->loadConfigFile(__DIR__ . '/_files/test-config.ini');
+        $this->oConfig->loadConfigFile(__DIR__ . '/_files/Config/test-config.ini');
 
         $sExpected = '/path/to/hookframework/tests/Core/svn/';
         $this->assertSame($sExpected, $this->oConfig->getConfiguration('vcs', 'binary_path'));
