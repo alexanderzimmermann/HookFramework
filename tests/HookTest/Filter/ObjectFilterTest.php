@@ -41,7 +41,7 @@ class ObjectFilterTest extends \PHPUnit_Framework_TestCase
     /**
      * SetUp operation.
      * @return void
-     * @author Alexander Zimmermann <alex@zimmemann.com>
+     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     protected function setUp()
     {
@@ -51,7 +51,7 @@ class ObjectFilterTest extends \PHPUnit_Framework_TestCase
     /**
      * Data provider for AddDirectoryToFilter test.
      * @return array
-     * @author Alexander Zimmermann <alex@zimmemann.com>
+     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public static function getDirectories()
     {
@@ -89,7 +89,7 @@ class ObjectFilterTest extends \PHPUnit_Framework_TestCase
      * @param array   $aData     Test data set.
      * @param integer $iExpected Expected entries count.
      * @return void
-     * @author       Alexander Zimmermann <alex@zimmemann.com>
+     * @author       Alexander Zimmermann <alex@azimmermann.com>
      * @dataProvider getDirectories
      */
     public function testAddDirectoryToFilter(array $aData, $iExpected)
@@ -106,7 +106,7 @@ class ObjectFilterTest extends \PHPUnit_Framework_TestCase
     /**
      * Data provider for AddFileToFilter test.
      * @return array
-     * @author Alexander Zimmermann <alex@zimmemann.com>
+     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public static function getFiles()
     {
@@ -153,7 +153,7 @@ class ObjectFilterTest extends \PHPUnit_Framework_TestCase
     /**
      * Data provider for addDirectoryToWhiteList test.
      * @return array
-     * @author Alexander Zimmermann <alex@zimmemann.com>
+     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public static function getWhiteListDirectories()
     {
@@ -208,7 +208,7 @@ class ObjectFilterTest extends \PHPUnit_Framework_TestCase
     /**
      * Data provider for AddFileToFilter test.
      * @return array
-     * @author Alexander Zimmermann <alex@zimmemann.com>
+     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public static function getWhiteListFiles()
     {

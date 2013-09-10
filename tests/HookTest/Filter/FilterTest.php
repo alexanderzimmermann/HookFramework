@@ -38,7 +38,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     /**
      * Test add Directory to filter.
      * @return void
-     * @author Alexander Zimmermann <alex@zimmemann.com>
+     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function testFilter()
     {
@@ -142,7 +142,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     /**
      * Test the white list directories.
      * @return void
-     * @author Alexander Zimmermann <alex@zimmemann.com>
+     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function testHandleWhiteListDirectories()
     {
