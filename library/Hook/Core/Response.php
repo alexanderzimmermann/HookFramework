@@ -46,7 +46,7 @@ class Response
     private $sText = 'no response text given or exit is ok.';
 
     /**
-     * Cosntructor
+     * Constructor.
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function __construct($rStream = STDERR)
