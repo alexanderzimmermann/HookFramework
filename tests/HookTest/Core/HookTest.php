@@ -15,8 +15,9 @@
 namespace HookTest\Core;
 
 use Hook\Core\Hook;
+use Hook\Core\Response;
 
-require_once HF_TEST_DIR . 'Bootstrap.php';
+require_once __DIR__ . '/../../Bootstrap.php';
 
 /**
  * Hook Tests.
@@ -33,51 +34,27 @@ require_once HF_TEST_DIR . 'Bootstrap.php';
 class HookTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Switch for ob start..
-     * @var boolean
-     */
-    private $bObStart;
-
-    /**
-     * Setup.
-     * @return void
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    protected function setUp()
-    {
-        $this->bObStart = false;
-    }
-
-    /**
-     * Tear down.
-     * @return void
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    protected function tearDown()
-    {
-        if (true === $this->bObStart) {
-
-            ob_end_clean();
-        }
-    }
-
-    /**
      * Test arguments error throwing exception.
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function testWrongArguments()
     {
         $aData = array(
-            0 => '/var/local/svn/hooks/Hook',
-            1 => HF_TEST_SVN_EXAMPLE,
-            2 => 'phoebe',
-            3 => 'pre-commit'
-        );
+                  0 => '/var/local/svn/hooks/Hook',
+                  1 => HF_TEST_SVN_EXAMPLE,
+                  2 => 'phoebe',
+                  3 => 'pre-commit'
+                 );
 
-        $oHook = new Hook($aData);
+        $oResponse = new Response(fopen('/dev/null', 'w'));
+        $oHook     = new Hook($aData);
+        $oHook->setResponse($oResponse);
         $iExit = $oHook->run();
 
+        $sExpected = 'Arguments Error. Transaction missing or wrong format.';
+
         $this->assertEquals(1, $iExit, 'Exit code false.');
+        $this->assertSame($sExpected, $oResponse->getText(), 'Text is false.');
     }
 
     /**
@@ -88,11 +65,11 @@ class HookTest extends \PHPUnit_Framework_TestCase
     public function testHookStart()
     {
         $aData = array(
-            0 => '/var/local/svn/hooks/Hook',
-            1 => HF_TEST_SVN_EXAMPLE,
-            2 => 'alice',
-            3 => 'start-commit'
-        );
+                  0 => '/var/local/svn/hooks/Hook',
+                  1 => HF_TEST_SVN_EXAMPLE,
+                  2 => 'alice',
+                  3 => 'start-commit'
+                 );
 
         $oHook = new Hook($aData);
         $iExit = $oHook->run();
@@ -108,21 +85,22 @@ class HookTest extends \PHPUnit_Framework_TestCase
     public function testHookPreCommitWithError()
     {
         $aData = array(
-            0 => '/var/local/svn/hooks/Hook',
-            1 => HF_TEST_SVN_EXAMPLE,
-            2 => '666-1',
-            3 => 'pre-commit',
-        );
+                  0 => '/var/local/svn/hooks/Hook',
+                  1 => HF_TEST_SVN_EXAMPLE,
+                  2 => '666-1',
+                  3 => 'pre-commit',
+                 );
 
-        ob_start();
-        $this->bObStart = true;
-        $oHook          = new Hook($aData);
-        $iExit          = $oHook->run();
+        $oResponse = new Response(fopen('/dev/null', 'w'));
+        $oHook = new Hook($aData);
+        $oHook->setResponse($oResponse);
+        $iExit = $oHook->run();
 
-        $this->assertEquals(1, $iExit);
+        $sFile     = __DIR__ . '/_files/Hook/expected-' . __FUNCTION__ . '.txt';
+        $sExpected = file_get_contents($sFile);
 
-        ob_end_clean();
-        $this->bObStart = false;
+        $this->assertEquals(1, $iExit, 'Exit value is not 1.');
+        $this->assertSame($sExpected, $oResponse->getText(), 'Result text false.');
     }
 
     /**
@@ -133,11 +111,11 @@ class HookTest extends \PHPUnit_Framework_TestCase
     public function testHookPreCommitOk()
     {
         $aData = array(
-            0 => '/var/local/svn/hooks/Hook',
-            1 => HF_TEST_SVN_EXAMPLE,
-            2 => '74-1',
-            3 => 'pre-commit',
-        );
+                  0 => '/var/local/svn/hooks/Hook',
+                  1 => HF_TEST_SVN_EXAMPLE,
+                  2 => '74-1',
+                  3 => 'pre-commit',
+                 );
 
         $oHook = new Hook($aData);
         $iExit = $oHook->run();
@@ -153,11 +131,11 @@ class HookTest extends \PHPUnit_Framework_TestCase
     public function testHookPost()
     {
         $aData = array(
-            0 => '/var/local/svn/hooks/Hook',
-            1 => HF_TEST_SVN_EXAMPLE,
-            2 => 76,
-            3 => 'post-commit',
-        );
+                  0 => '/var/local/svn/hooks/Hook',
+                  1 => HF_TEST_SVN_EXAMPLE,
+                  2 => 76,
+                  3 => 'post-commit',
+                 );
 
         $oHook = new Hook($aData);
         $iExit = $oHook->run();
@@ -173,15 +151,20 @@ class HookTest extends \PHPUnit_Framework_TestCase
     public function testNonExistingRevision()
     {
         $aData = array(
-            0 => '/var/local/svn/hooks/Hook',
-            1 => HF_TEST_SVN_EXAMPLE,
-            2 => 10,
-            3 => 'post-commit',
-        );
+                  0 => '/var/local/svn/hooks/Hook',
+                  1 => HF_TEST_SVN_EXAMPLE,
+                  2 => 10,
+                  3 => 'post-commit',
+                 );
 
-        $oHook = new Hook($aData);
+        $oResponse = new Response(fopen('/dev/null', 'w'));
+        $oHook     = new Hook($aData);
+        $oHook->setResponse($oResponse);
         $iExit = $oHook->run();
 
-        $this->assertEquals(1, $iExit);
+        $sExpected = 'svnlook: E160006: No Revision 10';
+
+        $this->assertEquals(1, $iExit, 'Exit value is not 1.');
+        $this->assertSame($sExpected, $oResponse->getText(), 'Result text false.');
     }
 }
