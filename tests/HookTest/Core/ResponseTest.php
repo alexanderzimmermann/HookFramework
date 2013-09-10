@@ -15,7 +15,7 @@ namespace HookTest\Core;
 
 use Hook\Core\Response;
 
-require_once HF_TEST_DIR . 'Bootstrap.php';
+require_once __DIR__ . '/../../Bootstrap.php';
 
 /**
  * Tests for response object.
@@ -94,6 +94,6 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->oResponse->setText($sMsg);
         $this->oResponse->send();
 
-        $this->assertFileEquals(__DIR__ . '/_files/expected.file', $sFile);
+        $this->assertFileEquals(__DIR__ . '/_files/Response/expected.file', $sFile);
     }
 }
