@@ -31,33 +31,38 @@ use Hook\Commit\Info as InfoObject;
 class Info
 {
     /**
-     * Parse the information.
-     * @param array   $aData Commit info lines.
-     * @param string  $sTxn  Transaction identifier.
-     * @param integer $iRev  Revision number.
-     * @internal param string $sRev Revision identifier.
-     * @return InfoObject
-     * @author   Alexander Zimmermann <alex@azimmermann.com>
+     * Collection information.
+     * @var array
      */
-    public function parse(array $aData, $sTxn, $iRev)
-    {
-        // Set defaults.
-        $aInfo             = array();
-        $aInfo['txn']      = $sTxn;
-        $aInfo['rev']      = $iRev;
-        $aInfo['user']     = '';
-        $aInfo['datetime'] = '';
-        $aInfo['message']  = '';
+    private $aInfo = array();
 
+    /**
+     * Constructor.
+     * @param string $sSha1 Commit identifier.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function __construct($sSha1)
+    {
+        $this->aInfo['txn'] = $sSha1;
+        $this->aInfo['rev'] = 0;
+    }
+
+    /**
+     * Parse the user information to parse.
+     * @param array $aUser User data.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function parseUser(array $aUser)
+    {
         // This elements in this order.
         $aProperties = array(
-                        'user', 'email', 'datetime', 'timezone'
-                       );
+            'user', 'email', 'datetime', 'timezone'
+        );
 
         // At the moment only one line is expected.
         // Example: alexanderzimmermann <alex@azimmermann.com> 1377095938 +0200
-        $aData = explode(' ', array_shift($aData));
-        $iMax  = count($aData);
+        $aUser = explode(' ', array_shift($aUser));
+        $iMax  = count($aUser);
 
         // Discard empty elements. Count could also be 0.
         if ($iMax > 4) {
@@ -65,19 +70,38 @@ class Info
         }
 
         for ($iFor = 0; $iFor < $iMax; $iFor++) {
-            $aInfo[$aProperties[$iFor]] = trim($aData[$iFor]);
+            $this->aInfo[$aProperties[$iFor]] = trim($aUser[$iFor]);
         }
 
         // Convert timestamp.
-        $aInfo['datetime'] = strftime('%Y-%m-%d %H:%M:%S', $aInfo['datetime']);
+        $this->aInfo['datetime'] = strftime('%Y-%m-%d %H:%M:%S', $this->aInfo['datetime']);
+    }
 
+    /**
+     * Parse the commit message.
+     * @param array $aData Message text.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function parseMessage(array $aData)
+    {
+        $this->aInfo['message'] = implode(PHP_EOL, $aData);
+    }
+
+    /**
+     * Get the info object.
+     * @return Info
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function getInfoObject()
+    {
         $oInfo = new InfoObject(
-            $aInfo['txn'],
-            $aInfo['rev'],
-            $aInfo['user'],
-            $aInfo['datetime'],
-            $aInfo['email'],
-            $aInfo['timezone']
+                    $this->aInfo['txn'],
+                    $this->aInfo['rev'],
+                    $this->aInfo['user'],
+                    $this->aInfo['datetime'],
+                    $this->aInfo['message'],
+                    $this->aInfo['email'],
+                    $this->aInfo['timezone']
         );
 
         return $oInfo;
