@@ -32,28 +32,31 @@ if (in_array($sCommand, $aCommands) === false) {
 
     exit;
 }
-// var_dump($argv);
 
-// DIFF Elements
-if (strpos($argc[2], '--')) {
-
-    $sOption = $argv[2];
-    $sTxn    = $argv[3];
-} else {
-    $sTxn = $argv[2];
+// DIFF elements.
+if ('diff' === $argv[1]) {
+    // With -- means raw, and only the changed file items.
+    if (false !== strpos($argv[2], 'raw')) {
+        $sFile = $argv[3] . '/changed';
+        $sTxn  = $argv[3];
+    } else {
+        $sFile = $argv[2] . '/diff';
+        $sTxn  = $argv[2];
+    }
 }
 
-$sOption = $argv[2];
-
+// VAR stuff.
+if ('var' === $argv[1]) {
+    if ('GIT_AUTHOR_IDENT' === $argv[2]) {
+        $sFile = 'author-ident';
+    }
+}
 
 // Path to _files directory.
-$sPath = str_replace('bin', '', __DIR__);
-
-// Determine file.
-$sCatFile = basename($sCatFile);
+$sPath = str_replace('bin', 'git/', __DIR__);
 
 // Prepare file for svn fake.
-$sFile = $sPath . $sTxn . '.txt';
+$sFile = $sPath . $sFile . '.txt';
 
 // Send an error that the commit doesn't exists, when the file isn't available.
 if (false === file_exists($sFile)) {
