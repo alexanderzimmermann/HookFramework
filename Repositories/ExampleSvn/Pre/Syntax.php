@@ -56,7 +56,7 @@ class Syntax extends AbstractObject
 
     /**
      * Execute the action.
-     * @param Object $oObject Directory / File-Object.
+     * @param \Hook\Commit\Object $oObject Directory / File-Object.
      * @return void
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */

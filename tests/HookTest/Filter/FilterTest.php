@@ -226,4 +226,77 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         // Tests.
         $this->assertEquals(4, count($aActual), 'Count false.');
     }
+
+    /**
+     * Test for handle directories, when no directory is given.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testHandleNoDirectoryElement()
+    {
+        // Create commit info object.
+        $sUser = 'Juliana';
+        $sDate = '2010-10-09 09:13:38';
+        $sMsg  = '+ A message for the commit';
+
+        $oInfo = new Info('74-1', 0, $sUser, $sDate, $sMsg);
+
+        // Create commit file objects.
+        $sBase  = 'hookframework/trunk/filter_directory/';
+        $sBase2 = $sBase . 'allowed_dir/';
+        $sReal  = 'filter_directory/allowed_dir/';
+
+        // Files.
+        $aFiles[0]['path'] = $sBase;
+        $aFiles[0]['ext']  = '';
+        $aFiles[0]['dir']  = true;
+        $aFiles[1]['path'] = $sBase . 'filter_file1.php';
+        $aFiles[1]['real'] = $sReal . 'filter_file1.php';
+        $aFiles[1]['ext']  = 'php';
+        $aFiles[1]['dir']  = false;
+        $aFiles[2]['path'] = $sBase . 'filter_file2.php';
+        $aFiles[2]['real'] = $sReal . 'filter_file2.php';
+        $aFiles[2]['ext']  = 'php';
+        $aFiles[2]['dir']  = false;
+        $aFiles[3]['path'] = $sBase2 . 'allowed_file1.php';
+        $aFiles[3]['real'] = $sReal . 'allowed_file1.php';
+        $aFiles[3]['ext']  = 'php';
+        $aFiles[3]['dir']  = false;
+        $aFiles[4]['path'] = $sBase2 . 'allowed_file2.php';
+        $aFiles[4]['real'] = $sReal . 'allowed_file2.php';
+        $aFiles[4]['ext']  = 'php';
+        $aFiles[4]['dir']  = false;
+
+        // Create the test data.
+        $iMax = count($aFiles);
+        for ($iFor = 0; $iFor < $iMax; $iFor++) {
+            $aParams = array(
+                'txn'    => '74-1',
+                'rev'    => 0,
+                'action' => 'A',
+                'item'   => $aFiles[$iFor]['path'],
+                'real'   => $aFiles[$iFor]['path'],
+                'isdir'  => $aFiles[$iFor]['dir'],
+                'ext'    => $aFiles[$iFor]['ext'],
+                'props'  => array(),
+                'lines'  => null,
+                'info'   => $oInfo
+            );
+
+            $aObjects[] = new Object($aParams);
+        }
+
+        // Create filter object.
+        $oObjectFilter = new ObjectFilter();
+
+        // Allow this directory and all its sub directories.
+        $oObjectFilter->addDirectoryToWhiteList($sBase2);
+
+        // Create filter and get the filtered objects.
+        $oFilter = new Filter($aObjects);
+        $aActual = $oFilter->getFilteredFiles($oObjectFilter);
+
+        // Tests.
+        $this->assertEquals(7, count($aActual), 'Count false.');
+    }
 }

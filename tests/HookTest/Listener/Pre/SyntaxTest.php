@@ -165,7 +165,39 @@ class SyntaxTest extends \PHPUnit_Framework_TestCase
      */
     public function testTemporaryFileNotAvailable()
     {
-        $x = 'Could not open input file: /tmp/666-1-trunk_tmp_newfile1.php';
+        // Test file from SVN.
+        $sFile = __DIR__ . '/_files/correct_file1.php';
+
+        $sUser = 'enya';
+        $sDate = '2008-12-30 12:22:23';
+        $sMsg  = '* Comment to this commit';
+        $oInfo = new Info('666-1', 666, $sUser, $sDate, $sMsg);
+
+        $aParams = array(
+            'txn'    => '666-1',
+            'rev'    => 666,
+            'action' => 'U',
+            'item'   => $sFile,
+            'real'   => $sFile,
+            'ext'    => 'php',
+            'isdir'  => false,
+            'props'  => array(),
+            'lines'  => null,
+            'info'   => $oInfo
+        );
+
+        $aExpected = array(
+                      'Could not open input file: /tmp/666-1-_home_alexander_Projekte_' .
+                      'HookFramework_tests_HookTest_Listener_Pre__files_correct_file1.php'
+                     );
+
+        $oObject        = new Object($aParams);
+        $this->sTmpPath = $oObject->getTmpObjectPath();
+
+        $this->oSyntaxListener->processAction($oObject);
+
+        $aData = $oObject->getErrorLines();
+        $this->assertSame($aExpected, $aData);
     }
 
 }

@@ -1,0 +1,16 @@
+#!/usr/bin/php
+<?php
+/**
+ * Executable for the hook tests.
+ * @category   Tests
+ * @package    Main
+ * @subpackage Core
+ * @author     Alexander Zimmermann <alex@zimmermann.com>
+ * @copyright  2008-2013 Alexander Zimmermann <alex@zimmermann.com>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    PHP 5.4
+ * @link       http://www.azimmermann.com/
+ * @since      File available since Release 3.0.0
+ */
+
+echo 'usage: git [--version] ';

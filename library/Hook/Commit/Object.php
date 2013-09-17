@@ -75,12 +75,6 @@ class Object extends Base
     private $sTmpObjectPath;
 
     /**
-     * Actual properties of the object.
-     * @var array
-     */
-    private $aProperties;
-
-    /**
      * Changed properties.
      * @var array
      */
@@ -202,16 +196,6 @@ class Object extends Base
     public function getTmpObjectPath()
     {
         return $this->sTmpObjectPath;
-    }
-
-    /**
-     * Return the actual properties.
-     * @return array
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function getActualProperties()
-    {
-        return $this->aProperties;
     }
 
     /**

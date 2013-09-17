@@ -70,7 +70,7 @@ class Command extends CommandAbstract
      */
     public function getInfo()
     {
-        $aUser = $this->getUser();
+        return $this->getUser();
     }
 
     /**
@@ -144,8 +144,8 @@ class Command extends CommandAbstract
         }
 
         // Check command line output. If any of this words is in the result, an error occurred.
-        if ((strpos($aData[0], 'git --help')) ||
-            (strpos($aData[0], 'usage'))) {
+        if ((false !== strpos($aData[0], 'git --help')) ||
+            (false !== strpos($aData[0], 'usage'))) {
             $this->bError = true;
             return $aData;
         }

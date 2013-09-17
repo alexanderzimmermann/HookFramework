@@ -40,21 +40,8 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoaderFailures()
     {
-        $aFunctions = array(
-            'getRepositoryName', 'getMainType', 'getSubActions'
-        );
-
-        $aArguments = array(
-            array(
-                0 => '/var/local/svn/hooks/Hook',
-                1 => HF_TEST_SVN_EXAMPLE,
-                2 => 'Juliana',
-                3 => 'pre-commit'
-            )
-        );
-
         // Main type usually is pre, post and start but here Failures to check listener.
-        $oArguments = $this->getMock('Hook\Adapter\Svn\Arguments', $aFunctions, $aArguments);
+        $oArguments = $this->getMock('Hook\Adapter\Svn\Arguments', array(), array(), '', false);
 
         $oArguments->expects($this->any())
             ->method('getRepositoryName')

@@ -104,28 +104,6 @@ class Arguments extends ArgumentsAbstract implements ArgumentsInterface
     }
 
     /**
-     * Arguments Ok.
-     * @return boolean
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function argumentsOk()
-    {
-        $this->checkArguments();
-
-        return $this->bArgumentsOk;
-    }
-
-    /**
-     * Return complete hook type.
-     * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function getMainHook()
-    {
-        return $this->sMainType . $this->sDelimiter . $this->sSubType;
-    }
-
-    /**
      * Returns all available sub actions from the main action.
      * @return array
      * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -197,25 +175,6 @@ class Arguments extends ArgumentsAbstract implements ArgumentsInterface
     }
 
     /**
-     * Checks the user.
-     * @param string $sUser Username.
-     * @return boolean
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    private function checkUser($sUser)
-    {
-        if (preg_match('/[a-z0-9]+/i', $sUser) > 0) {
-            $this->sUser = $sUser;
-
-            return true;
-        }
-
-        $this->sError .= 'User ';
-
-        return false;
-    }
-
-    /**
      * Check the transaction number (e.g. beb5ba1ee12722e1c2fa552d9f34bb096f5edcec).
      * @param string $sTransaction Transaction number.
      * @return boolean
@@ -229,7 +188,7 @@ class Arguments extends ArgumentsAbstract implements ArgumentsInterface
             return true;
         }
 
-        $this->sError .= 'Transaction ';
+        $this->sError .= 'Transaction "' . $sTransaction . '" is not a valid hash.';
 
         return false;
     }

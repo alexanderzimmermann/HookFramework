@@ -53,30 +53,17 @@ class CommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testNoValidTransactionOrRevision()
     {
-        $aFunctions = array(
-            'getRepository', 'getMainType', 'getTransaction', 'getRevision'
-        );
-
-        $aArguments = array(
-            array(
-                0 => '/var/local/svn/hooks/Hook',
-                1 => HF_TEST_SVN_EXAMPLE,
-                2 => 'Zora',
-                3 => 'client.pre-commit'
-            )
-        );
-
         // Main type usually is pre, post and start but here Failures to check listener.
-        $oArguments = $this->getMock('Hook\Adapter\Git\Arguments', $aFunctions, $aArguments);
+        $oArguments = $this->getMock('Hook\Adapter\Git\Arguments', array(), array(), '', false);
 
         $oArguments->expects($this->once())
-            ->method('getRepository')
-            ->will($this->returnValue('ExampleGit'));
+                   ->method('getRepository')
+                   ->will($this->returnValue('ExampleGit'));
 
         // This should be called once.
         $oArguments->expects($this->once())
-            ->method('getTransaction')
-            ->will($this->returnValue('234523454'));
+                   ->method('getTransaction')
+                   ->will($this->returnValue('234523454'));
 
         $this->oCommand->init($oArguments);
 
@@ -93,5 +80,80 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         */
 
         $this->assertSame($aExpected, $this->oCommand->getCommitDiff());
+    }
+
+    /**
+     * Test call of function getInfo
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testGetInfo()
+    {
+        // Main type usually is pre, post and start but here Failures to check listener.
+        $oArguments = $this->getMock('Hook\Adapter\Git\Arguments', array(), array(), '', false);
+
+        $oArguments->expects($this->once())
+                   ->method('getRepository')
+                   ->will($this->returnValue('ExampleGit'));
+
+        // This should be called once.
+        $oArguments->expects($this->once())
+                   ->method('getTransaction')
+                   ->will($this->returnValue('234523454'));
+
+        $this->oCommand->init($oArguments);
+
+        $aExpected = array(
+                      0 => 'alexanderzimmermann <alex@azimmermann.com> 1377963964 +0200'
+                     );
+
+        $this->assertSame($aExpected, $this->oCommand->getInfo());
+    }
+
+    /**
+     * Test when the command returns an error cause of wrong parameters.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testBadCommandCall()
+    {        // Main type usually is pre, post and start but here Failures to check listener.
+        $oArguments = $this->getMock('Hook\Adapter\Git\Arguments', array(), array(), '', false);
+
+        $oArguments->expects($this->once())
+                   ->method('getRepository')
+                   ->will($this->returnValue('ExampleGit'));
+
+        // This should be called once.
+        $oArguments->expects($this->once())
+                   ->method('getTransaction')
+                   ->will($this->returnValue('234523454'));
+
+        $oCommand = new Command(HF_TEST_FILES_DIR . 'bin/error-');
+        $oCommand->init($oArguments);
+        $oCommand->getUser();
+
+        $this->assertTrue($oCommand->hasError());
+    }
+
+    /**
+     * Test when the command returns nothing, also when the command does not exists.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testEmptyCommandResult()
+    {        // Main type usually is pre, post and start but here Failures to check listener.
+        $oArguments = $this->getMock('Hook\Adapter\Git\Arguments', array(), array(), '', false);
+
+        $oArguments->expects($this->once())
+                   ->method('getRepository')
+                   ->will($this->returnValue('ExampleGit'));
+
+        // This should be called once.
+        $oArguments->expects($this->once())
+                   ->method('getTransaction')
+                   ->will($this->returnValue('234523454'));
+
+        $oCommand = new Command(HF_TEST_FILES_DIR . 'bin/empty-');
+        $oCommand->init($oArguments);
+        $oCommand->getUser();
+
+        $this->assertTrue($oCommand->hasError());
     }
 }

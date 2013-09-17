@@ -126,4 +126,16 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
         $sPath = '/tmp/74-1-_path_to_file.txt';
         $this->assertEquals($sPath, $this->oObject->getTmpObjectPath());
     }
+
+    /**
+     * Test set raw data, that they leave as is.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testSetRawData()
+    {
+        $aData = array('some lines', 'normaly diff lines');
+        $this->oObject->setRawData($aData);
+
+        $this->assertSame($aData, $this->oObject->getRawData());
+    }
 }

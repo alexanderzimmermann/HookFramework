@@ -150,4 +150,48 @@ class ArgumentsTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($aData[3], $oArguments->getCommitMessageFile(), 'Message File false');
         $this->assertSame($aData[4], $oArguments->getCommitMessageAction(), 'Action false');
     }
+
+    /**
+     * Test of arguments not ok when invalid repository.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testInvalidRepository()
+    {
+        $aData = array(
+                  0 => '/path/to/Hook',
+                  1 => 'xyz',
+                  2 => 'd3c57c9bce575082af8b7a0bb6d2f836a46cb4a5',
+                  3 => '.git/COMMIT_EDITMSG',
+                  4 => 'message',
+                  5 => 'client.prepare-commit-msg'
+                 );
+
+        $sExpected = 'Repository xyz does not exists.';
+
+        $oArguments = new Arguments($aData);
+
+        $this->assertFalse($oArguments->argumentsOk(), 'Arguments false');
+        $this->assertSame($sExpected, $oArguments->getError(), 'Error message false');
+    }
+
+    /**
+     * Test of invalid transaction number (hash).
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testInvalidTxn()
+    {
+        $aData = array(
+                  0 => '/path/to/Hook',
+                  1 => HF_TEST_GIT_EXAMPLE,
+                  2 => '1974ABAZZA575082af8b7a0bb6d2f836a46cb4a5',
+                  3 => 'client.pre-commit'
+                 );
+
+        $sExpected = 'Transaction "' . $aData[2] . '" is not a valid hash.';
+
+        $oArguments = new Arguments($aData);
+
+        $this->assertFalse($oArguments->argumentsOk(), 'Arguments false');
+        $this->assertSame($sExpected, $oArguments->getError(), 'Error message false');
+    }
 }

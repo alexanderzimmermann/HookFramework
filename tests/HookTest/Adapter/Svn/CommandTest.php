@@ -53,39 +53,25 @@ class CommandTest extends \PHPUnit_Framework_TestCase
      */
     public function testNoValidTransactionOrRevision()
     {
-        $aFunctions = array(
-            'getRepository', 'getMainType', 'getTransaction', 'getRevision'
-        );
-
-        $aArguments = array(
-            array(
-                0 => '/var/local/svn/hooks/Hook',
-                1 => HF_TEST_SVN_EXAMPLE,
-                2 => 'Zora',
-                3 => 'pre-commit'
-            )
-        );
-
         // Main type usually is pre, post and start but here Failures to check listener.
-        $oArguments = $this->getMock('Hook\Adapter\Svn\Arguments', $aFunctions, $aArguments);
+        $oArguments = $this->getMock('Hook\Adapter\Svn\Arguments', array(), array(), '', false);
 
         $oArguments->expects($this->once())
-            ->method('getRepository')
-            ->will($this->returnValue('ExampleSvn'));
+                   ->method('getRepository')
+                   ->will($this->returnValue('ExampleSvn'));
 
         $oArguments->expects($this->exactly(2))
-            ->method('getMainType')
-            ->will($this->returnValue('pre'));
+                   ->method('getMainType')
+                   ->will($this->returnValue('pre'));
 
 
         $oArguments->expects($this->once())
-            ->method('getTransaction')
-            ->will($this->returnValue('10-1'));
-
+                   ->method('getTransaction')
+                   ->will($this->returnValue('10-1'));
 
         $oArguments->expects($this->never())
-            ->method('getRevision')
-            ->will($this->returnValue('10'));
+                   ->method('getRevision')
+                   ->will($this->returnValue('10'));
 
         $this->oCommand->init($oArguments);
 

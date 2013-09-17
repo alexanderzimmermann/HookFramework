@@ -41,7 +41,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Prepare the config mock objects.
-     * @return Hook\Core\Config
+     * @return Hook\Core\Config;
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     private function getMockConfig()
@@ -164,12 +164,12 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     public function testControllerCommitMsgError()
     {
         $aArguments = array(
-            '/path/to/Hook',
-            HF_TEST_GIT_EXAMPLE,
-            'd3c57c9bce575082af8b7a0bb6d2f836a46cb4a5',
-            '.git/COMMIT_EMPTYMSG',
-            'client.commit-msg'
-        );
+                       '/path/to/Hook',
+                       HF_TEST_GIT_EXAMPLE,
+                       'd3c57c9bce575082af8b7a0bb6d2f836a46cb4a5',
+                       '.git/COMMIT_EMPTYMSG',
+                       'client.commit-msg'
+                      );
 
         // Get the mock objects.
         $oConfig = $this->getMockConfig();
@@ -186,5 +186,65 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(1, $oResponse->getResult(), 'Result should be 1');
         $this->assertSame($sText, $oResponse->getText(), 'Error text is false');
     }
-}
 
+    /**
+     * Test the usage function
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testWrongParameter()
+    {
+        // Get the mock objects.
+        $oConfig = $this->getMockConfig();
+        $oLog    = $this->getMockLog();
+
+        $aArguments = array(
+                       '/path/to/Hook',
+                       HF_TEST_GIT_EXAMPLE,
+                       'fd43d0f959ffcddf8a36e1cc6adb43129ddd36a1',
+                       'client.pre-commit'
+                      );
+
+        $this->oFixture = new Controller($aArguments);
+        $this->oFixture->init($oConfig, $oLog, new Response());
+
+        $this->oFixture->showUsage();
+    }
+
+    /**
+     * Test the usage function
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testInitArgumentFalseAndShowUsage()
+    {
+/*        $oArguments = $this->getMock('Hook\Adapter\Git\Arguments', array(), array(), '', false);
+
+        $oArguments->expects($this->once())
+                   ->method('getMainType')
+                   ->will($this->returnValue('Client'));
+
+        // This should be called once.
+        $oArguments->expects($this->once())
+                   ->method('getSubType')
+                   ->will($this->returnValue('pre-commit'));*/
+
+        // Get the mock objects.
+        $oConfig = $this->getMockConfig();
+        $oLog    = $this->getMockLog();
+
+        $aArguments = array(
+                       '/path/to/Hook',
+                       HF_TEST_GIT_EXAMPLE,
+                       'AZ43d0f959ffcddf8a36e1cc6adb43129ddd36a1',
+                       'client.pre-commit'
+                      );
+
+        $sMessage = 'Arguments Error. Transaction "'. $aArguments[2] . '" is not a valid hash.';
+        $this->setExpectedException('Exception', $sMessage);
+
+        $this->oFixture = new Controller($aArguments);
+        $this->oFixture->init($oConfig, $oLog, new Response());
+
+        $s = $this->oFixture->showUsage();
+        var_dump($s);
+    }
+}

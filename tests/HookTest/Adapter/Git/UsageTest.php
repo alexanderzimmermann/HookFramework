@@ -33,21 +33,25 @@ require_once __DIR__ . '/../../../Bootstrap.php';
 class UsageTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test client commit msg usage
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function testClientCommitMsg()
-    {
-        $this->markTestIncomplete('not implemented yet');
-    }
-
-    /**
      * Test client prepare-commit-msg
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function testClientPrepareCommitMsg()
     {
-        $this->markTestIncomplete('not implemented yet');
+        $oUsage = new Usage('client', 'prepare-commit-msg');
+
+        // Expected text.
+        $sExpected = 'Call with the following parameters and order:' . "\n";
+        $sExpected .= "\n";
+        $sExpected .= 'REPOSITORY Repository path (/path/to/project)' . "\n";
+        $sExpected .= '           REPOSITORY=$(git rev-parse --show-toplevel)' . "\n";
+        $sExpected .= 'Commit     HEAD, SHA1' . "\n";
+        $sExpected .= 'Hook       client.prepare-commit-msg' . "\n";
+        $sExpected .= "\n";
+        $sExpected .= 'Example: ';
+        $sExpected .= '/path/to/hookframework/Hook $REPOSITORY $commit $commitmsgfile client.prepare-commit-msg' . "\n";
+
+        $this->assertEquals($sExpected, $oUsage->getUsage());
     }
 
     /**

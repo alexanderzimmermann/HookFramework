@@ -226,6 +226,12 @@ abstract class ArgumentsAbstract
     }
 
     /**
+     * Check the parameter, by types defined in aActions.
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    abstract protected function checkType($sType, $sArgument);
+
+    /**
      * Arguments Ok.
      * @return boolean
      * @author Alexander Zimmermann <alex@azimmermann.com>
