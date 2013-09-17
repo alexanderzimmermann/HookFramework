@@ -1,14 +1,14 @@
-.. _svn.listener.object:
+.. _core.listener.object:
 
 Object listener
 ===============
 The `object listener` gets the *Object* object to process the listener. The main intention of this
-listener is to handle the files of a commit. Comparing to the :doc:`info listener <svn.listener.info>`
+listener is to handle the files of a commit. Comparing to the :doc:`info listener <core.listener.info>`
 that is only called once, this listener is called for each file (object) in the commit.
 
-The files that are passed to the :doc:`process function <svn.listener.process>` are already
+The files that are passed to the :doc:`process function <core.listener.process>` are already
 filtered to the requested files and the filter settings in the
-:doc:`register function <svn.listener.register>`.
+:doc:`register function <core.listener.register>`.
 
 
 Available Functions for *Object* object
@@ -50,7 +50,7 @@ Comparing to the example paths in ``getObjectPath``, this paths are truncated by
 getInfo()
 ~~~~~~~~~
 Here it is possible to get access on the information that was shiped with the commit like *user*
-and *message* etc. See :ref:`Info Object <svn.listener.info>`.
+and *message* etc. See :ref:`Info Object <core.listener.info>`.
 
 
 getTmpObjectPath()

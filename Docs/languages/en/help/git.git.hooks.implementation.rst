@@ -1,4 +1,4 @@
-.. _svn.subversion.hooks.implementation:
+.. _git.git.hooks.implementation:
 
 Hook implementation
 ====================

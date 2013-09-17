@@ -1,77 +1,95 @@
-.. Hook Framework 2 documentation master file.
+.. Hook Framework documentation master file.
 
-|ProgrammersReferenceGuideofHookFramework2|
-===========================================
+|ProgrammersReferenceGuideofHookFramework|
+==========================================
 
 .. toctree::
    :hidden:
 
    ref/overview
    ref/installation
-   tutorials/quickstart.svn
+   tutorials/quickstart
+
+   help/core.listener.introduction
+   help/core.listener.directory
+   help/core.listener.info
+   help/core.listener.object
+   help/core.listener.register
+   help/core.listener.filter
+   help/core.listener.process
+   help/core.repositories.introduction
+   help/core.repositories.configuration
+   help/core.repositories.structure
+   help/core.repositories.git.configuration
+   help/core.repositories.git.structure
+   help/core.repositories.subversion.configuration
+   help/core.repositories.subversion.structure
+
+   help/git.git.hooks
+   help/git.git.hooks.implementation
    help/svn.subversion.hooks
    help/svn.subversion.hooks.implementation
-   help/svn.listener.introduction
-   help/svn.listener.directory
-   help/svn.listener.info
-   help/svn.listener.object
-   help/svn.listener.register
-   help/svn.listener.filter
-   help/svn.listener.process
-   help/svn.repositories.introduction
-   help/svn.repositories.structure
-   help/svn.repositories.configuration
 
+   ref/workflow
    ref/copyrights
    ref/requirements
    ref/project.structure
 
-
 |IntroductiontoHookFramework|
 -----------------------------
 
-    * :doc:`ref/overview`
-    * :doc:`ref/installation`
+  * :doc:`ref/overview`
+  * :doc:`ref/installation`
+
 
 |Tutorials|
 -----------------------
-
-    * :doc:`tutorials/quickstart.svn`
+  * :doc:`tutorials/quickstart`
 
 |HookFrameworkReference|
 ------------------------
 
-.. _svn.subversion.hooks:
+.. _git.adapter:
 
-Hooks
-^^^^^
+Git adapter
+^^^^^^^^^^^
 
-    * :doc:`help/svn.subversion.hooks`
-    * :doc:`help/svn.subversion.hooks.implementation`
+  * :doc:`help/git.git.hooks`
+  * :doc:`help/git.git.hooks.implementation`
 
+.. _svn.adapter:
 
-.. _svn.listener:
+Subversion adapter
+^^^^^^^^^^^^^^^^^^
+
+  * :doc:`help/svn.subversion.hooks`
+  * :doc:`help/svn.subversion.hooks.implementation`
+
+.. _core.repositories:
+
+Repositories
+------------
+
+  * :doc:`help/core.repositories.introduction`
+  * :doc:`help/core.repositories.configuration`
+      * :doc:`help/core.repositories.git.configuration`
+      * :doc:`help/core.repositories.subversion.configuration`
+  * :doc:`help/core.repositories.structure`
+      * :doc:`help/core.repositories.git.structure`
+      * :doc:`help/core.repositories.subversion.structure`
+
+.. _core.listener:
 
 Listener
 ^^^^^^^^
 
-    * :doc:`help/svn.listener.introduction`
-    * :doc:`help/svn.listener.directory`
-    * :doc:`help/svn.listener.info`
-    * :doc:`help/svn.listener.object`
-    * :doc:`help/svn.listener.register`
-    * :doc:`help/svn.listener.filter`
-    * :doc:`help/svn.listener.process`
-
-
-.. _svn.repositories:
-
-Repositories
-^^^^^^^^^^^^
-
-    * :doc:`help/svn.repositories.introduction`
-    * :doc:`help/svn.repositories.structure`
-    * :doc:`help/svn.repositories.configuration`
+  * :doc:`help/core.listener.introduction`
+  * :doc:`help/core.listener.directory`
+  * :doc:`help/core.listener.info`
+  * :doc:`help/core.listener.object`
+  * :doc:`help/core.listener.register`
+  * :doc:`help/core.listener.filter`
+  * :doc:`help/core.listener.process`
 
 .. _core.copyright:
 

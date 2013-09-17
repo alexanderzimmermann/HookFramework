@@ -1,4 +1,4 @@
-.. _svn.subversion.hooks.table-1:
+.. _svn.subversion.hooks.table:
 
 .. table:: Subversion Hooks list
 

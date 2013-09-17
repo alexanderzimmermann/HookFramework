@@ -1,9 +1,9 @@
-.. _svn.listener.process:
+.. _core.listener.process:
 
 Processing the listener
 =======================
-The ``processAction`` is executed once for a :ref:`Info listener <svn.listener.info>` and for each
-object in the :ref:`Object listener <svn.listener.object>`.
+The ``processAction`` is executed once for a :ref:`Info listener <core.listener.info>` and for each
+object in the :ref:`Object listener <core.listener.object>`.
 
 Within the processAction method feel free to implement whatever you need to analyze, to check on
 the commited file.

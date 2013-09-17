@@ -1,4 +1,4 @@
-.. _svn.listener.info:
+.. _core.listener.info:
 
 Information listener
 ====================
@@ -9,7 +9,7 @@ listener is to handle the information of a commit.
 Available Functions for *Info* object
 -------------------------------------
 Here is a list of the available function of the *Info* object that is passed to the listener in the
-:doc:`process function <svn.listener.process>`
+:doc:`process function <core.listener.process>`
 
 
 getUser()
@@ -38,7 +38,7 @@ getObjects()
 ~~~~~~~~~~~~
 All files that were commited.
 
-Returns an Array with the `file objects <svn.listener.object>` of the commit.
+Returns an Array with the `file objects <core.listener.object>` of the commit.
 
 .. note::
 

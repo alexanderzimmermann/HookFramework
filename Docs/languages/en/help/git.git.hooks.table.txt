@@ -1,0 +1,61 @@
+.. _git.git.client-hooks.table:
+
+Client hooks
+============
+
+.. table:: Git hook list client side
+
+   +-----------------------------+----------------------------------------------------------------------------+
+   |Hook                         |Time of invoke                                                              |
+   +=============================+============================================================================+
+   |pre-commit                   |This hook is called, when files and directories are commited, but before    |
+   |                             |they are stored. This is the first hook that runs.                          |
+   +-----------------------------+----------------------------------------------------------------------------+
+   |prepare-commit-msg           |This hook is intent to edit the default message before the author sees it.  |
+   +-----------------------------+----------------------------------------------------------------------------+
+   |commit-msg                   |This hook can be used to validate the commit message                        |
+   +-----------------------------+----------------------------------------------------------------------------+
+   |post-commit                  |This hook is called, when files and directories are commited, after         |
+   |                             |the data is stored. This hook can be used for notification or similar.      |
+   +-----------------------------+----------------------------------------------------------------------------+
+   |pre-rebase                   |The pre-rebase hook runs before you rebase anything and can halt the        |
+   |                             |process by exiting non-zero                                                 |
+   +-----------------------------+----------------------------------------------------------------------------+
+   |post-checkout                |After git checkout this hook can use to set up the working directory.       |
+   +-----------------------------+----------------------------------------------------------------------------+
+   |post-merge                   |Runs after a successful merge command. It can be used to restore data.      |
+   +-----------------------------+----------------------------------------------------------------------------+
+   |applypatch-msg               |You can use this to make sure a commit message is properly formatted or to  |
+   |                             |normalize the message by having the script edit it in place.                |
+   +-----------------------------+----------------------------------------------------------------------------+
+   |pre-applypatch               |Runs after the patch is applied, so you can use it to inspect the snapshot  |
+   |                             |before making the commit.                                                   |
+   +-----------------------------+----------------------------------------------------------------------------+
+   |post-applypatch              |You can use it to notify a group or the author of the patch you pulled in   |
+   |                             |that you’ve done so.                                                        |
+   +-----------------------------+----------------------------------------------------------------------------+
+
+
+.. _git.git.server-hooks.table:
+
+Server hooks
+============
+
+.. table:: Git hook list server side
+
+   +-----------------------------+----------------------------------------------------------------------------+
+   |Hook                         |Time of invoke                                                              |
+   +=============================+============================================================================+
+   |pre-receive                  |                                                                            |
+   |                             |                                                                            |
+   +-----------------------------+----------------------------------------------------------------------------+
+   |post-receive                 |                                                                            |
+   |                             |                                                                            |
+   +-----------------------------+----------------------------------------------------------------------------+
+   |update                       |Similar to pre-receive, except that it run for each branch. If the pusher   |
+   |                             |is trying to push to multiple branches, pre-receive runs only once, whereas |
+   |                             |update runs once per branch they’re pushing to.                             |
+   |                             |This script takes three arguments: the name of the reference (branch), the  |
+   |                             |SHA-1 that reference pointed to before the push, and the SHA-1 the user is  |
+   |                             |trying to push.                                                             |
+   +-----------------------------+----------------------------------------------------------------------------+

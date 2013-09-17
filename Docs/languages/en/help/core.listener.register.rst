@@ -1,4 +1,4 @@
-.. _svn.listener.register:
+.. _core.listener.register:
 
 Register the listener
 =====================
@@ -7,15 +7,15 @@ The register function is called for each listener and tells the hook framework f
 this listener should take care of and or which data objects should be shipped to the process Action.
 
 Depending on the listener type the information is passed to the
-:ref:`processAction <svn.listener.process>` method.
+:ref:`processAction <core.listener.process>` method.
 
 In the register method you can also implement some filter rules.
-See :ref:`Filter <svn.listener.filter>` (next topic) for detailed information.
+See :ref:`Filter <core.listener.filter>` (next topic) for detailed information.
 
 Example info listener
 ---------------------
 
-Example to register a info listener for the specified subaction.
+Example to register a info listener for the specified sub-action.
 
 .. code-block:: php
    :linenos:
@@ -33,7 +33,7 @@ Example to register a info listener for the specified subaction.
 Example object listener
 -----------------------
 
-Example to register a object listener for the specified subaction and tell which files this listener
+Example to register a object listener for the specified sub-action and tell which files this listener
 requests.
 
 .. code-block:: php
@@ -58,7 +58,9 @@ requests.
 
 Action
 ~~~~~~
-This are the valid values for the action array index.
+The valid action values differ depending on the VCS you use in repository.
+
+This are the valid values for the action array index for subversion.
 
 * commit
 * lock

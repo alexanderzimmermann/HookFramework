@@ -1,18 +1,19 @@
-.. _svn.repositories.structure:
+.. _core.repositories.subversion.structure:
 
-Structure in the Repositories
-=============================
+Subversion
+==========
 
-It is often desirable to use a purely *PHP*-based configuration file. The following code illustrates
-how easily this can be accomplished:
+Here is an example, how the directory could look like for a subversion repository directory.
 
 .. code-block:: text
 
     Repositories/
-        /Example
+        /ExampleSvn
             /logs
                 common.log
             /Post
+                /Helper
+                    Mail.php
                 Mailing.php
                 Diff.php
             /Pre
@@ -22,9 +23,10 @@ how easily this can be accomplished:
             /Start
                 User.php
             config.ini
-        /Example2
+        /Example-Svn-2
             /Pre
                 Style.php
                 Syntax.php
             config.ini
+            config-dist.ini
 

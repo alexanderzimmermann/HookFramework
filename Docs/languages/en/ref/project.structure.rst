@@ -23,7 +23,11 @@ Recommended Project Directory Structure
        Docs/
        library/
        Repositories/
-           Example/
+           ExampleGit/
+               logs/
+               Client/
+               Server/
+           ExampleSvn/
                logs/
                Post/
                Pre/
@@ -43,7 +47,14 @@ The following describes the use cases for each directory as listed.
 - **Respositories/**: This directory contains your application. It will house the *MVC* system, as well as
   configurations, services used, and your bootstrap file.
 
-  - **Example/**: This is the main directory corresponding to your subversion repository name.
+  - **ExampleGit/**: This is the main directory corresponding to your git repository name.
+                  If you need you can also put some directories or code files here.
+
+    - **Client/** and **Server/**: These directories serve as the listener for all post, pre and start actions.
+      The subactions are -commit -rev-prop-change are not separated but this can be done within in the `register` function of the `listener object`.
+
+
+  - **ExampleSvn/**: This is the main directory corresponding to your subversion repository name.
                   If you need you can also put some directories or code files here.
 
     - **Post/**, **Pre/**, and **Start/**: These directories serve as the listener for all post, pre and start actions.

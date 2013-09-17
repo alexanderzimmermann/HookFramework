@@ -4,17 +4,29 @@
 Installation
 ************
 
-Install the Hookframework
-=========================
+First, read the :ref:`requirements <requirements>`.
 
-.. _tutorial.installation.intro.hf:
+There are two ways to install or to activate the hookframework for the version control system.
+The easiest way is to use the installation script. Or the manually installation.
 
-Requirements
-------------
+Install the Hookframework via install script
+============================================
 
-* The hook framework needs PHP 5.3 or higher to be on the same server where subversion is installed. Direct access to the subversion commands must be granted.
-* The hook framework is a CLI application. So there is no need for a webserver, but the PHP CLI should be configured (i. e. error_log).
-* Subversion 1.6 or higher.
+The script just needs 2 parameters, which version control system you use and the path to the
+repository you want to activate the hookframework to.
+
+Assuming that you are in the directory of the hook framework, just type the following command:
+
+.. code-block:: console
+
+    $: [sudo] ./install.sh git /path/to/git/directory
+    $: [sudo] ./install.sh svn /var/svn/REPOSITORY-NAME
+
+That's it, now adjust the :ref:`listener <core.listener.introduction>` to your needs.
+
+
+Install the Hookframework manually
+==================================
 
 Optional
 ~~~~~~~~
@@ -27,7 +39,7 @@ To run the unit tests PHPUnit 3.5 or higher is recommended.
 Install and configure the hook framework
 ----------------------------------------
 
-Just copy the directories Core and Listener to a directory you want them to reside. Be sure that the folders and files are executable by the PHP CLI. For example in ``/opt/hookframework/``.
+Be sure that the folders and files are executable by the PHP CLI. For example in ``/opt/hookframework/``.
 
 Configuration file
 ~~~~~~~~~~~~~~~~~~
@@ -89,7 +101,7 @@ Hook Framework if you want to contribute back to the framework, or need to upgra
 often than releases occur.
 
 Once you have a copy of Hook Framework available, the hook framework needs some configuration in
-order to access all the informations needed for the :ref:`listener <svn.listener.introduction>`.
+order to access all the informations needed for the :ref:`listener <core.listener.introduction>`.
 
 
 
