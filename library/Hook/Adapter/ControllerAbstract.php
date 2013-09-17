@@ -249,9 +249,6 @@ abstract class ControllerAbstract
             $this->oResponse->setText($sErrors);
             $this->oResponse->setResult(1);
 
-            // $sErrors = $this->oError->getMessages();
-            // fwrite(STDERR, $sErrors);
-
             return;
         }
 
