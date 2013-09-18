@@ -216,17 +216,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testInitArgumentFalseAndShowUsage()
     {
-/*        $oArguments = $this->getMock('Hook\Adapter\Git\Arguments', array(), array(), '', false);
-
-        $oArguments->expects($this->once())
-                   ->method('getMainType')
-                   ->will($this->returnValue('Client'));
-
-        // This should be called once.
-        $oArguments->expects($this->once())
-                   ->method('getSubType')
-                   ->will($this->returnValue('pre-commit'));*/
-
         // Get the mock objects.
         $oConfig = $this->getMockConfig();
         $oLog    = $this->getMockLog();
@@ -243,8 +232,5 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->oFixture = new Controller($aArguments);
         $this->oFixture->init($oConfig, $oLog, new Response());
-
-        $s = $this->oFixture->showUsage();
-        var_dump($s);
     }
 }
