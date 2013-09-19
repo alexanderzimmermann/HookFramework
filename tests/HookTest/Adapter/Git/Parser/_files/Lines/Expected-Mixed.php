@@ -156,6 +156,3 @@ $oExpected3->setRawLines($aRaw);
 $oExpected3->setNewLines($aNew);
 $oExpected3->setOldLines($aOld);
 $oExpected3->setInfo($oDiff);
-
-/* ==== */
-

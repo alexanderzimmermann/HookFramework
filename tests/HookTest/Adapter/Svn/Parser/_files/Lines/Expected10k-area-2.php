@@ -30,8 +30,8 @@ $aRaw = array(
     '+      public function init()',
     '+      {',
     '+              $this->oMember = new stdClass();',
-	'+      } // function',
-	' } // class',
+    '+      } // function',
+    ' } // class',
     '',
     '',
     ''
@@ -51,7 +51,7 @@ $aNew = array(
     48 => '      public function init()',
     49 => '      {',
     50 => '              $this->oMember = new stdClass();',
-	51 => '      } // function',
+    51 => '      } // function',
 );
 
 $aOld = array();
@@ -63,4 +63,3 @@ $oExpected->setOldLines($aOld);
 
 
 $oExpected->setInfo($oDiff);
-

@@ -37,4 +37,3 @@ $oExpected->setOldLines($aOld);
 
 
 $oExpected->setInfo($oDiff);
-

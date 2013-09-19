@@ -173,7 +173,8 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     public function testControllerPrepareCommitMsg()
     {
         // Get the mock objects.
-        $oArguments = $this->getMockArguments(true, 'd3c57c9bce575082af8b7a0bb6d2f836a46cb4a5', 'client.prepare-commit-msg');
+        $sTxn = 'd3c57c9bce575082af8b7a0bb6d2f836a46cb4a5';
+        $oArguments = $this->getMockArguments(true, $sTxn, 'client.prepare-commit-msg');
 
         $oArguments->expects($this->once())
                    ->method('getCommitMessageFile')
@@ -259,13 +260,10 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
                    ->method('getError')
                    ->will($this->returnValue('Arguments false'));
 
-        try
-        {
+        try {
             $this->oFixture = new Controller($oArguments);
             $this->oFixture->init($oConfig, $oLog, new Response());
-        }
-        catch (\Exception $oE)
-        {
+        } catch (\Exception $oE) {
         }
 
         $sFile = __DIR__ . '/_files/Controller/expected-InitArgumentsFalseAndShowUsage.txt';

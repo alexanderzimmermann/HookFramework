@@ -32,90 +32,90 @@ require_once __DIR__ . '/../../Bootstrap.php';
  */
 class BaseTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * Commit Base Object.
-	 * @var Base
-	 */
-	private $oBase;
+    /**
+     * Commit Base Object.
+     * @var Base
+     */
+    private $oBase;
 
-	/**
-	 * Set Up Method.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	protected function setUp()
-	{
-		$this->oBase = new Base('74-1', 74);
-	}
+    /**
+     * Set Up Method.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    protected function setUp()
+    {
+        $this->oBase = new Base('74-1', 74);
+    }
 
-	/**
-	 * Check correct transaction number.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function testGetTransaction()
-	{
-		$this->assertEquals('74-1', $this->oBase->getTransaction());
-	}
+    /**
+     * Check correct transaction number.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testGetTransaction()
+    {
+        $this->assertEquals('74-1', $this->oBase->getTransaction());
+    }
 
-	/**
-	 * Check correct revision number.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function testGetRevision()
-	{
-		$this->assertEquals(74, $this->oBase->getRevision());
-	}
+    /**
+     * Check correct revision number.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testGetRevision()
+    {
+        $this->assertEquals(74, $this->oBase->getRevision());
+    }
 
-	/**
-	 * Test for added error lines.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function testAddError()
-	{
-		$aLines   = array();
-		$aLines[] = 'Eine Fehlermeldung.';
-		$aLines[] = 'Eine weitere Fehlermeldung.';
+    /**
+     * Test for added error lines.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testAddError()
+    {
+        $aLines   = array();
+        $aLines[] = 'Eine Fehlermeldung.';
+        $aLines[] = 'Eine weitere Fehlermeldung.';
 
-		$this->oBase->addError($aLines[0]);
-		$this->oBase->addError($aLines[1]);
+        $this->oBase->addError($aLines[0]);
+        $this->oBase->addError($aLines[1]);
 
-		$aError = $this->oBase->getErrorLines();
+        $aError = $this->oBase->getErrorLines();
 
-		$this->assertTrue(is_array($aError), 'no array');
-		$this->assertFalse(empty($aError), 'array aError empty');
-		$this->assertEquals($aLines, $aError, 'aError does not eqal aLines.');
-	}
+        $this->assertTrue(is_array($aError), 'no array');
+        $this->assertFalse(empty($aError), 'array aError empty');
+        $this->assertEquals($aLines, $aError, 'aError does not eqal aLines.');
+    }
 
-	/**
-	 * Test for adding multiple error lines.
-	 * @return void
-	 * @author Alexander Zimmermann <alex@azimmermann.com>
-	 */
-	public function testAddErrorLines()
-	{
-		$aLines   = array();
-		$aLines[] = 'Eine Fehlermeldung.';
-		$aLines[] = 'Eine weitere Fehlermeldung.';
+    /**
+     * Test for adding multiple error lines.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function testAddErrorLines()
+    {
+        $aLines   = array();
+        $aLines[] = 'Eine Fehlermeldung.';
+        $aLines[] = 'Eine weitere Fehlermeldung.';
 
-		$this->oBase->addErrorLines($aLines);
+        $this->oBase->addErrorLines($aLines);
 
-		$aLines   = array();
-		$aLines[] = 'Eine Fehlermeldung.';
-		$aLines[] = 'Eine weitere Fehlermeldung.';
+        $aLines   = array();
+        $aLines[] = 'Eine Fehlermeldung.';
+        $aLines[] = 'Eine weitere Fehlermeldung.';
 
-		$this->oBase->addErrorLines($aLines);
+        $this->oBase->addErrorLines($aLines);
 
-		$aError = $this->oBase->getErrorLines();
+        $aError = $this->oBase->getErrorLines();
 
-		$this->assertTrue(is_array($aError), 'no array');
-		$this->assertFalse(empty($aError), 'array aError empty');
+        $this->assertTrue(is_array($aError), 'no array');
+        $this->assertFalse(empty($aError), 'array aError empty');
 
-		$aLines[] = 'Eine Fehlermeldung.';
-		$aLines[] = 'Eine weitere Fehlermeldung.';
+        $aLines[] = 'Eine Fehlermeldung.';
+        $aLines[] = 'Eine weitere Fehlermeldung.';
 
-		$this->assertEquals($aLines, $aError, 'aError does not eqal aLines.');
-	}
+        $this->assertEquals($aLines, $aError, 'aError does not eqal aLines.');
+    }
 }

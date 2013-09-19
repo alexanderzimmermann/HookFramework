@@ -112,8 +112,11 @@ class SyntaxTest extends \PHPUnit_Framework_TestCase
             $aData = array('Errors parsing ' . $this->sTmpPath);
         } else {
             $aData = array(
-                0 => 'PHP Parse error:  syntax error, unexpected \'is\' (T_STRING) in /tmp/666-1-_home_alexander_Projekte_HookFramework_tests_HookTest_Listener_Pre__files_parse-error_file1.php on line 38',
-                1 => 'Errors parsing /tmp/666-1-_home_alexander_Projekte_HookFramework_tests_HookTest_Listener_Pre__files_parse-error_file1.php'
+                0 => 'PHP Parse error:  syntax error, unexpected \'is\' (T_STRING) in ' .
+                     '/tmp/666-1-_home_alexander_Projekte_HookFramework_tests_HookTest_Listener_' .
+                     'Pre__files_parse-error_file1.php on line 38',
+                1 => 'Errors parsing /tmp/666-1-_home_alexander_Projekte_HookFramework_tests_' .
+                     'HookTest_Listener_Pre__files_parse-error_file1.php'
             );
         }
 
@@ -199,5 +202,4 @@ class SyntaxTest extends \PHPUnit_Framework_TestCase
         $aData = $oObject->getErrorLines();
         $this->assertSame($aExpected, $aData);
     }
-
 }

@@ -95,13 +95,13 @@ class Info
     public function getInfoObject()
     {
         $oInfo = new InfoObject(
-                    $this->aInfo['txn'],
-                    $this->aInfo['rev'],
-                    $this->aInfo['user'],
-                    $this->aInfo['datetime'],
-                    $this->aInfo['message'],
-                    $this->aInfo['email'],
-                    $this->aInfo['timezone']
+            $this->aInfo['txn'],
+            $this->aInfo['rev'],
+            $this->aInfo['user'],
+            $this->aInfo['datetime'],
+            $this->aInfo['message'],
+            $this->aInfo['email'],
+            $this->aInfo['timezone']
         );
 
         return $oInfo;
