@@ -358,12 +358,10 @@ abstract class LoaderAbstract
             $sListener = str_replace('.php', '', $sListener);
 
             // Check the listener is available after including. If the file contains other code
-            // like Helper for a listener, we don't want to use it..
+            // like Helper for a listener, we don't want to use it.
             // Create the listener and put in category (info, object) list.
             try {
-                if (false === $this->checkListenerImplementation($sListener)) {
-                    unset($this->aListenerFiles[$iFor]);
-                } else {
+                if (true === $this->checkListenerImplementation($sListener)) {
                     $aListener[] = $sListener;
                 }
             } catch (\Exception $oException) {
@@ -372,9 +370,6 @@ abstract class LoaderAbstract
                                . $oException->getTraceAsString() . PHP_EOL;
             }
         }
-
-        // Sets the listener.
-        $this->aListenerFiles = $aListener;
     }
 
     /**

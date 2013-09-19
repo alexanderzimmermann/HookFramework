@@ -16,6 +16,8 @@ namespace Hook\Adapter;
 
 use Hook\Adapter\Git\Controller as GitController;
 use Hook\Adapter\Svn\Controller as SvnController;
+use Hook\Adapter\Git\Arguments as GitArguments;
+use Hook\Adapter\Svn\Arguments as SvnArguments;
 use Hook\Core\Error;
 use Hook\Core\File;
 use Hook\Core\Response;
@@ -125,6 +127,7 @@ abstract class ControllerAbstract
 
     /**
      * Run.
+     * @return Response
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function run()
@@ -138,7 +141,6 @@ abstract class ControllerAbstract
             $this->runListenerInfo();
             $this->runListenerObject();
             $this->handleErrors();
-            $this->shutDown();
         }
 
         $this->oLog->writeLog(Log::HF_INFO, 'controller run end');
@@ -228,8 +230,10 @@ abstract class ControllerAbstract
 
             $this->oLog->writeLog(Log::HF_VARDUMP, $aObjects[$iFor]);
 
+            // Process the listener magic.
             $oListener->processAction($aObjects[$iFor]);
 
+            // Set listener name and get the error lines from the object being processed.
             $this->oError->setListener($oListener->getListenerName());
             $this->oError->processActionObject($aObjects[$iFor]);
         }
@@ -260,7 +264,7 @@ abstract class ControllerAbstract
      * Shut Down the controller.
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    protected function shutDown()
+    public function __destruct()
     {
         // Cleanup files using destruct method of File object.
         unset($this->oFile);
@@ -279,9 +283,9 @@ abstract class ControllerAbstract
         $sHook = $aArguments[(count($aArguments) - 1)];
 
         if (false === strpos($sHook, '.')) {
-            return new SvnController($aArguments);
+            return new SvnController(new SvnArguments($aArguments));
         } else {
-            return new GitController($aArguments);
+            return new GitController(new GitArguments($aArguments));
         }
     }
 }

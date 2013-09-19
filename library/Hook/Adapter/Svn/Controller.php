@@ -56,12 +56,12 @@ class Controller extends ControllerAbstract
 
     /**
      * Constructor.
-     * @param array $aArguments Arguments from command line.
+     * @param Arguments $oArguments Arguments object from command line.
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function __construct(array $aArguments)
+    public function __construct(Arguments $oArguments)
     {
-        $this->oArguments = new Arguments($aArguments);
+        $this->oArguments = $oArguments;
     }
 
     /**

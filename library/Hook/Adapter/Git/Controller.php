@@ -1,6 +1,6 @@
 <?php
 /**
- *  This is the main controller for the git adapter.
+ * This is the main controller for the git adapter.
  * @category   Adapter
  * @package    Git
  * @subpackage Git
@@ -56,12 +56,12 @@ class Controller extends ControllerAbstract
 
     /**
      * Constructor.
-     * @param array $aArguments Arguments from command line.
+     * @param Arguments $oArguments Arguments from command line.
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function __construct(array $aArguments)
+    public function __construct(Arguments $oArguments)
     {
-        $this->oArguments = new Arguments($aArguments);
+        $this->oArguments = $oArguments;
     }
 
     /**
@@ -188,6 +188,7 @@ class Controller extends ControllerAbstract
         // No listener available? Then abort here (performance).
         if (true === empty($this->aListener)) {
 
+            // Check if there are no files or files found but with bad implementations.
             $aFiles = $oLoader->getListenerFiles();
             if (true === empty($aFiles)) {
 
@@ -199,6 +200,7 @@ class Controller extends ControllerAbstract
             } else {
 
                 $this->oLog->writeLog(Log::HF_DEBUG, 'controller errors: ' . $oLoader->getErrors());
+                $this->oResponse->setResult(0);
 
                 $bResult = false;
             }
