@@ -1,6 +1,6 @@
 <?php
 /**
- * Git Controller-Object Tests.
+ * Usage-Object Tests.
  * @category   Tests
  * @package    Adapter
  * @subpackage Git
@@ -12,15 +12,15 @@
  * @since      File available since Release 3.0.0
  */
 
-namespace HookTest\Adapter\Git;
+namespace HookTest\Adapter\Svn;
 
-use Hook\Adapter\Git\Controller;
+use Hook\Adapter\Svn\Controller;
 use Hook\Core\Response;
 
 require_once __DIR__ . '/../../../Bootstrap.php';
 
 /**
- * Git Controller-Object Tests.
+ * Usage-Object Tests.
  * @category   Tests
  * @package    Adapter
  * @subpackage Git
@@ -44,9 +44,9 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
         // Create a map of arguments to return values.
         $aMap = array(
-                 array('path', 'repositories', HF_TEST_GIT_REPOSITORY),
+                 array('path', 'repositories', HF_TEST_SVN_REPOSITORY),
                  array('log', 'logmode', 3),
-                 array('vcs', 'binary_path', HF_TEST_GIT_BIN)
+                 array('vcs', 'binary_path', HF_TEST_SVN_BIN)
                 );
 
         $oConfig->expects($this->any())
@@ -78,9 +78,9 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      */
     private function getMockArguments($bArgumentsOk, $sTxn, $sHook)
     {
-        $aCommit = explode('.', $sHook);
+        $aCommit = explode('-', $sHook);
 
-        $oArguments = $this->getMock('Hook\Adapter\Git\Arguments', array(), array(), '', false);
+        $oArguments = $this->getMock('Hook\Adapter\Svn\Arguments', array(), array(), '', false);
 
         $oArguments->expects($this->once())
                    ->method('argumentsOk')
@@ -88,11 +88,11 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
         $oArguments->expects($this->any())
                    ->method('getRepository')
-                   ->will($this->returnValue(HF_TEST_GIT_EXAMPLE));
+                   ->will($this->returnValue(HF_TEST_SVN_EXAMPLE));
 
         $oArguments->expects($this->any())
                    ->method('getRepositoryName')
-                   ->will($this->returnValue('ExampleGit'));
+                   ->will($this->returnValue('ExampleSvn'));
 
         $oArguments->expects($this->any())
                    ->method('getTransaction')
@@ -112,7 +112,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
         $oArguments->expects($this->any())
                    ->method('getSubActions')
-                   ->will($this->returnValue(array('pre-commit', 'prepare-commit-msg', 'commit-msg')));
+                   ->will($this->returnValue(array('commit', 'lock')));
 
         return $oArguments;
     }
@@ -121,28 +121,29 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      * Test that the git controller is returned.
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function testGetGitControllerObject()
+    public function testGetSvnControllerObject()
     {
         $aArguments = array(
-                       '/path/to/Hook',
-                       'abc',
-                       'client.pre-commit'
-                      );
+            '/path/to/Hook',
+            'abc',
+            'pre-commit'
+        );
 
-        $oController = Controller::factory($aArguments);
-        $this->assertInstanceOf('Hook\Adapter\Git\Controller', $oController);
+        $oController = \Hook\Adapter\Svn\Controller::factory($aArguments);
+        $this->assertInstanceOf('Hook\Adapter\Svn\Controller', $oController);
     }
 
     /**
-     * Test controller for pre-commit hook.
+     * Test pre hook that works fine.
+     * @return void
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function testControllerPreCommit()
+    public function testControllerPreCommitOk()
     {
         // Get the mock objects.
         $oConfig    = $this->getMockConfig();
         $oLog       = $this->getMockLog();
-        $oArguments = $this->getMockArguments(true, 'd3c57c9bce575082af8b7a0bb6d2f836a46cb4a5', 'client.pre-commit');
+        $oArguments = $this->getMockArguments(true, '74-1', 'pre-commit');
 
         $oFixture = new Controller($oArguments);
         $oFixture->init($oConfig, $oLog, new Response());
@@ -154,15 +155,16 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test controller for pre-commit hook.
+     * Test pre hook with errors.
+     * @return void
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function testControllerPreCommitError()
+    public function testHookPreCommitWithError()
     {
         // Get the mock objects.
         $oConfig    = $this->getMockConfig();
         $oLog       = $this->getMockLog();
-        $oArguments = $this->getMockArguments(true, 'fd43d0f959ffcddf8a36e1cc6adb43129ddd36a1', 'client.pre-commit');
+        $oArguments = $this->getMockArguments(true, '666-1', 'pre-commit');
 
         $oFixture = new Controller($oArguments);
         $oFixture->init($oConfig, $oLog, new Response());
@@ -174,112 +176,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(1, $oResponse->getResult(), 'Result should be 1');
         $this->assertSame($sText, $oResponse->getText(), 'Error text is false');
-    }
-
-    /**
-     * TEst controller for prepare-commit-msg hook.
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function testControllerPrepareCommitMsg()
-    {
-        // Get the mock objects.
-        $sTxn = 'd3c57c9bce575082af8b7a0bb6d2f836a46cb4a5';
-        $oArguments = $this->getMockArguments(true, $sTxn, 'client.prepare-commit-msg');
-
-        $oArguments->expects($this->once())
-                   ->method('getCommitMessageFile')
-                   ->will($this->returnValue('.git/COMMIT_EDITMSG'));
-
-        $oConfig = $this->getMockConfig();
-        $oLog    = $this->getMockLog();
-
-        $oFixture = new Controller($oArguments);
-        $oFixture->init($oConfig, $oLog, new Response());
-        $oResponse = $oFixture->run();
-
-        // Assert
-        $this->assertSame(0, $oResponse->getResult(), 'Result should be 0');
-        $this->assertSame('', $oResponse->getText(), 'Error text is false');
-    }
-
-    /**
-     * TEst controller for prepare-commit-msg hook.
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function testControllerCommitMsgError()
-    {
-        // Get the mock objects.
-        $oArguments = $this->getMockArguments(true, 'd3c57c9bce575082af8b7a0bb6d2f836a46cb4a5', 'client.commit-msg');
-
-        $oArguments->expects($this->once())
-            ->method('getCommitMessageFile')
-            ->will($this->returnValue('.git/COMMIT_EMPTYMSG'));
-
-        $oConfig = $this->getMockConfig();
-        $oLog    = $this->getMockLog();
-
-        $oFixture = new Controller($oArguments);
-        $oFixture->init($oConfig, $oLog, new Response());
-        $oResponse = $oFixture->run();
-
-        // Assert a missing commit text.
-        $sFile = __DIR__ . '/_files/Controller/expected-PreCommitMsgError-Response.txt';
-        $sText = file_get_contents($sFile);
-
-        $this->assertSame(1, $oResponse->getResult(), 'Result should be 1');
-        $this->assertSame($sText, $oResponse->getText(), 'Error text is false');
-    }
-
-    /**
-     * Test that the exception will be thrown.
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function testWrongParameter()
-    {
-        // Get the mock objects.
-        $sTxn       = 'AZ43d0f959ffcddf8a36e1cc6adb43129ddd36a1';
-        $sMessage   = 'Arguments Error. Transaction "'. $sTxn . '" is not a valid hash.';
-        $oConfig    = $this->getMockConfig();
-        $oLog       = $this->getMockLog();
-        $oArguments = $this->getMockArguments(false, $sTxn, 'client.pre-commit');
-        $oArguments->expects($this->once())
-                   ->method('argumentsOk')
-                   ->will($this->returnValue(false));
-
-        $oArguments->expects($this->once())
-                   ->method('getError')
-                   ->will($this->returnValue($sMessage));
-
-        $this->setExpectedException('Exception', $sMessage);
-
-        $oFixture = new Controller($oArguments);
-        $oFixture->init($oConfig, $oLog, new Response());
-    }
-
-    /**
-     * Test the usage function
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function testInitArgumentsFalseAndShowUsage()
-    {
-        // Get the mock objects.
-        $oConfig    = $this->getMockConfig();
-        $oLog       = $this->getMockLog();
-        $oArguments = $this->getMockArguments(false, 'fd43d0f959ffcddf8a36e1cc6adb43129ddd36a1', 'client.pre-commit');
-        $oArguments->expects($this->once())
-                   ->method('getError')
-                   ->will($this->returnValue('Arguments false'));
-
-        try {
-            $oFixture = new Controller($oArguments);
-            $oFixture->init($oConfig, $oLog, new Response());
-        } catch (\Exception $oE) {
-        }
-
-        $sFile = __DIR__ . '/_files/Controller/expected-InitArgumentsFalseAndShowUsage.txt';
-        $sText = file_get_contents($sFile);
-
-        $this->assertSame($sText, $oFixture->showUsage());
     }
 
     /**
@@ -296,14 +192,14 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $aMap = array(
                  array('path', 'repositories', HF_TEST_FILES_DIR . 'Repositories/'),
                  array('log', 'logmode', 3),
-                 array('vcs', 'binary_path', HF_TEST_GIT_BIN)
+                 array('vcs', 'binary_path', HF_TEST_SVN_BIN)
                 );
 
         $oConfig->expects($this->any())
                 ->method('getConfiguration')
                 ->will($this->returnValueMap($aMap));
 
-        $oArguments = $this->getMock('Hook\Adapter\Git\Arguments', array(), array(), '', false);
+        $oArguments = $this->getMock('Hook\Adapter\Svn\Arguments', array(), array(), '', false);
 
         $oArguments->expects($this->once())
                    ->method('argumentsOk')
@@ -319,23 +215,23 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
         $oArguments->expects($this->any())
                    ->method('getTransaction')
-                   ->will($this->returnValue('fd43d0f959ffcddf8a36e1cc6adb43129ddd36a1'));
+                   ->will($this->returnValue('74-1'));
 
         $oArguments->expects($this->any())
                    ->method('getMainHook')
-                   ->will($this->returnValue('client.pre-commit'));
-
-        $oArguments->expects($this->any())
-                   ->method('getMainType')
-                   ->will($this->returnValue('client'));
-
-        $oArguments->expects($this->any())
-                   ->method('getSubType')
                    ->will($this->returnValue('pre-commit'));
 
         $oArguments->expects($this->any())
+                   ->method('getMainType')
+                   ->will($this->returnValue('pre'));
+
+        $oArguments->expects($this->any())
+                   ->method('getSubType')
+                   ->will($this->returnValue('commit'));
+
+        $oArguments->expects($this->any())
                    ->method('getSubActions')
-                   ->will($this->returnValue(array('pre-commit', 'prepare-commit-msg', 'commit-msg')));
+                   ->will($this->returnValue(array('commit', 'lock')));
 
         $oResponse = new Response();
 
@@ -359,48 +255,48 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
         // Create a map of arguments to return values.
         $aMap = array(
-                 array('path', 'repositories', HF_TEST_FILES_DIR . 'Repositories/'),
-                 array('log', 'logmode', 3),
-                 array('vcs', 'binary_path', HF_TEST_GIT_BIN)
-                );
+            array('path', 'repositories', HF_TEST_FILES_DIR . 'Repositories/'),
+            array('log', 'logmode', 3),
+            array('vcs', 'binary_path', HF_TEST_SVN_BIN)
+        );
 
         $oConfig->expects($this->any())
-                ->method('getConfiguration')
-                ->will($this->returnValueMap($aMap));
+            ->method('getConfiguration')
+            ->will($this->returnValueMap($aMap));
 
-        $oArguments = $this->getMock('Hook\Adapter\Git\Arguments', array(), array(), '', false);
+        $oArguments = $this->getMock('Hook\Adapter\Svn\Arguments', array(), array(), '', false);
 
         $oArguments->expects($this->once())
-                   ->method('argumentsOk')
-                   ->will($this->returnValue(true));
+            ->method('argumentsOk')
+            ->will($this->returnValue(true));
 
         $oArguments->expects($this->any())
-                   ->method('getRepository')
-                   ->will($this->returnValue(HF_TEST_FILES_DIR . 'Repositories/'));
+            ->method('getRepository')
+            ->will($this->returnValue(HF_TEST_FILES_DIR . 'Repositories/'));
 
         $oArguments->expects($this->any())
-                   ->method('getRepositoryName')
-                   ->will($this->returnValue('Failures'));
+            ->method('getRepositoryName')
+            ->will($this->returnValue('Failures'));
 
         $oArguments->expects($this->any())
-                   ->method('getTransaction')
-                   ->will($this->returnValue('fd43d0f959ffcddf8a36e1cc6adb43129ddd36a1'));
+            ->method('getTransaction')
+            ->will($this->returnValue('74-1'));
 
         $oArguments->expects($this->any())
-                   ->method('getMainHook')
-                   ->will($this->returnValue('client.pre-commit'));
+            ->method('getMainHook')
+            ->will($this->returnValue('pre-commit'));
 
         $oArguments->expects($this->any())
-                   ->method('getMainType')
-                   ->will($this->returnValue('client'));
+            ->method('getMainType')
+            ->will($this->returnValue('pre'));
 
         $oArguments->expects($this->any())
-                   ->method('getSubType')
-                   ->will($this->returnValue('pre-commit'));
+            ->method('getSubType')
+            ->will($this->returnValue('commit'));
 
         $oArguments->expects($this->any())
-                   ->method('getSubActions')
-                   ->will($this->returnValue(array('pre-commit', 'prepare-commit-msg', 'commit-msg')));
+            ->method('getSubActions')
+            ->will($this->returnValue(array('commit', 'lock')));
 
         $oResponse = new Response();
 

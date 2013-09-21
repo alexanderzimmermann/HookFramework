@@ -14,6 +14,7 @@
 
 namespace Hook\Adapter;
 
+use \Exception;
 use Hook\Adapter\Git\Controller as GitController;
 use Hook\Adapter\Svn\Controller as SvnController;
 use Hook\Adapter\Git\Arguments as GitArguments;
@@ -116,6 +117,64 @@ abstract class ControllerAbstract
         $this->oResponse = $oResponse;
 
         return true;
+    }
+
+    /**
+     * Initialize repository stuff.
+     * @throws \Exception
+     * @return string
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    protected function initRepository()
+    {
+        // Check if there is a repository path.
+        $sRepositoryDir = $this->oConfig->getConfiguration('path', 'repositories');
+        $sLogMode       = $this->oConfig->getConfiguration('log', 'logmode');
+
+        // Fallback, set the shipped repository Example.
+        if (false === $sRepositoryDir) {
+
+            $sRepositoryDir = realpath(HF_ROOT . 'Repositories/');
+        }
+
+        $sDirectory = $sRepositoryDir . $this->oArguments->getRepositoryName() . '/';
+
+        if (false === is_dir($sDirectory)) {
+
+            // Use the Listener that come with the hookframework.
+            $sDirectory = $sRepositoryDir . 'ExampleSvn/';
+
+            // If this directory is missing, then we are screwed.
+            if (false === is_dir($sDirectory)) {
+
+                throw new Exception('Build-in repository is missing');
+            }
+        }
+
+        // Load the configuration file of the repository.
+        $sFile = $sDirectory . 'config.ini';
+        if (false === file_exists($sFile)) {
+            $sFile = $sDirectory . 'config-dist.ini';
+        }
+
+        $this->oConfig = new Config();
+        $this->oConfig->loadConfigFile($sFile);
+
+        // Check if a common.log file is available.
+        $sFile = $sDirectory . 'logs/common.log';
+
+        if ((true === is_file($sFile)) &&
+            (true === is_writable($sFile))) {
+
+            // Get another Log instance for the repository.
+            $this->oLog = Log::getInstance('repository');
+
+            // Change log file if a separate exists for the repository.
+            $this->oLog->setLogFile($sFile);
+            $this->oLog->setLogMode($sLogMode);
+        }
+
+        return $sDirectory;
     }
 
     /**
