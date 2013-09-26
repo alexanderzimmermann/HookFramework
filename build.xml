@@ -137,7 +137,6 @@
 	<target name="phpcs-ci"
 	        description="Find coding standard violations using PHP_CodeSniffer">
 		<exec executable="phpcs" output="/dev/null">
-			<arg value="-n" />
 			<arg value="--report-file=${basedir}/build/logs/checkstyle.txt" />
 			<arg value="--standard=PSR2" />
 			<arg value="--extensions=php" />
