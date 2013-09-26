@@ -287,7 +287,7 @@ abstract class ControllerAbstract
             // Write the file to disk for the listener to "play" with it.
             $this->oFile->writeFile($aObjects[$iFor]);
 
-            $this->oLog->writeLog(Log::HF_VARDUMP, $aObjects[$iFor]);
+            $this->oLog->writeLog(Log::HF_VARDUMP, 'objects: ' . $iFor, $aObjects[$iFor]);
 
             // Process the listener magic.
             $oListener->processAction($aObjects[$iFor]);
