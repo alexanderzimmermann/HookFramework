@@ -108,20 +108,27 @@ class Log
     /**
      * Set the logfile name.
      * @param string $sFile Log file.
-     * @return void
+     * @return resource
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function setLogFile($sFile)
     {
         $this->hasLogFile = false;
 
-        $this->rFile = fopen($sFile, 'a+');
+        try {
+            $this->rFile = fopen($sFile, 'a+');
+        } catch (Exception $oE) {
+            return null;
+        }
 
+        // Write a head for the new start.
         fwrite($this->rFile, str_repeat('=', 80) . "\n");
         fwrite($this->rFile, str_repeat(' ', 20) . date('Y-m-d H:i:s') . "\n");
         fwrite($this->rFile, str_repeat('=', 80) . "\n");
 
         $this->hasLogFile = true;
+
+        return $this->rFile;
     }
 
     /**
@@ -145,15 +152,17 @@ class Log
      */
     public function writeLog($iLogMode, $sHeadMsg = '', $mVar = null)
     {
-        if ($this->iLogMode <= $iLogMode) {
+        if ($this->iLogMode < $iLogMode) {
             return;
         }
 
         $sLogLine = $sHeadMsg . "\n";
 
-        if ($mVar !== null) {
-            $sVarDump = var_export($mVar, true);
-            $sLogLine .= $sVarDump . "\n";
+        if (false === is_object($mVar)) {
+            if ($mVar !== null) {
+                $sVarDump = var_export($mVar, true);
+                $sLogLine .= $sVarDump . "\n";
+            }
         }
 
         fwrite($this->rFile, $sLogLine);

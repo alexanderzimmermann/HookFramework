@@ -79,12 +79,12 @@ class Properties
                 $bSwitch   = null;
 
                 $this->aProperties[$iId][$sProperty] = $oProperty;
-            } else if (substr($sLine, 0, 5) === '   - ') {
+            } elseif (substr($sLine, 0, 5) === '   - ') {
                 $this->setValue($oProperty, $bSwitch, $sValue);
 
                 $sValue  = str_replace('   - ', '', $sLine) . "\n";
                 $bSwitch = false;
-            } else if (substr($sLine, 0, 5) === '   + ') {
+            } elseif (substr($sLine, 0, 5) === '   + ') {
                 $this->setValue($oProperty, $bSwitch, $sValue);
 
                 $sValue  = str_replace('   + ', '', $sLine) . "\n";

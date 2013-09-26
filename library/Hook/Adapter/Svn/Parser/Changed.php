@@ -99,7 +99,7 @@ class Changed extends ChangedAbstract implements ChangedInterface
         if ('trunk' === $aPath[0]) {
 
             array_shift($aPath);
-        } else if (('branches' === $aPath[0]) || ('tags' === $aPath[0])) {
+        } elseif (('branches' === $aPath[0]) || ('tags' === $aPath[0])) {
 
             // We assume that the branch, tag identifier follows the key words branches and tags.
             array_shift($aPath);

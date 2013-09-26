@@ -1,6 +1,6 @@
 <?php
 /**
- * Hauptdatei fuer das Hook Framework.
+ * Main class for the Hook Framework.
  * @category   Core
  * @package    Main
  * @subpackage Main

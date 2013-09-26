@@ -10,7 +10,7 @@
     |       | top-level vendor name)
   4 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 0
   6 | ERROR | Line indented incorrectly; expected 4 spaces, found 0
-  6 | ERROR | No scope modifier specified for function "construct"
+  6 | ERROR | Visibility must be declared on method "construct"
   8 | ERROR | Line indented incorrectly; expected at least 8 spaces, found 0
  11 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 0
  11 | ERROR | Line indented incorrectly; expected 4 spaces, found 0
@@ -31,7 +31,7 @@ FOUND 10 ERROR(S) AFFECTING 8 LINE(S)
     |       | top-level vendor name)
   4 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 0
   6 | ERROR | Line indented incorrectly; expected 4 spaces, found 0
-  6 | ERROR | No scope modifier specified for function "construct"
+  6 | ERROR | Visibility must be declared on method "construct"
   8 | ERROR | Line indented incorrectly; expected at least 8 spaces, found 0
  11 | ERROR | Line indented incorrectly; expected at least 4 spaces, found 0
  11 | ERROR | Line indented incorrectly; expected 4 spaces, found 0

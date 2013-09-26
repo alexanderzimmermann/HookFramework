@@ -1,0 +1,63 @@
+
+/++++++++++++++++++++++++
+ +  HOOK: Commit Message
+
+
+Please start the comment as follows:
++ If something new is added.
+- If something is deleted.
+* If something is changed.
+
+/+++++++++++++++++++++++++++++++
+ +  HOOK: Strict Commit Message
+
+
+The comment should be like:
++ If you add something.
+- If you delete something.
+* If you changed something.
+/********************************
+ *  FILE: trunk/tmp/newfile1.php
+
+/++++++++++++++++++++++
+ +  HOOK: Syntax check
+
+
+Errors parsing /tmp/666-1-trunk_tmp_newfile1.php
+
+
+/+++++++++++++++++++++
+ +  HOOK: Style Guide
+
+
+FOUND 15 ERROR(S) AND 1 WARNING(S) AFFECTING 10 LINE(S)
+--------------------------------------------------------------------------------
+  4 | ERROR   | There must be exactly one blank line before the tags in file
+    |         | comment
+  4 | ERROR   | Category name "library" is not valid; consider "Library"
+    |         | instead
+  5 | ERROR   | Package name "apackage" is not valid; consider "Apackage"
+    |         | instead
+  6 | ERROR   | Subpackage name "subpackage" is not valid; consider
+    |         | "Subpackage" instead
+ 11 | WARNING | PHP version not specified
+ 11 | ERROR   | Missing @link tag in file comment
+ 15 | ERROR   | There must be exactly one blank line before the tags in class
+    |         | comments
+ 15 | ERROR   | Category name "library" is not valid; consider "Library"
+    |         | instead
+ 16 | ERROR   | Package name "apackage" is not valid; consider "Apackage"
+    |         | instead
+ 17 | ERROR   | Subpackage name "subpackage" is not valid; consider
+    |         | "Subpackage" instead
+ 22 | ERROR   | Missing @link tag in class comment
+ 27 | ERROR   | There must be exactly one blank line before the tags in
+    |         | function comment
+ 34 | ERROR   | Constants must be uppercase; expected THIS but found this
+ 34 | ERROR   | Constants must be uppercase; expected IS but found is
+ 34 | ERROR   | Constants must be uppercase; expected A but found a
+ 34 | ERROR   | Constants must be uppercase; expected TEST but found test
+--------------------------------------------------------------------------------
+================================================================================
+
+
