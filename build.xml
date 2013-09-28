@@ -123,9 +123,12 @@
 	<target name="phpcs"
 	        description="Find coding standard violations using PHP_CodeSniffer">
 		<exec executable="phpcs">
+			<arg value="-n" />
+			<arg value="--report=full" />
+			<arg value="--report-file=${basedir}/build/logs/checkstyle.txt" />
 			<arg value="--standard=PSR2" />
 			<arg value="--extensions=php" />
-			<arg value="--ignore=Autoload.php" />
+			<arg value="--ignore=Autoload.php,_files/" />
 			<arg path="${basedir}/library/Hook" />
 			<arg path="${basedir}/tests" />
 		</exec>
@@ -134,11 +137,10 @@
 	<target name="phpcs-ci"
 	        description="Find coding standard violations using PHP_CodeSniffer">
 		<exec executable="phpcs" output="/dev/null">
-			<arg value="--report=full" />
 			<arg value="--report-file=${basedir}/build/logs/checkstyle.txt" />
 			<arg value="--standard=PSR2" />
 			<arg value="--extensions=php" />
-			<arg value="--ignore=Autoload.php" />
+			<arg value="--ignore=Autoload.php,_files/" />
 			<arg path="${basedir}/library/Hook" />
 			<arg path="${basedir}/tests" />
 		</exec>
@@ -161,7 +163,6 @@
 
 	<target name="php-documentor">
 		<exec executable="phpdoc" logerror="on">
-			<!-- <arg line="-title 'HookFramework' -dn Main -dc Core -ct dataprovider,covers -ue on -t build/api -d library/Hook -i *.ini,*.html,*.txt" /> -->
 			<arg line="--title 'HookFramework' -d library/Hook -t build/api --defaultpackagename Main --ignore-tags dataprovider,covers -i *.ini,*.html,*.txt" />
 		</exec>
 	</target>

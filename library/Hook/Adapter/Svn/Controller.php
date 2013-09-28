@@ -56,12 +56,12 @@ class Controller extends ControllerAbstract
 
     /**
      * Constructor.
-     * @param array $aArguments Arguments from command line.
+     * @param Arguments $oArguments Arguments from command line.
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function __construct(array $aArguments)
+    public function __construct(Arguments $oArguments)
     {
-        $this->oArguments = new Arguments($aArguments);
+        $this->oArguments = $oArguments;
     }
 
     /**
@@ -108,61 +108,6 @@ class Controller extends ControllerAbstract
     }
 
     /**
-     * Initialize repository stuff.
-     * @throws Exception
-     * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    protected function initRepository()
-    {
-        // Check if there is a repository path.
-        $sRepositoryDir = $this->oConfig->getConfiguration('path', 'repositories');
-        $sLogMode       = $this->oConfig->getConfiguration('log', 'logmode');
-
-        // Fallback, set the shipped repository Example.
-        if (false === $sRepositoryDir) {
-
-            $sRepositoryDir = realpath(HF_ROOT . 'Repositories/');
-        }
-
-        $sDirectory = $sRepositoryDir . $this->oArguments->getRepositoryName() . '/';
-
-        if (false === is_dir($sDirectory)) {
-
-            // Use the Listener that come with the hookframework.
-            $sDirectory = $sRepositoryDir . 'ExampleSvn/';
-
-            // If this directory is missing, then we are screwed.
-            if (false === is_dir($sDirectory)) {
-
-                throw new Exception('Build-in repository is missing');
-            }
-        }
-
-        // Load the configuration file of the repository.
-        $sFile = $sDirectory . 'config.ini';
-        if (false === file_exists($sFile)) {
-            $sFile = $sDirectory . 'config-dist.ini';
-        }
-
-        $this->oConfig = new Config();
-        $this->oConfig->loadConfigFile($sFile);
-
-        // Check if a common.log file is available.
-        $sFile = $sDirectory . 'logs/common.log';
-
-        if ((true === is_file($sFile)) &&
-            (true === is_writable($sFile))) {
-
-            // Change log file if a separate exists for the repository.
-            $this->oLog->setLogFile($sFile);
-            $this->oLog->setLogMode($sLogMode);
-        }
-
-        return $sDirectory;
-    }
-
-    /**
      * Init the listener loader and load the listener.
      * @param string $sDirectory Directory of hookframework repository.
      * @return boolean
@@ -170,7 +115,10 @@ class Controller extends ControllerAbstract
      */
     protected function initLoader($sDirectory)
     {
+        $this->oLog->writeLog(Log::HF_INFO, 'controller load Listener');
+
         // Parse listener in directory.
+        $bResult = true;
         $oLoader = new Loader();
         $oLoader->setArguments($this->oArguments);
         $oLoader->setConfiguration($this->oConfig);
@@ -178,33 +126,34 @@ class Controller extends ControllerAbstract
         $oLoader->init();
 
         $this->aListener = $oLoader->getListener();
-        unset($oLoader);
 
         // No listener available? Then abort here (performance).
         if (true === empty($this->aListener)) {
 
-            $sMessage = 'No listener: Abort';
-            $this->oLog->writeLog(Log::HF_DEBUG, $sMessage);
-            $this->oResponse->setResult(0);
+            // Check if there are no files or files found but with bad implementations.
+            $aFiles = $oLoader->getListenerFiles();
+            if (true === empty($aFiles)) {
 
-            return false;
+                $sMessage = 'No listener found at ' . $sDirectory . '. Abort!';
+                $this->oLog->writeLog(Log::HF_DEBUG, $sMessage);
+                $this->oResponse->setResult(0);
+
+                $bResult = false;
+            } else {
+
+                $this->oLog->writeLog(Log::HF_DEBUG, 'controller errors: ' . $oLoader->getErrors());
+                $this->oResponse->setResult(0);
+
+                $bResult = false;
+            }
         }
 
-        return true;
-    }
+        $this->oLog->writeLog(Log::HF_DEBUG, 'controller errors: ' . $oLoader->getErrors());
+        $this->oLog->writeLog(Log::HF_VARDUMP, 'Accepted Listeners', $oLoader->getListenerFiles());
+        $this->oLog->writeLog(Log::HF_INFO, 'controller Listener loaded');
+        unset($oLoader);
 
-    /**
-     * Show usage.
-     * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function showUsage()
-    {
-        $sMainType = $this->oArguments->getMainType();
-        $sSubType  = $this->oArguments->getSubType();
-        $oUsage    = new Usage($sMainType, $sSubType);
-
-        return $oUsage->getUsage();
+        return $bResult;
     }
 
     /**
@@ -310,5 +259,19 @@ class Controller extends ControllerAbstract
 
         // Set the commited objects for info listener.
         $this->oData->getInfo()->setObjects($aObjects);
+    }
+
+    /**
+     * Show usage.
+     * @return void
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function showUsage()
+    {
+        $sMainType = $this->oArguments->getMainType();
+        $sSubType  = $this->oArguments->getSubType();
+        $oUsage    = new Usage($sMainType, $sSubType);
+
+        return $oUsage->getUsage();
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- *  This is the main controller for the git adapter.
+ * This is the main controller for the git adapter.
  * @category   Adapter
  * @package    Git
  * @subpackage Git
@@ -56,12 +56,12 @@ class Controller extends ControllerAbstract
 
     /**
      * Constructor.
-     * @param array $aArguments Arguments from command line.
+     * @param Arguments $oArguments Arguments from command line.
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function __construct(array $aArguments)
+    public function __construct(Arguments $oArguments)
     {
-        $this->oArguments = new Arguments($aArguments);
+        $this->oArguments = $oArguments;
     }
 
     /**
@@ -108,64 +108,6 @@ class Controller extends ControllerAbstract
     }
 
     /**
-     * Initialize repository stuff.
-     * @throws Exception
-     * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    protected function initRepository()
-    {
-        // Check if there is a repository path.
-        $sRepositoryDir = $this->oConfig->getConfiguration('path', 'repositories');
-        $sLogMode       = $this->oConfig->getConfiguration('log', 'logmode');
-
-        // Fallback, set the shipped repository Example.
-        if (false === $sRepositoryDir) {
-
-            $sRepositoryDir = realpath(HF_ROOT . 'Repositories/');
-        }
-
-        $sDirectory = $sRepositoryDir . $this->oArguments->getRepositoryName() . '/';
-
-        if (false === is_dir($sDirectory)) {
-
-            // Use the Listener that come with the hookframework.
-            $sDirectory = $sRepositoryDir . 'ExampleGit/';
-
-            // If this directory is missing, then we are screwed.
-            if (false === is_dir($sDirectory)) {
-
-                throw new Exception('Build-in repository is missing');
-            }
-        }
-
-        // Load the configuration file of the repository.
-        $sFile = $sDirectory . 'config.ini';
-        if (false === file_exists($sFile)) {
-            $sFile = $sDirectory . 'config-dist.ini';
-        }
-
-        $this->oConfig = new Config();
-        $this->oConfig->loadConfigFile($sFile);
-
-        // Check if a common.log file is available.
-        $sFile = $sDirectory . 'logs/common.log';
-
-        if ((true === is_file($sFile)) &&
-            (true === is_writable($sFile))) {
-
-            // Get another Log instance for the repository.
-            $this->oLog = Log::getInstance('repository');
-
-            // Change log file if a separate exists for the repository.
-            $this->oLog->setLogFile($sFile);
-            $this->oLog->setLogMode($sLogMode);
-        }
-
-        return $sDirectory;
-    }
-
-    /**
      * Init the listener loader and load the listener.
      * @param string $sDirectory Directory of hookframework repository.
      * @return boolean
@@ -188,6 +130,7 @@ class Controller extends ControllerAbstract
         // No listener available? Then abort here (performance).
         if (true === empty($this->aListener)) {
 
+            // Check if there are no files or files found but with bad implementations.
             $aFiles = $oLoader->getListenerFiles();
             if (true === empty($aFiles)) {
 
@@ -199,6 +142,7 @@ class Controller extends ControllerAbstract
             } else {
 
                 $this->oLog->writeLog(Log::HF_DEBUG, 'controller errors: ' . $oLoader->getErrors());
+                $this->oResponse->setResult(0);
 
                 $bResult = false;
             }
