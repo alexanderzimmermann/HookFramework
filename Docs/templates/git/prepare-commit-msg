@@ -47,6 +47,6 @@ repository=$(git rev-parse --show-toplevel)
 commitmsgfile=$1
 action=$2
 
-/path/to/hookframework/Hook ExampleGit $against $commitmsgfile $action client.prepare-commit-msg >&2 || exit 1
+/path/to/hookframework/Hook $repository $against $commitmsgfile $action client.prepare-commit-msg >&2 || exit 1
 
 exit 0

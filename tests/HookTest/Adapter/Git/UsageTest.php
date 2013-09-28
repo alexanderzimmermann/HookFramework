@@ -43,13 +43,13 @@ class UsageTest extends \PHPUnit_Framework_TestCase
         // Expected text.
         $sExpected = 'Call with the following parameters and order:' . "\n";
         $sExpected .= "\n";
-        $sExpected .= 'REPOSITORY Repository path (/path/to/project)' . "\n";
-        $sExpected .= '           REPOSITORY=$(git rev-parse --show-toplevel)' . "\n";
+        $sExpected .= 'repository Repository path (/path/to/project)' . "\n";
+        $sExpected .= '           repository=$(git rev-parse --show-toplevel)' . "\n";
         $sExpected .= 'Commit     HEAD, SHA1' . "\n";
         $sExpected .= 'Hook       client.prepare-commit-msg' . "\n";
         $sExpected .= "\n";
         $sExpected .= 'Example: ';
-        $sExpected .= '/path/to/hookframework/Hook $REPOSITORY $commit $commitmsgfile client.prepare-commit-msg' . "\n";
+        $sExpected .= '/path/to/hookframework/Hook $repository $commit $commitmsgfile client.prepare-commit-msg' . "\n";
 
         $this->assertEquals($sExpected, $oUsage->getUsage());
     }
@@ -66,13 +66,13 @@ class UsageTest extends \PHPUnit_Framework_TestCase
         // Expected text.
         $sExpected = 'Call with the following parameters and order:' . "\n";
         $sExpected .= "\n";
-        $sExpected .= 'REPOSITORY Repository path (/path/to/project)' . "\n";
-        $sExpected .= '           REPOSITORY=$(git rev-parse --show-toplevel)' . "\n";
+        $sExpected .= 'repository Repository path (/path/to/project)' . "\n";
+        $sExpected .= '           repository=$(git rev-parse --show-toplevel)' . "\n";
         $sExpected .= 'Commit     HEAD, SHA1' . "\n";
         $sExpected .= 'Hook       client.pre-commit' . "\n";
         $sExpected .= "\n";
         $sExpected .= 'Example: ';
-        $sExpected .= '/path/to/hookframework/Hook $REPOSITORY Commit client.pre-commit' . "\n";
+        $sExpected .= '/path/to/hookframework/Hook $repository Commit client.pre-commit' . "\n";
 
         $this->assertEquals($sExpected, $oUsage->getUsage());
     }
@@ -89,13 +89,13 @@ class UsageTest extends \PHPUnit_Framework_TestCase
         // Expected text.
         $sExpected = 'Call with the following parameters and order:' . "\n";
         $sExpected .= "\n";
-        $sExpected .= 'REPOSITORY Repository path (/path/to/project)' . "\n";
-        $sExpected .= '           REPOSITORY=$(git rev-parse --show-toplevel)' . "\n";
+        $sExpected .= 'repository Repository path (/path/to/project)' . "\n";
+        $sExpected .= '           repository=$(git rev-parse --show-toplevel)' . "\n";
         $sExpected .= 'Commit     HEAD, SHA1' . "\n";
         $sExpected .= 'Hook       client.post-commit' . "\n";
         $sExpected .= "\n";
         $sExpected .= 'Example: ';
-        $sExpected .= '/path/to/hookframework/Hook $REPOSITORY Commit client.post-commit' . "\n";
+        $sExpected .= '/path/to/hookframework/Hook $repository Commit client.post-commit' . "\n";
 
         $this->assertEquals($sExpected, $oUsage->getUsage());
     }
@@ -112,13 +112,13 @@ class UsageTest extends \PHPUnit_Framework_TestCase
         // Expected text.
         $sExpected = 'Call with the following parameters and order:' . "\n";
         $sExpected .= "\n";
-        $sExpected .= 'REPOSITORY Repository path (/path/to/project)' . "\n";
-        $sExpected .= '           REPOSITORY=$(git rev-parse --show-toplevel)' . "\n";
+        $sExpected .= 'repository Repository path (/path/to/project)' . "\n";
+        $sExpected .= '           repository=$(git rev-parse --show-toplevel)' . "\n";
         $sExpected .= 'Commit     HEAD, SHA1' . "\n";
         $sExpected .= 'Hook       client.commit-msg' . "\n";
         $sExpected .= "\n";
         $sExpected .= 'Example: ';
-        $sExpected .= '/path/to/hookframework/Hook $REPOSITORY $commit $commitmsgfile client.commit-msg' . "\n";
+        $sExpected .= '/path/to/hookframework/Hook $repository $commit $commitmsgfile client.commit-msg' . "\n";
 
         $this->assertEquals($sExpected, $oUsage->getUsage());
     }
@@ -135,14 +135,14 @@ class UsageTest extends \PHPUnit_Framework_TestCase
         // Expected text.
         $sExpected = 'Call with the following parameters and order:' . "\n";
         $sExpected .= "\n";
-        $sExpected .= 'REPOSITORY Repository path (/path/to/project)' . "\n";
-        $sExpected .= '           REPOSITORY=$(git rev-parse --show-toplevel)' . "\n";
+        $sExpected .= 'repository Repository path (/path/to/project)' . "\n";
+        $sExpected .= '           repository=$(git rev-parse --show-toplevel)' . "\n";
         $sExpected .= 'Params     Parameters depending on hook type.' . "\n";
         $sExpected .= 'Hook       client.pre-commit, server.update' . "\n";
         $sExpected .= "\n";
         $sExpected .= 'Examples: ';
-        $sExpected .= '/path/to/hookframework/Hook $REPOSITORY HEAD client.HOOK-IDENTIFIER' . "\n";
-        $sExpected .= '/path/to/hookframework/Hook $REPOSITORY $SHA1 server.HOOK-IDENTIFIER' . "\n";
+        $sExpected .= '/path/to/hookframework/Hook $repository HEAD client.HOOK-IDENTIFIER' . "\n";
+        $sExpected .= '/path/to/hookframework/Hook $repository $SHA1 server.HOOK-IDENTIFIER' . "\n";
 
         $this->assertEquals($sExpected, $oUsage->getUsage());
     }

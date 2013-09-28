@@ -25,6 +25,6 @@ else
 	topic=`git symbolic-ref HEAD`
 fi
 
-/path/to/hookframework/Hook $REPOSITORY $basebranch $topic client.pre-rebase >&2 || exit 1
+/path/to/hookframework/Hook $repository $basebranch $topic client.pre-rebase >&2 || exit 1
 
 exit 0
