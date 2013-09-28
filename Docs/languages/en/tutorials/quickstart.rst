@@ -3,95 +3,50 @@
 Quick start
 ===========
 
-If all the :doc:`requirements <../ref/requirements>` fit to your system then you are 5 steps away from
-a running system.
-
-With git
+Overview
 --------
 
-Assuming that you already cloned or init a `new git`_ repository on your local system.
+* `Clone`_ or `download`_ the Hookframework.
+* Install the hooks.
+* Configure
 
-.. code-block:: bash
+Clone or Download
+-----------------
 
-   $ git clone https://github.com/alexanderzimmermann/HookFramework.git
-   $ ./install.sh git ~/Projects/MyExampleGit
+.. code-block:: console
 
-The output should look like
+   $: git clone https://github.com/alexanderzimmermann/HookFramework.git
 
-.. code-block:: bash
+.. code-block:: console
 
-   * Copy hook files to target /home/alexander/projects/MyExampleGit/.git/hooks/
-   * Replace default path /path/to/hookframework/ with /home/alexander/projects/HookFramework/ in /home/alexander/projects/MyExampleGit/.git/hooks/
-   * Copy example listener /home/alexander/projects/HookFramework/Repositories/ExampleGit/* to Repositories/MyExampleGit
-   * Change namespace in /home/alexander/projects/HookFramework/Repositories/MyExampleGit/ from namespace ExampleGit to namespace MyExampleGit
-
-   Install completed
+   $: wget https://github.com/alexanderzimmermann/HookFramework/archive/master.zip
+   $: unzip master.zip
 
 
-With subversion
----------------
+Installation
+------------
 
-Assuming that you on your subversion server or local system.
+.. code-block:: console
 
-.. code-block:: bash
+   $: cd HookFramework
+   $: [sudo] ./install.sh git /path/to/git/existing/directory/PROJECT
+   $: vim Repositories/PROJECT/config.ini
 
-   $ sudo svnadmin create /var/svn/Example
-   $ git clone git://github.com/alexanderzimmermann/HookFramework.git
-   $ cd HookFramework
-   $ sudo ./install.sh svn /var/svn/Example
 
-The output should look like
+Configure
+---------
 
-.. code-block:: bash
-
-   * Copy hook files to target /home/alexander/projects/MyExampleGit/.git/hooks/
-   * Replace default path /path/to/hookframework/ with /home/alexander/projects/HookFramework/ in /home/alexander/projects/MyExampleGit/.git/hooks/
-   * Copy example listener /home/alexander/projects/HookFramework/Repositories/ExampleGit/* to Repositories/MyExampleGit
-   * Change namespace in /home/alexander/projects/HookFramework/Repositories/MyExampleGit/ from namespace ExampleGit to namespace MyExampleGit
-
-   Install completed
-
-Test the installation
----------------------
-A little test is, just create a file named World.php.
-
-.. code-block:: php
-
-   <?php
-   class World {}
-
-Commit the file with no commit message. A dialog of your IDE should appear to tell that the commit failed and returns error lines.
+Adjust, remove or delete configurations to your needs and save the file.
 
 .. code-block:: text
 
-   svn: E165001: Commit failed (details follow):
-   svn: E165001: Commit blocked by pre-commit hook (exit code 1) with output:
-   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   Strict Commit Message
-   ================================================================================
-   Please provide a comment for the commit
-   The comment should be like:
-   + If you add something.
-   - If you delete something.
-   * If you changed something.
-   Commit Message
-   ================================================================================
-   Please provide a comment to this commit and use it as follows:
-   + If something new is added.
-   - If something is deleted.
-   * If something is changed.
-   trunk/Filter/NotFiltered/SyntaxError.php
-   --------------------------------------------------------------------------------
-   Style Guide
-   ================================================================================
-   FOUND 3 ERROR(S) AFFECTING 1 LINE(S)
-   --------------------------------------------------------------------------------
-   2 | ERROR | Each class must be in a namespace of at least one level (a
-             | top-level vendor name)
-   2 | ERROR | Opening brace of a class must be on the line after the definition
-   2 | ERROR | Closing brace must be on a line by itself
-   --------------------------------------------------------------------------------
-   svn: E175002: MERGE of '/svn/Example/trunk/Filter/NotFiltered': 409 Conflict (http://localhost)
+   [Pre:StyleIncrement]
+   Standard                      = PSR2
+   Style.TabWidth                = 4
+
+That's it. Now make commits in your *PROJECT*. If the comment is empty or the source code in your
+file doesn't fit the *PSR2* standards, an error will occur in the IDE or console.
 
 
-.. _`new git`: http://git-scm.com/book/en/Git-Basics-Getting-a-Git-Repository#Initializing-a-Repository-in-an-Existing-Directory
+.. _`Clone`: https://github.com/alexanderzimmermann/HookFramework.git
+.. _`download`: https://github.com/alexanderzimmermann/HookFramework/archive/master.zip
