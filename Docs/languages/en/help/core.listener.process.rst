@@ -19,33 +19,29 @@ updated.
 .. code-block:: php
    :linenos:
 
-	/**
-	 * Execute the action.
-	 * @param Object $oObject Directory / File-Object.
-	 * @return void
-	 */
-	public function processAction(Object $oObject)
-	{
-		$aLines = array();
-		$sCmd   = 'php -l ' . $oObject->getTmpObjectPath() . ' 2>&1';
+   /**
+    * Execute the action.
+    * @param Object $oObject Directory / File-Object.
+    * @return void
+    */
+   public function processAction(Object $oObject)
+   {
+       $aLines = array();
+       $sCmd   = 'php -l ' . $oObject->getTmpObjectPath() . ' 2>&1';
+       exec($sCmd, $aLines);
 
-		exec($sCmd, $aLines);
+       if (true === empty($aLines)) {
+           return;
+       }
 
-		if (true === empty($aLines))
-		{
-			return;
-		} // if
+       $sMessage  = 'No syntax errors detected in ';
+       $sMessage .= $oObject->getTmpObjectPath();
 
-		$sMessage  = 'No syntax errors detected in ';
-		$sMessage .= $oObject->getTmpObjectPath();
+       if (count($aLines) === 1) {
+           if ($aLines[0] === $sMessage) {
+               return;
+           }
+       }
 
-		if (count($aLines) === 1)
-		{
-			if ($aLines[0] === $sMessage)
-			{
-				return;
-			} // if
-		} // if
-
-		$oObject->addErrorLines($aLines);
-	} // function
+       $oObject->addErrorLines($aLines);
+   }

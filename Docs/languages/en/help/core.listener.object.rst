@@ -108,7 +108,7 @@ The *Property object* provides therefore also the function ``getOldValue``.
    $sValue = $oProperty->getNewValue();
    if ('Id' !== $sValue)
    {
-    	$oObject->addError('Please add the "Id" value to the svn:keywords tag.');
+       $oObject->addError('Please add the "Id" value to the svn:keywords tag.');
    } // if
 
 
@@ -150,17 +150,17 @@ The method `getRawLines` returns the raw lines of an unified diff.
    @@ -35,10 +35,10 @@
     class WhiteFile
     {
-    	/**
-   -	 * A member var.
-   -	 * @var stdClass
-   +	 * List with generated random numbers.
-   +	 * @var array
-    	 */
-   -	private $oMember;
-   +	private $aNumbers = array();
+        /**
+   -     * A member var.
+   -     * @var stdClass
+   +     * List with generated random numbers.
+   +     * @var array
+         */
+   -    private $oMember;
+   +    private $aNumbers = array();
 
-    	/**
-    	 * Init.
+        /**
+         * Init.
 
 The methods `getOldLines` and `getNewLines` will return only these + and - parts as an array.
 But this array contains the line number this line has in the new file or had in the old file.
@@ -169,15 +169,14 @@ In example above it will looks like this.
 .. code-block:: text
 
    Old lines
-   38 => 	 * A member var.
-   39 => 	 * @var stdClass
-   41 => 	private $oMember;
+   38 =>      * A member var.
+   39 =>      * @var stdClass
+   41 =>     private $oMember;
 
    New lines
-   38 => 	 * List with generated random numbers.
-   39 => 	 * @var array
-   41 => 	private $aNumbers = array();
-
+   38 =>      * List with generated random numbers.
+   39 =>      * @var array
+   41 =>     private $aNumbers = array();
 
 
 .. _`subversion property name`: http://svnbook.red-bean.com/en/1.5/svn.ref.properties.html
