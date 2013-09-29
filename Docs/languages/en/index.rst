@@ -27,8 +27,10 @@
 
    help/git.git.hooks
    help/git.git.hooks.implementation
+   help/git.git.installation
    help/svn.subversion.hooks
    help/svn.subversion.hooks.implementation
+   help/svn.subversion.installation
 
    ref/workflow
    ref/copyrights
@@ -54,6 +56,7 @@
 Git adapter
 ^^^^^^^^^^^
 
+  * :doc:`help/git.git.installation`
   * :doc:`help/git.git.hooks`
   * :doc:`help/git.git.hooks.implementation`
 
@@ -62,6 +65,7 @@ Git adapter
 Subversion adapter
 ^^^^^^^^^^^^^^^^^^
 
+  * :doc:`help/svn.subversion.installation`
   * :doc:`help/svn.subversion.hooks`
   * :doc:`help/svn.subversion.hooks.implementation`
 
