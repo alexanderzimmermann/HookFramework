@@ -411,4 +411,23 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(0, $oResponse->getResult(), 'Result should be 0');
         $this->assertSame($sExpected, $oResponse->getText(), 'Result text is false');
     }
+
+    /**
+     * Test an empty set when git diff returns nothing.
+     */
+    public function testEmptyCommit()
+    {
+        // Get the mock objects.
+        $oConfig    = $this->getMockConfig();
+        $oLog       = $this->getMockLog();
+        $oArguments = $this->getMockArguments(true, '0123456789abcdef0123456789abcdef01234567', 'client.post-commit');
+
+        $oFixture = new Controller($oArguments);
+        $oFixture->init($oConfig, $oLog, new Response());
+        $oResponse = $oFixture->run();
+
+        $this->assertSame(0, $oResponse->getResult(), 'Result should be 0');
+        $this->assertSame('', $oResponse->getText(), 'Error text is false');
+    }
+
 }

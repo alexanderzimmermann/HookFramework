@@ -34,7 +34,7 @@ abstract class ChangedAbstract
      * Items of the commit, but just the file with path.
      * @var array
      */
-    protected $aItems;
+    protected $aItems = array();
 
     /**
      * The created commit objects.

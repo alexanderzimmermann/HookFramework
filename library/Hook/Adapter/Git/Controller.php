@@ -201,11 +201,12 @@ class Controller extends ControllerAbstract
         $iFiles = count($aFiles);
         $this->oLog->writeLog(Log::HF_VARDUMP, 'controller parse found ' . $iFiles . ' files.');
 
-        $aDiffLines = $this->oCommand->getCommitDiff();
-        $oParser    = new Parser($oChanged->getFiles(), $aDiffLines);
-        $oParser->parse();
-
-        $this->createObjects($oChanged, $oParser);
+        if (0 > $iFiles) {
+            $aDiffLines = $this->oCommand->getCommitDiff();
+            $oParser    = new Parser($aFiles, $aDiffLines);
+            $oParser->parse();
+            $this->createObjects($oChanged, $oParser);
+        }
 
         $this->oLog->writeLog(Log::HF_INFO, 'controller parse end');
 
