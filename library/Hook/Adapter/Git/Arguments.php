@@ -58,7 +58,7 @@ class Arguments extends ArgumentsAbstract implements ArgumentsInterface
                                       'pre-commit'         => array('repos', 'txn'),
                                       'prepare-commit-msg' => array('repos', 'txn', 'file', 'action'),
                                       'commit-msg'         => array('repos', 'txn', 'file'),
-                                      'post-commit'        => array('repos'),
+                                      'post-commit'        => array('repos', 'txn'),
                                       // E-mail workflow hooks.
                                       'applypatch-msg'     => array('repos'),
                                       'pre-applypath'      => array('repos'),
