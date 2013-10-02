@@ -77,13 +77,13 @@ class Usage
      */
     private function getClientPrecommit()
     {
-        $sUsage  = 'REPOSITORY Repository path (/path/to/project)' . "\n";
-        $sUsage .= '           REPOSITORY=$(git rev-parse --show-toplevel)' . "\n";
+        $sUsage  = 'repository Repository path (/path/to/project)' . "\n";
+        $sUsage .= '           repository=$(git rev-parse --show-toplevel)' . "\n";
         $sUsage .= 'Commit     HEAD, SHA1' . "\n";
         $sUsage .= 'Hook       client.pre-commit' . "\n";
         $sUsage .= "\n";
         $sUsage .= 'Example: ';
-        $sUsage .= '/path/to/hookframework/Hook $REPOSITORY Commit client.pre-commit' . "\n";
+        $sUsage .= '/path/to/hookframework/Hook $repository Commit client.pre-commit' . "\n";
 
         return $sUsage;
     }
@@ -95,13 +95,13 @@ class Usage
      */
     private function getClientPostcommit()
     {
-        $sUsage  = 'REPOSITORY Repository path (/path/to/project)' . "\n";
-        $sUsage .= '           REPOSITORY=$(git rev-parse --show-toplevel)' . "\n";
+        $sUsage  = 'repository Repository path (/path/to/project)' . "\n";
+        $sUsage .= '           repository=$(git rev-parse --show-toplevel)' . "\n";
         $sUsage .= 'Commit     HEAD, SHA1' . "\n";
         $sUsage .= 'Hook       client.post-commit' . "\n";
         $sUsage .= "\n";
         $sUsage .= 'Example: ';
-        $sUsage .= '/path/to/hookframework/Hook $REPOSITORY Commit client.post-commit' . "\n";
+        $sUsage .= '/path/to/hookframework/Hook $repository Commit client.post-commit' . "\n";
 
         return $sUsage;
     }
@@ -113,13 +113,13 @@ class Usage
      */
     private function getClientCommitmsg()
     {
-        $sUsage  = 'REPOSITORY Repository path (/path/to/project)' . "\n";
-        $sUsage .= '           REPOSITORY=$(git rev-parse --show-toplevel)' . "\n";
+        $sUsage  = 'repository Repository path (/path/to/project)' . "\n";
+        $sUsage .= '           repository=$(git rev-parse --show-toplevel)' . "\n";
         $sUsage .= 'Commit     HEAD, SHA1' . "\n";
         $sUsage .= 'Hook       client.commit-msg' . "\n";
         $sUsage .= "\n";
         $sUsage .= 'Example: ';
-        $sUsage .= '/path/to/hookframework/Hook $REPOSITORY $commit $commitmsgfile client.commit-msg' . "\n";
+        $sUsage .= '/path/to/hookframework/Hook $repository $commit $commitmsgfile client.commit-msg' . "\n";
 
         return $sUsage;
     }
@@ -143,14 +143,14 @@ class Usage
      */
     private function getCommonUsage()
     {
-        $sUsage  = 'REPOSITORY Repository path (/path/to/project)' . "\n";
-        $sUsage .= '           REPOSITORY=$(git rev-parse --show-toplevel)' . "\n";
+        $sUsage  = 'repository Repository path (/path/to/project)' . "\n";
+        $sUsage .= '           repository=$(git rev-parse --show-toplevel)' . "\n";
         $sUsage .= 'Params     Parameters depending on hook type.' . "\n";
         $sUsage .= 'Hook       client.pre-commit, server.update' . "\n";
         $sUsage .= "\n";
         $sUsage .= 'Examples: ';
-        $sUsage .= '/path/to/hookframework/Hook $REPOSITORY HEAD client.HOOK-IDENTIFIER' . "\n";
-        $sUsage .= '/path/to/hookframework/Hook $REPOSITORY $SHA1 server.HOOK-IDENTIFIER' . "\n";
+        $sUsage .= '/path/to/hookframework/Hook $repository HEAD client.HOOK-IDENTIFIER' . "\n";
+        $sUsage .= '/path/to/hookframework/Hook $repository $SHA1 server.HOOK-IDENTIFIER' . "\n";
 
         return $sUsage;
     }

@@ -1,0 +1,11 @@
+commit 410f2007e7edd34aeb1d1534e21faf7508b1c502
+Author: alexanderzimmermann <alex@azimmermann.com>
+Date:   Sun Sep 29 21:13:46 2013 +0200
+
+    When the git diff returns an empty result, a fatal error occurs.
+
+:100644 100644 9746470... 4cc9763... M	library/Hook/Adapter/ChangedAbstract.php
+:100644 100644 b251267... d5670e4... M	library/Hook/Adapter/Git/Controller.php
+:100644 100644 134f5e5... 9be01b0... M	tests/HookTest/Adapter/Git/ControllerTest.php
+:000000 100644 0000000... e69de29... A	tests/HookTest/_files/git/0123456789abcdef0123456789abcdef01234567/changed.txt
+:000000 100644 0000000... e69de29... A	tests/HookTest/_files/git/0123456789abcdef0123456789abcdef01234567/diff.txt

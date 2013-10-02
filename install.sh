@@ -32,6 +32,7 @@ InstallMain() {
 
     # Escape path for sed using bash find and replace.
     TMP_INSTALL_DIR="${INSTALL_DIR//\//\\/}"
+    TMP_REPOSITORY_DIR="${REPOSITORY_DIR//\//\\/}"
 
     # Just copy all templates in the given subversion repository.
     echo "* Copy hook files to target $HOOK_DIR"
@@ -45,7 +46,7 @@ InstallMain() {
 
     # Copy the example listener.
     echo "* Copy example listener $INSTALL_DIR"Repositories/"$EXAMPLE/* to Repositories/$REPOSITORY"
-    echo ""
+    echo ""                                             Copy and configure the config.ini file.
     mkdir -vp $REPOSITORY_DIR
     cp -vR "$INSTALL_DIR"Repositories/"$EXAMPLE"/* $REPOSITORY_DIR
     echo ""
@@ -53,6 +54,14 @@ InstallMain() {
     # Parse the listener php files and adjust the namespace.
     echo "* Change namespace in $REPOSITORY_DIR/ from namespace $EXAMPLE to namespace $REPOSITORY"
     find $REPOSITORY_DIR -type f -exec sed -i 's/'"namespace $EXAMPLE"'/'"namespace $REPOSITORY"'/g' {} \;
+
+    # Copy and change the configuration files.
+    echo "* Copy and change the configuration files."
+    cp -v $REPOSITORY_DIR/config-dist.ini $REPOSITORY_DIR/config.ini
+    cp -v $INSTALL_DIR/config-dist.ini $INSTALL_DIR/config.ini
+    sed -i 's/\/path\/to\/hookframework\/logs\//'"$TMP_INSTALL_DIR"'/g' $INSTALL_DIR/config.ini
+    sed -i 's/\/path\/to\/the\/listener\/foreach\/repository\//'"$TMP_INSTALL_DIR"'Repositories\//g' $INSTALL_DIR/config.ini
+    echo ""
 
     return 0;
 }

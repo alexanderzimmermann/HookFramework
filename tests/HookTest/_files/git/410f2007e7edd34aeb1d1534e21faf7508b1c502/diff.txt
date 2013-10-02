@@ -1,0 +1,75 @@
+commit 410f2007e7edd34aeb1d1534e21faf7508b1c502
+Author: alexanderzimmermann <alex@azimmermann.com>
+Date:   Sun Sep 29 21:13:46 2013 +0200
+
+    When the git diff returns an empty result, a fatal error occurs.
+
+diff --git a/library/Hook/Adapter/ChangedAbstract.php b/library/Hook/Adapter/ChangedAbstract.php
+index 9746470..4cc9763 100644
+--- a/library/Hook/Adapter/ChangedAbstract.php
++++ b/library/Hook/Adapter/ChangedAbstract.php
+@@ -34,7 +34,7 @@
+      * Items of the commit, but just the file with path.
+      * @var array
+      */
+-    protected $aItems;
++    protected $aItems = array();
+ 
+     /**
+      * The created commit objects.
+diff --git a/library/Hook/Adapter/Git/Controller.php b/library/Hook/Adapter/Git/Controller.php
+index b251267..d5670e4 100644
+--- a/library/Hook/Adapter/Git/Controller.php
++++ b/library/Hook/Adapter/Git/Controller.php
+@@ -201,11 +201,12 @@ public function parse()
+         $iFiles = count($aFiles);
+         $this->oLog->writeLog(Log::HF_VARDUMP, 'controller parse found ' . $iFiles . ' files.');
+ 
+-        $aDiffLines = $this->oCommand->getCommitDiff();
+-        $oParser    = new Parser($oChanged->getFiles(), $aDiffLines);
+-        $oParser->parse();
+-
+-        $this->createObjects($oChanged, $oParser);
++        if (0 > $iFiles) {
++            $aDiffLines = $this->oCommand->getCommitDiff();
++            $oParser    = new Parser($aFiles, $aDiffLines);
++            $oParser->parse();
++            $this->createObjects($oChanged, $oParser);
++        }
+ 
+         $this->oLog->writeLog(Log::HF_INFO, 'controller parse end');
+ 
+diff --git a/tests/HookTest/Adapter/Git/ControllerTest.php b/tests/HookTest/Adapter/Git/ControllerTest.php
+index 134f5e5..9be01b0 100644
+--- a/tests/HookTest/Adapter/Git/ControllerTest.php
++++ b/tests/HookTest/Adapter/Git/ControllerTest.php
+@@ -411,4 +411,23 @@ public function testFilesFoundButBadImplementationSoNoListener()
+         $this->assertSame(0, $oResponse->getResult(), 'Result should be 0');
+         $this->assertSame($sExpected, $oResponse->getText(), 'Result text is false');
+     }
++
++    /**
++     * Test an empty set when git diff returns nothing.
++     */
++    public function testEmptyCommit()
++    {
++        // Get the mock objects.
++        $oConfig    = $this->getMockConfig();
++        $oLog       = $this->getMockLog();
++        $oArguments = $this->getMockArguments(true, '0123456789abcdef0123456789abcdef01234567', 'client.post-commit');
++
++        $oFixture = new Controller($oArguments);
++        $oFixture->init($oConfig, $oLog, new Response());
++        $oResponse = $oFixture->run();
++
++        $this->assertSame(0, $oResponse->getResult(), 'Result should be 0');
++        $this->assertSame('', $oResponse->getText(), 'Error text is false');
++    }
++
+ }
+diff --git a/tests/HookTest/_files/git/0123456789abcdef0123456789abcdef01234567/changed.txt b/tests/HookTest/_files/git/0123456789abcdef0123456789abcdef01234567/changed.txt
+new file mode 100644
+index 0000000..e69de29
+diff --git a/tests/HookTest/_files/git/0123456789abcdef0123456789abcdef01234567/diff.txt b/tests/HookTest/_files/git/0123456789abcdef0123456789abcdef01234567/diff.txt
+new file mode 100644
+index 0000000..e69de29

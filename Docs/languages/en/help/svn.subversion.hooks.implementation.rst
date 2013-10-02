@@ -1,7 +1,7 @@
 .. _svn.subversion.hooks.implementation:
 
 Hook implementation
-====================
+===================
 
 This example shows how the hook framework is called.
 
