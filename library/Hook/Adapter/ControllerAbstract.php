@@ -195,6 +195,7 @@ abstract class ControllerAbstract
 
         $this->oError = new Error();
 
+        // Parse the commit, get the files, and pass it to the listener.
         if (true === $this->parse()) {
 
             $this->runListenerInfo();

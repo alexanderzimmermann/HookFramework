@@ -209,8 +209,14 @@ class Controller extends ControllerAbstract
         $iFiles = count($aFiles);
         $this->oLog->writeLog(Log::HF_VARDUMP, 'controller parse found ' . $iFiles . ' files.');
 
-        if (0 > $iFiles) {
+        // If files were found, parse the diff and create the objects for the listener.
+        if (0 < $iFiles) {
             $aDiffLines = $this->oCommand->getCommitDiff();
+            // On post hooks, remove the header.
+            if ('post' === substr($this->oArguments->getSubType(), 0, 4)) {
+                $aDiffLines = array_slice($aDiffLines, 6);
+            }
+
             $oParser    = new Parser($aFiles, $aDiffLines);
             $oParser->parse();
             $this->createObjects($oChanged, $oParser);
