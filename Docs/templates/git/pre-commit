@@ -17,8 +17,8 @@ else
 	against=4b825dc642cb6eb9a060e54bf8d69288fbee4904
 fi
 
-REPOSITORY=$(git rev-parse --show-toplevel)
+repository=$(git rev-parse --show-toplevel)
 
-/path/to/hookframework/Hook $REPOSITORY $against client.pre-commit >&2 || exit 1
+/path/to/hookframework/Hook $repository $against client.pre-commit >&2 || exit 1
 
 exit 0

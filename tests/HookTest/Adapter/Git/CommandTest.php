@@ -114,7 +114,8 @@ class CommandTest extends \PHPUnit_Framework_TestCase
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function testBadCommandCall()
-    {        // Main type usually is pre, post and start but here Failures to check listener.
+    {
+        // Main type usually is pre, post and start but here Failures to check listener.
         $oArguments = $this->getMock('Hook\Adapter\Git\Arguments', array(), array(), '', false);
 
         $oArguments->expects($this->once())

@@ -73,7 +73,7 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(isset($aListener['object']), 'Object Element is not set in $aListener.');
 
         // Object listener test.
-        $this->assertEquals(1, count($aListener['object']), 'Info Listener count not 1.');
+        $this->assertEquals(1, count($aListener['object']), 'Object Listener count not 1.');
         $sExpectedName = 'Test Object Listener Ok.';
         $sActualName   = $aListener['object'][0]->getListenerName();
         $this->assertEquals($sExpectedName, $sActualName, 'Object Listener Name not correct!');

@@ -7,7 +7,7 @@ Hook Framework Requirements
 .. _requirements.overview:
 
 Quick Overview
-^^^^^^^^^^^^^^
+--------------
 
 The hook framework is a CLI application. So there is no need for a webserver, but the PHP
 CLI should be configured (i. e. error_log).
@@ -51,8 +51,10 @@ The hook framework needs to be installed on the same server where subversion is 
 Direct access to the subversion commands must be granted.
 
 
-
 .. _requirements.php:
+
+PHP
+-----
 
 PHP Version
 ^^^^^^^^^^^
@@ -65,20 +67,16 @@ features may not be fully functional.
 The Hook Framework recommends the most current release of *PHP* for critical security and
 performance enhancements, and currently supports *PHP* 5.3.6 or later.
 
-Hook Framework has a collection of unit tests, which you can run using PHPUnit 3.3.0 or later.
+Hook Framework has a collection of unit tests, which you can run using PHPUnit 3.5.0 or later.
 
-.. _requirements.php_extensions:
 
-PHP Extensions
-^^^^^^^^^^^^^^
+Optional
+--------
 
-You will find a table listing all extensions typically found in *PHP* and how they are used in Zend Framework
-below. You should verify that the extensions on which Zend Framework components you'll be using in your application
-are available in your *PHP* environments. Many applications will not require every extension listed below.
+In order to run listener that use other software, you need to install this software they use.
+The example repository includes a listener that needs the
+`PHP CodeSniffer`_ installed.
+Another listener mails the changes to a given address, so you need the mail function for php
+configured.
 
-A dependency of type "hard" indicates that the components or classes cannot function properly if the respective
-extension is not available, while a dependency of type "soft" indicates that the component may use the extension if
-it is available but will function properly if it is not. Many components will automatically use certain extensions
-if they are available to optimize performance but will execute code with similar functionality in the component
-itself if the extensions are unavailable.
-
+.. _`PHP CodeSniffer`: http://pear.php.net/package/PHP_CodeSniffer
