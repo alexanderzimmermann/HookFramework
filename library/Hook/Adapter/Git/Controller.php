@@ -193,8 +193,16 @@ class Controller extends ControllerAbstract
         $this->oData->setInfo($oInfo->getInfoObject());
 
         // Parse array with the changed items.
+        $aChanged = $this->oCommand->getCommitChanged();
         $oChanged = new Changed();
-        $oChanged->parseFiles($this->oCommand->getCommitChanged());
+
+        // On post hooks, remove the header.
+        if ('post' === substr($this->oArguments->getSubType(), 0, 4)) {
+            $aChanged = array_slice($aChanged, 6);
+        }
+
+        // Parse files.
+        $oChanged->parseFiles($aChanged);
 
         // Log.
         $aFiles = $oChanged->getFiles();

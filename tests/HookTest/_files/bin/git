@@ -13,15 +13,17 @@
  * @since      File available since Release 3.0.0
  */
 
+/** @var $argv array */
+
 /**
     The check for the params can be skipped, cause the script is only used in the test environment.
     Example: git diff --raw acdef098776554
  */
 
 $aCommands = array(
-    'diff', 'var'
+    'diff', 'show', 'var', 'rev-parse'
 );
-
+error_log(var_export($argv, true));
 if (false === isset($argv[1])) {
     exit;
 }
@@ -33,8 +35,15 @@ if (in_array($sCommand, $aCommands) === false) {
     exit;
 }
 
+if ('rev-parse' === $argv[1]) {
+    echo '410f2007e7edd34aeb1d1534e21faf7508b1c502';
+    exit;
+}
+
+$sTxn = '';
 // DIFF elements.
-if ('diff' === $argv[1]) {
+if (('diff' === $argv[1]) ||
+    ('show' === $argv[1])) {
     // With -- means raw, and only the changed file items.
     if (false !== strpos($argv[2], 'raw')) {
         $sFile = $argv[3] . '/changed';

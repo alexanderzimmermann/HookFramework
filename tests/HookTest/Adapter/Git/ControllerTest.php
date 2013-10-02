@@ -177,6 +177,24 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test that the post commit runs properly.
+     */
+    public function testControllerPostCommit()
+    {
+        // get the mock objects.
+        $oConfig    = $this->getMockConfig();
+        $oLog       = $this->getMockLog();
+        $oArguments = $this->getMockArguments(true, '410f2007e7edd34aeb1d1534e21faf7508b1c502', 'client.post-commit');
+
+        $oFixture = new Controller($oArguments);
+        $oFixture->init($oConfig, $oLog, new Response());
+        $oResponse = $oFixture->run();
+
+        $this->assertSame(0, $oResponse->getResult(), 'Result should be 0');
+        $this->assertSame('', $oResponse->getText(), 'Error text is false');
+    }
+
+    /**
      * TEst controller for prepare-commit-msg hook.
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
@@ -429,5 +447,4 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(0, $oResponse->getResult(), 'Result should be 0');
         $this->assertSame('', $oResponse->getText(), 'Error text is false');
     }
-
 }

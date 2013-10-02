@@ -38,6 +38,18 @@ class Command extends CommandAbstract
     protected $sAgainst = 'HEAD';
 
     /**
+     * Sub command to get data..
+     * @var string
+     */
+    protected $sSubCommand = ' diff';
+
+    /**
+     * Last sha1 identifier..
+     * @var string
+     */
+    protected $sLastSha1;
+
+    /**
      * Initialize.
      * @param ArgumentsAbstract $oArguments Command line arguments.
      * @return void
@@ -48,6 +60,25 @@ class Command extends CommandAbstract
         $this->sRepository = $oArguments->getRepository();
         $this->sCommand    = $this->sBinPath . 'git';
         $this->sAgainst    = $oArguments->getTransaction();
+
+        if ('post' === substr($oArguments->getSubType(), 0, 4)) {
+            $this->sSubCommand = ' show';
+            $this->sAgainst    = $this->getLastSha1();
+        }
+    }
+
+    /**
+     * Get the last sha1 number (post).
+     * @return string
+     */
+    public function getLastSha1()
+    {
+        $sCommand  = $this->sCommand;
+        $sCommand .= ' rev-parse HEAD';
+
+        $aData = $this->execCommand($sCommand);
+
+        return $aData[0];
     }
 
     /**
@@ -57,8 +88,22 @@ class Command extends CommandAbstract
      */
     public function getCommitChanged()
     {
-        $sCommand = $this->sCommand;
-        $sCommand .= ' diff --raw ';
+        $sCommand  = $this->sCommand;
+        $sCommand .= $this->sSubCommand . ' --raw ';
+        $sCommand .= $this->sAgainst;
+
+        return $this->execCommand($sCommand);
+    }
+
+    /**
+     * Get the difference of that commit.
+     * @return array
+     * @author Alexander Zimmermann <alex@azimmermann.com>
+     */
+    public function getCommitDiff()
+    {
+        $sCommand  = $this->sCommand;
+        $sCommand .= $this->sSubCommand;
         $sCommand .= $this->sAgainst;
 
         return $this->execCommand($sCommand);
@@ -97,20 +142,6 @@ class Command extends CommandAbstract
         $sFile = $this->sRepository . '/' . $sFile;
 
         return file($sFile, FILE_IGNORE_NEW_LINES);
-    }
-
-    /**
-     * Get the difference of that commit.
-     * @return array
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    public function getCommitDiff()
-    {
-        $sCommand = $this->sCommand;
-        $sCommand .= ' diff ';
-        $sCommand .= $this->sAgainst;
-
-        return $this->execCommand($sCommand);
     }
 
     /**
