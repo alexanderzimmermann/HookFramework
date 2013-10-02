@@ -41,7 +41,7 @@ class Command extends CommandAbstract
      * Sub command to get data..
      * @var string
      */
-    protected $sSubCommand = ' diff';
+    protected $sSubCommand = ' diff ';
 
     /**
      * Last sha1 identifier..
@@ -62,7 +62,7 @@ class Command extends CommandAbstract
         $this->sAgainst    = $oArguments->getTransaction();
 
         if ('post' === substr($oArguments->getSubType(), 0, 4)) {
-            $this->sSubCommand = ' show';
+            $this->sSubCommand = ' show ';
             $this->sAgainst    = $this->getLastSha1();
         }
     }
@@ -89,7 +89,7 @@ class Command extends CommandAbstract
     public function getCommitChanged()
     {
         $sCommand  = $this->sCommand;
-        $sCommand .= $this->sSubCommand . ' --raw ';
+        $sCommand .= $this->sSubCommand . '--raw ';
         $sCommand .= $this->sAgainst;
 
         return $this->execCommand($sCommand);

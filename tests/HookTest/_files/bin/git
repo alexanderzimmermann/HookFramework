@@ -23,7 +23,7 @@
 $aCommands = array(
     'diff', 'show', 'var', 'rev-parse'
 );
-error_log(var_export($argv, true));
+
 if (false === isset($argv[1])) {
     exit;
 }
