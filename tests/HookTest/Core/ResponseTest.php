@@ -39,7 +39,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Setup
-     * @author Alexander Zimmermann <alex@azimmermann.com>
+     * @return void
      */
     protected function setUp()
     {
@@ -47,8 +47,8 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test check values on create
-     * @author Alexander Zimmermann <alex@azimmermann.com>
+     * Test check values on create.
+     * @return void
      */
     public function testCreate()
     {
@@ -58,7 +58,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Set response result to success.
-     * @author Alexander Zimmermann <alex@azimmermann.com>
+     * @return void
      */
     public function testSetSuccess()
     {
@@ -71,7 +71,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Set a wrong value for result.
-     * @author Alexander Zimmermann <alex@azimmermann.com>
+     * @return void
      */
     public function testSetWrongValueForResult()
     {
@@ -81,8 +81,128 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test for error handling of a info object..
+     * @return void
+     */
+    public function testErrorInfo()
+    {
+        $sFile      = __DIR__ . '/_files/Error/lines_info.txt';
+        $sErrorInfo = file_get_contents($sFile);
+        $aErrorInfo = explode("\n", $sErrorInfo);
+
+        $oInfo = $this->getMock('Hook\Commit\Info', array(), array(), '', false);
+        $oInfo->expects($this->any())
+              ->method('getObjectPath')
+              ->will($this->returnValue('/path/to/a/file/in/svn.ext'));
+
+        $oInfo->expects($this->any())
+              ->method('getErrorLines')
+              ->will($this->returnValue($aErrorInfo));
+
+        $oListener = $this->getMock('Hook\Listener\AbstractInfo');
+        $oListener->expects($this->once())
+                  ->method('getListenerName')
+                  ->will($this->returnValue('ErrorTest Listener'));
+
+        $this->oResponse->processActionInfo($oInfo, $oListener);
+
+        $sExpected = __DIR__ . '/_files/Error/expected-' . __FUNCTION__  .'.txt';
+        $sExpected = file_get_contents($sExpected);
+
+        $this->assertEquals($sExpected, $this->oResponse->getMessages());
+    }
+
+    /**
+     * Test for error handling of a file object.
+     * @return void
+     */
+    public function testErrorObject()
+    {
+        // Commit Object.
+        $sFile        = __DIR__ . '/_files/Error/lines_object.txt';
+        $sFile        = file_get_contents($sFile);
+        $aErrorObject = explode("\n", $sFile);
+
+        $oObject = $this->getMock('Hook\Commit\Object', array(), array(), '', false);
+        $oObject->expects($this->any())
+                 ->method('getObjectPath')
+                 ->will($this->returnValue('/path/to/a/file/in/svn.txt'));
+
+        $oObject->expects($this->any())
+                ->method('getErrorLines')
+                ->will($this->returnValue($aErrorObject));
+
+        $oListener = $this->getMock('Hook\Listener\AbstractObject');
+        $oListener->expects($this->once())
+                  ->method('getListenerName')
+                  ->will($this->returnValue('ErrorTest Listener'));
+
+        $this->oResponse->processActionObject($oObject, $oListener);
+
+        // Tests.
+        $this->assertSame(1, $this->oResponse->getResult(), 'Result not true.');
+
+        $sExpected = __DIR__ . '/_files/Error/expected-' . __FUNCTION__  .'.txt';
+        $sExpected = file_get_contents($sExpected);
+
+        $this->assertEquals($sExpected, $this->oResponse->getMessages(), 'getMessage false.');
+    }
+
+    /**
+     * Test, when 2 Objects contain errors.
+     * @return void
+     */
+    public function testErrorObjectTwoObjects()
+    {
+        // Commit Object.
+        $sFile        = __DIR__ . '/_files/Error/lines_object.txt';
+        $sFile        = file_get_contents($sFile);
+        $aErrorObject = explode("\n", $sFile);
+
+
+        $oObject = $this->getMock('Hook\Commit\Object', array(), array(), '', false);
+        $oObject->expects($this->any())
+                ->method('getObjectPath')
+                ->will($this->returnValue('/path/to/a/file/in/svn.txt'));
+
+        $oObject->expects($this->any())
+                ->method('getErrorLines')
+                ->will($this->returnValue($aErrorObject));
+
+        $oListener = $this->getMock('Hook\Listener\AbstractObject');
+        $oListener->expects($this->once())
+                  ->method('getListenerName')
+                  ->will($this->returnValue('ErrorTest Listener 1'));
+
+        $this->oResponse->processActionObject($oObject, $oListener);
+
+        // Simulate a 2nd file.
+        $oObject = $this->getMock('Hook\Commit\Object', array(), array(), '', false);
+        $oObject->expects($this->any())
+                ->method('getObjectPath')
+                ->will($this->returnValue('/path/to/a/file/in/info.txt'));
+
+        $oObject->expects($this->any())
+                ->method('getErrorLines')
+                ->will($this->returnValue($aErrorObject));
+
+        $oListener = $this->getMock('Hook\Listener\AbstractObject');
+        $oListener->expects($this->once())
+                  ->method('getListenerName')
+                  ->will($this->returnValue('ErrorTest Listener 2'));
+
+        $this->oResponse->processActionObject($oObject, $oListener);
+
+        // Asserts.
+        $sExpected = __DIR__ . '/_files/Error/expected-' . __FUNCTION__  .'.txt';
+        $sExpected = file_get_contents($sExpected);
+
+        $this->assertSame(1, $this->oResponse->getResult(), 'Result not true.');
+        $this->assertEquals($sExpected, $this->oResponse->getMessages(), 'Messages not equal.');
+    }
+
+    /**
      * Test the send output.
-     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function testSend()
     {

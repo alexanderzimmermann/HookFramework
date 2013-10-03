@@ -73,12 +73,6 @@ abstract class ControllerAbstract
     protected $oData;
 
     /**
-     * Error-Object.
-     * @var Error
-     */
-    protected $oError;
-
-    /**
      * Response object.
      * @var Response
      */
@@ -108,7 +102,6 @@ abstract class ControllerAbstract
      * @param Log      $oLog      The log we need to log debug information and errors.
      * @param Response $oResponse Response Object from hook.
      * @return boolean
-     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function init(Config $oConfig, Log $oLog, Response $oResponse)
     {
@@ -123,7 +116,6 @@ abstract class ControllerAbstract
      * Initialize repository stuff.
      * @throws \Exception
      * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     protected function initRepository()
     {
@@ -180,27 +172,23 @@ abstract class ControllerAbstract
     /**
      * Start to parse the commit.
      * @return boolean
-     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     abstract protected function parse();
 
     /**
      * Run.
      * @return Response
-     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function run()
     {
         $this->oLog->writeLog(Log::HF_INFO, 'controller run start');
-
-        $this->oError = new Error();
 
         // Parse the commit, get the files, and pass it to the listener.
         if (true === $this->parse()) {
 
             $this->runListenerInfo();
             $this->runListenerObject();
-            $this->handleErrors();
+            $this->oResponse->getMessages();
         }
 
         $this->oLog->writeLog(Log::HF_INFO, 'controller run end');
@@ -211,7 +199,6 @@ abstract class ControllerAbstract
     /**
      * Call info listener.
      * @return void
-     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     private function runListenerInfo()
     {
@@ -230,7 +217,6 @@ abstract class ControllerAbstract
     /**
      * Call Listener.
      * @return void
-     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     private function runListenerObject()
     {
@@ -254,7 +240,6 @@ abstract class ControllerAbstract
      * Call Listener for Info.
      * @param AbstractInfo $oListener Listener.
      * @return void
-     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     private function processInfoListener(AbstractInfo $oListener)
     {
@@ -264,17 +249,17 @@ abstract class ControllerAbstract
 
         $oInfo = $this->oData->getInfo();
 
+        // Process the listener magic.
         $oListener->processAction($oInfo);
 
-        $this->oError->setListener($oListener->getListenerName());
-        $this->oError->processActionInfo($oInfo);
+        // Prepare the response result.
+        $this->oResponse->processActionInfo($oInfo, $oListener);
     }
 
     /**
      * Execute Listener.
      * @param AbstractObject $oListener Listener Object.
      * @return void
-     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     private function processObjectListener(AbstractObject $oListener)
     {
@@ -293,36 +278,14 @@ abstract class ControllerAbstract
             // Process the listener magic.
             $oListener->processAction($aObjects[$iFor]);
 
-            // Set listener name and get the error lines from the object being processed.
-            $this->oError->setListener($oListener->getListenerName());
-            $this->oError->processActionObject($aObjects[$iFor]);
+            // Prepare the response result.
+            $this->oResponse->processActionObject($aObjects[$iFor], $oListener);
         }
-    }
-
-    /**
-     * Error handling of listener.
-     * @return integer
-     * @author Alexander Zimmermann <alex@azimmermann.com>
-     */
-    protected function handleErrors()
-    {
-        if (true === $this->oError->hasError()) {
-
-            $sErrors = $this->oError->getMessages();
-
-            $this->oResponse->setText($sErrors);
-            $this->oResponse->setResult(1);
-
-            return;
-        }
-
-        $this->oResponse->setText('');
-        $this->oResponse->setResult(0);
     }
 
     /**
      * Shut Down the controller.
-     * @author Alexander Zimmermann <alex@azimmermann.com>
+     * @return void
      */
     public function __destruct()
     {

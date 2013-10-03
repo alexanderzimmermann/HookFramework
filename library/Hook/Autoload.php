@@ -57,7 +57,6 @@ function hfautoload($sClass)
    'hook\\commit\\info' => '/Commit/Info.php',
    'hook\\commit\\object' => '/Commit/Object.php',
    'hook\\core\\config' => '/Core/Config.php',
-   'hook\\core\\error' => '/Core/Error.php',
    'hook\\core\\file' => '/Core/File.php',
    'hook\\core\\hook' => '/Core/Hook.php',
    'hook\\core\\log' => '/Core/Log.php',
