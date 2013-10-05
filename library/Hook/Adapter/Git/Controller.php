@@ -272,7 +272,7 @@ class Controller extends ControllerAbstract
 
     /**
      * Show usage.
-     * @return void
+     * @return string
      * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function showUsage()
