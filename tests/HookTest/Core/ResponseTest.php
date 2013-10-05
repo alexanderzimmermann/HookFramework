@@ -86,7 +86,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function testErrorInfo()
     {
-        $sFile      = __DIR__ . '/_files/Error/lines_info.txt';
+        $sFile      = __DIR__ . '/_files/Response/lines_info.txt';
         $sErrorInfo = file_get_contents($sFile);
         $aErrorInfo = explode("\n", $sErrorInfo);
 
@@ -106,7 +106,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 
         $this->oResponse->processActionInfo($oInfo, $oListener);
 
-        $sExpected = __DIR__ . '/_files/Error/expected-' . __FUNCTION__  .'.txt';
+        $sExpected = __DIR__ . '/_files/Response/expected-' . __FUNCTION__  .'.txt';
         $sExpected = file_get_contents($sExpected);
 
         $this->assertEquals($sExpected, $this->oResponse->getMessages());
@@ -119,7 +119,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     public function testErrorObject()
     {
         // Commit Object.
-        $sFile        = __DIR__ . '/_files/Error/lines_object.txt';
+        $sFile        = __DIR__ . '/_files/Response/lines_object.txt';
         $sFile        = file_get_contents($sFile);
         $aErrorObject = explode("\n", $sFile);
 
@@ -142,7 +142,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         // Tests.
         $this->assertSame(1, $this->oResponse->getResult(), 'Result not true.');
 
-        $sExpected = __DIR__ . '/_files/Error/expected-' . __FUNCTION__  .'.txt';
+        $sExpected = __DIR__ . '/_files/Response/expected-' . __FUNCTION__  .'.txt';
         $sExpected = file_get_contents($sExpected);
 
         $this->assertEquals($sExpected, $this->oResponse->getMessages(), 'getMessage false.');
@@ -155,7 +155,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     public function testErrorObjectTwoObjects()
     {
         // Commit Object.
-        $sFile        = __DIR__ . '/_files/Error/lines_object.txt';
+        $sFile        = __DIR__ . '/_files/Response/lines_object.txt';
         $sFile        = file_get_contents($sFile);
         $aErrorObject = explode("\n", $sFile);
 
@@ -194,7 +194,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->oResponse->processActionObject($oObject, $oListener);
 
         // Asserts.
-        $sExpected = __DIR__ . '/_files/Error/expected-' . __FUNCTION__  .'.txt';
+        $sExpected = __DIR__ . '/_files/Response/expected-' . __FUNCTION__  .'.txt';
         $sExpected = file_get_contents($sExpected);
 
         $this->assertSame(1, $this->oResponse->getResult(), 'Result not true.');
