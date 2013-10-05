@@ -210,7 +210,20 @@ abstract class ControllerAbstract
         $iMax = count($this->aListener['info']);
         for ($iFor = 0; $iFor < $iMax; $iFor++) {
 
-            $this->processInfoListener($this->aListener['info'][$iFor]);
+            /** @var $oListener AbstractInfo */
+            $oListener = $this->aListener['info'][$iFor];
+
+            // No files, call listener once.
+            $sLog  = 'process info listener '. $oListener->getListenerName();
+            $this->oLog->writeLog(Log::HF_INFO, $sLog);
+
+            $oInfo = $this->oData->getInfo();
+
+            // Process the listener magic.
+            $oListener->processAction($oInfo);
+
+            // Prepare the response result.
+            $this->oResponse->processActionInfo($oInfo, $oListener);
         }
     }
 
@@ -228,32 +241,14 @@ abstract class ControllerAbstract
 
         for ($iFor = 0; $iFor < $iMax; $iFor++) {
 
-            $sLog = 'process object listener ';
-            $sLog .= $this->aListener['object'][$iFor]->getListenerName();
+            /** @var AbstractObject $oListener */
+            $oListener = $this->aListener['object'][$iFor];
+
+            $sLog = 'process object listener ' . $oListener->getListenerName();
             $this->oLog->writeLog(Log::HF_DEBUG, $sLog);
 
             $this->processObjectListener($this->aListener['object'][$iFor]);
         }
-    }
-
-    /**
-     * Call Listener for Info.
-     * @param AbstractInfo $oListener Listener.
-     * @return void
-     */
-    private function processInfoListener(AbstractInfo $oListener)
-    {
-        // No files, call listener once.
-        $sLog  = 'process info listener '. $oListener->getListenerName();
-        $this->oLog->writeLog(Log::HF_INFO, $sLog);
-
-        $oInfo = $this->oData->getInfo();
-
-        // Process the listener magic.
-        $oListener->processAction($oInfo);
-
-        // Prepare the response result.
-        $this->oResponse->processActionInfo($oInfo, $oListener);
     }
 
     /**
