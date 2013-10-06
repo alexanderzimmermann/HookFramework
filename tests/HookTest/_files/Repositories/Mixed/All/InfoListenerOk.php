@@ -12,7 +12,7 @@
  * @since      File available since Release 1.0.0
  */
 
-namespace HookTest\Listener\Failures;
+namespace HookTest\Listener\Mixed\All;
 
 use Hook\Commit\Info;
 use Hook\Listener\AbstractInfo;
@@ -40,7 +40,6 @@ class InfoListenerOk extends AbstractInfo
     /**
      * Register the action.
      * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function register()
     {
@@ -51,10 +50,9 @@ class InfoListenerOk extends AbstractInfo
      * Process action.
      * @param Info $oInfo Info des Commits.
      * @return void
-     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function processAction(Info $oInfo)
     {
-        $oInfo = null;
+        $oInfo->addError('some error');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Failure Register values empty.
+ * Failure Register values with wrong type.
  * @category   Hook
  * @package    Listener
  * @subpackage Failures
@@ -12,13 +12,13 @@
  * @since      File available since Release 1.0.0
  */
 
-namespace HookTest\Listener\Failures;
+namespace HookTest\Listener\Mixed\All;
 
 use Hook\Commit\Object;
 use Hook\Listener\AbstractObject;
 
 /**
- * Failure Register values empty.
+ * Failure Register values with wrong type.
  * @category   Hook
  * @package    Listener
  * @subpackage Failures
@@ -29,24 +29,23 @@ use Hook\Listener\AbstractObject;
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class ObjectListenerFailureRegisterValuesEmpty extends AbstractObject
+class ObjectListenerFailureRegisterValues extends AbstractObject
 {
     /**
      * Listener Name.
      * @var string
      */
-    protected $sListener = 'Test Object Listener Failure Register Values.';
+    protected $sListener = 'Test Object Listener Failure Register Values empty.';
 
     /**
      * Register the action.
      * @return array
-     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function register()
     {
         return array(
-            'action'     => '',
-            'fileaction' => array(),
+            'action'     => 'commit',
+            'fileaction' => 'U',
             'extensions' => array(),
             'withdirs'   => false
         );
@@ -56,9 +55,9 @@ class ObjectListenerFailureRegisterValuesEmpty extends AbstractObject
      * Execute the action.
      * @param Object $oObject Directory / File-Object.
      * @return void
-     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function processAction(Object $oObject)
     {
+        $oObject->addError('some error');
     }
 }

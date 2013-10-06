@@ -1,6 +1,6 @@
 <?php
 /**
- * Failure Register values with wrong type.
+ * Failure Type Empty Test Listener.
  * @category   Hook
  * @package    Listener
  * @subpackage Failures
@@ -12,13 +12,13 @@
  * @since      File available since Release 1.0.0
  */
 
-namespace HookTest\Listener\Failures;
+namespace HookTest\Listener\Mixed\All;
 
-use Hook\Commit\Object;
-use Hook\Listener\AbstractObject;
+use Hook\Commit\Info;
+use Hook\Listener\AbstractInfo;
 
 /**
- * Failure Register values with wrong type.
+ * Failure Type Empty Test Listener.
  * @category   Hook
  * @package    Listener
  * @subpackage Failures
@@ -29,36 +29,30 @@ use Hook\Listener\AbstractObject;
  * @link       http://www.azimmermann.com/
  * @since      Class available since Release 1.0.0
  */
-class ObjectListenerFailureRegisterValues extends AbstractObject
+class InfoListenerFailureTypeEmpty extends AbstractInfo
 {
     /**
      * Listener Name.
      * @var string
      */
-    protected $sListener = 'Test Object Listener Failure Register Values empty.';
+    protected $sListener = 'Test listener register value empty';
 
     /**
      * Register the action.
-     * @return array
-     * @author Alexander Zimmermann <alex@azimmermann.com>
+     * @return string
      */
     public function register()
     {
-        return array(
-            'action'     => 'commit',
-            'fileaction' => 'U',
-            'extensions' => array(),
-            'withdirs'   => false
-        );
+        return '';
     }
 
     /**
      * Execute the action.
-     * @param Object $oObject Directory / File-Object.
+     * @param Info $oInfo Info des Commits.
      * @return void
-     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
-    public function processAction(Object $oObject)
+    public function processAction(Info $oInfo)
     {
+        $oInfo->addError('some error');
     }
 }
