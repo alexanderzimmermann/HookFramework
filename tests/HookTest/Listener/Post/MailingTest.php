@@ -130,32 +130,7 @@ class MailingTest extends \PHPUnit_Framework_TestCase
         $oInfo->setObjects($aObjects);
 
         $sMail = $this->oMailingListener->processAction($oInfo);
-
-        $sDir = 'hookframework/trunk/';
-
-        $sExpected = 'Date Time : 2008-12-30 14:56:23' . "\n\n";
-        $sExpected .= 'User      : duchess' . "\n\n";
-        $sExpected .= 'Comment   : * Test comment for the Unit Tests.' . "\n\n";
-
-        $sExpected .= str_repeat('=', 80) . "\n";
-        $sExpected .= 'Directories, Fileinformations:' . "\n";
-        $sExpected .= str_repeat('-', 40) . "\n";
-        $sExpected .= 'Added   : 2' . "\n";
-        $sExpected .= 'hookframework/trunk/doc/hooktemplates/' . "\n";
-        $sExpected .= 'hookframework/trunk/doc/hooktemplates/pre-commit' . "\n";
-        $sExpected .= 'Updated : 2' . "\n";
-        $sExpected .= 'hookframework/trunk/Core/Commit/Base.php' . "\n";
-        $sExpected .= 'hookframework/trunk/Core/Commit/Object.php' . "\n";
-        $sExpected .= 'Deleted : 2' . "\n";
-        $sExpected .= 'hookframework/trunk/tmp//newfolder/testfile.txt' . "\n";
-        $sExpected .= 'hookframework/trunk/tmp//newfolder/' . "\n";
-        $sExpected .= "\n";
-        $sExpected .= $sDir . 'Core/Commit/Base.php (updated)' . "\n";
-        $sExpected .= $sDir . 'Core/Commit/Object.php (updated)' . "\n";
-        $sExpected .= $sDir . 'doc/hooktemplates/ (new)' . "\n";
-        $sExpected .= $sDir . 'doc/hooktemplates/pre-commit (new)' . "\n";
-        $sExpected .= $sDir . 'tmp//newfolder/testfile.txt (deleted)' . "\n";
-        $sExpected .= $sDir . 'tmp//newfolder/ (deleted)' . "\n";
+        $sExpected = file_get_contents(__DIR__ . '/_files/expected-mail-1.txt');
 
         $this->assertEquals($sExpected, $sMail);
     }
@@ -205,22 +180,7 @@ class MailingTest extends \PHPUnit_Framework_TestCase
         $oInfo->setObjects($aObjects);
 
         $sMail = $this->oMailingListener->processAction($oInfo);
-
-        $sDir = 'hookframework/trunk/';
-
-        $sExpected = 'Date Time : 2008-12-30 14:56:23' . "\n\n";
-        $sExpected .= 'User      : duchess' . "\n\n";
-        $sExpected .= 'Comment   : * Test comment for the Unit Tests.' . "\n\n";
-
-        $sExpected .= str_repeat('=', 80) . "\n";
-        $sExpected .= 'Directories, Fileinformations:' . "\n";
-        $sExpected .= str_repeat('-', 40) . "\n";
-        $sExpected .= 'Updated : 2' . "\n";
-        $sExpected .= 'hookframework/trunk/Core/Commit/Base.php' . "\n";
-        $sExpected .= 'hookframework/trunk/Core/Commit/Object.php' . "\n";
-        $sExpected .= "\n";
-        $sExpected .= $sDir . 'Core/Commit/Base.php (updated)' . "\n";
-        $sExpected .= $sDir . 'Core/Commit/Object.php (updated)' . "\n";
+        $sExpected = file_get_contents(__DIR__ . '/_files/expected-mail-2.txt');
 
         $this->assertEquals($sExpected, $sMail);
     }

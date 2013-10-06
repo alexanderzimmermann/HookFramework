@@ -81,7 +81,7 @@ class Mailing extends AbstractInfo
         $sHeader .= 'Content-Type: text/plain; char-set=UTF-8' . "\r\n";
         $sHeader .= 'X-Mailer: PHP/' . phpversion();
 
-        // mail('alex@aimmermann.com', 'Git Commit', $sMailBody, $sHeader);
+        mail('alex@aimmermann.com', 'Git Commit', $sMailBody, $sHeader);
 
         return $sMailBody;
     }
