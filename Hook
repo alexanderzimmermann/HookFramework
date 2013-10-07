@@ -51,7 +51,7 @@ use Hook\Core\Hook;
 define('HF_ROOT', __DIR__ . '/');
 
 // Include autoloader.
-require_once 'library/Hook/Autoload.php';
+require_once __DIR__ . '/library/Hook/Autoload.php';
 
 // Create object.
 $oMain = new Hook($argv);
