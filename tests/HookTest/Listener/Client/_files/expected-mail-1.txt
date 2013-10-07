@@ -1,0 +1,35 @@
+Date Time : 2013-12-30 14:56:23
+User      : savannah
+Comment   : * Test comment for the Unit Tests.
+================================================================================
+File Information's:
+----------------------------------------
+Added   : 1
+doc/templates/git/pre-commit
+
+Copied  : 1
+Commit/Base.php
+
+Deleted : 1
+tmp/newfolder/testfile.txt
+
+Modified: 1
+Commit/Data.php
+
+Renamed : 1
+Commit/Info.php
+
+Type    : 1
+Docs/languages/en/images/top.gif
+
+Unmerged: 1
+Commit/Object.php
+
+
+doc/templates/git/pre-commit (added)
+Commit/Base.php (copied)
+tmp/newfolder/testfile.txt (deleted)
+Commit/Data.php (modified)
+Commit/Info.php (renamed)
+Docs/languages/en/images/top.gif (type)
+Commit/Object.php (unmerged)

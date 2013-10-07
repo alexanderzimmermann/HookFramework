@@ -41,24 +41,28 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
     public function testLoaderFailures()
     {
         // Main type usually is pre, post and start but here Failures to check listener.
-        $oArguments = $this->getMock('Hook\Adapter\Svn\Arguments', array(), array(), '', false);
+        $oArguments = $this->getMock('Hook\Adapter\Git\Arguments', array(), array(), '', false);
 
         $oArguments->expects($this->any())
-            ->method('getRepositoryName')
-            ->will($this->returnValue('HookTest\\Listener'));
+                   ->method('getRepository')
+                   ->will($this->returnValue(HF_TEST_FILES_DIR . 'Repositories/'));
 
         $oArguments->expects($this->any())
-            ->method('getMainType')
-            ->will($this->returnValue('Failures'));
+                   ->method('getRepositoryName')
+                   ->will($this->returnValue('HookTest\\Listener\\Mixed'));
 
         $oArguments->expects($this->any())
-            ->method('getSubActions')
-            ->will($this->returnValue(array('commit')));
+                   ->method('getMainType')
+                   ->will($this->returnValue('All'));
+
+        $oArguments->expects($this->any())
+                   ->method('getSubActions')
+                   ->will($this->returnValue(array('commit')));
 
         // Just the instance.
         $oConfig = new Config;
 
-        $sTestDir = HF_TEST_DIR . 'HookTest/Listener/';
+        $sTestDir = HF_TEST_FILES_DIR . 'Repositories/Mixed/';
 
         $oLoader = new Loader();
         $oLoader->setArguments($oArguments);
