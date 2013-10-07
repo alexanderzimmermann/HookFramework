@@ -206,14 +206,15 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function testSend()
     {
-        $sFile = HF_TEST_FILES_DIR . 'send.file';
-        $rFile = fopen($sFile, 'w+');
+        $rFile = fopen('php://memory', 'w+');
         $this->oResponse = new Response($rFile);
 
         $sMsg = "Failure during commit!\nComment is missing";
         $this->oResponse->setText($sMsg);
         $this->oResponse->send();
 
-        $this->assertFileEquals(__DIR__ . '/_files/Response/expected.file', $sFile);
+        rewind($rFile);
+        $aExpected = file_get_contents(__DIR__ . '/_files/Response/expected.file');
+        $this->assertSame($aExpected, stream_get_contents($rFile));
     }
 }

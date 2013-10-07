@@ -1,0 +1,25 @@
+Date Time : 2008-12-30 14:56:23
+User      : duchess
+Comment   : * Test comment for the Unit Tests.
+================================================================================
+Directories, File Information's:
+----------------------------------------
+Added   : 2
+hookframework/trunk/doc/hooktemplates/
+hookframework/trunk/doc/hooktemplates/pre-commit
+
+Updated : 2
+hookframework/trunk/Core/Commit/Base.php
+hookframework/trunk/Core/Commit/Object.php
+
+Deleted : 2
+hookframework/trunk/tmp//newfolder/testfile.txt
+hookframework/trunk/tmp//newfolder/
+
+
+hookframework/trunk/Core/Commit/Base.php (updated)
+hookframework/trunk/Core/Commit/Object.php (updated)
+hookframework/trunk/doc/hooktemplates/ (added)
+hookframework/trunk/doc/hooktemplates/pre-commit (added)
+hookframework/trunk/tmp//newfolder/testfile.txt (deleted)
+hookframework/trunk/tmp//newfolder/ (deleted)

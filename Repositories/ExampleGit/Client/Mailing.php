@@ -14,7 +14,9 @@
 
 namespace ExampleGit\Client;
 
+use stdClass;
 use Hook\Commit\Info;
+use Hook\Commit\Object;
 use Hook\Listener\AbstractInfo;
 
 /**
@@ -44,6 +46,14 @@ class Mailing extends AbstractInfo
     private $oInfo;
 
     /**
+     * List of modifiers for mail formatting.
+     * @var array
+     */
+    private $aActions = array(
+                         'added', 'copied', 'deleted', 'modified', 'renamed', 'type', 'unmerged'
+                        );
+
+    /**
      * Register the action.
      * @return string
      * @author Alexander Zimmermann <alex@azimmermann.com>
@@ -57,7 +67,6 @@ class Mailing extends AbstractInfo
      * Execute the action.
      * @param Info $oInfo Info des Commits.
      * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     public function processAction(Info $oInfo)
     {
@@ -66,28 +75,26 @@ class Mailing extends AbstractInfo
         $sMailBody = $this->getInfoMailHead();
         $sMailBody .= $this->getObjectsMailBody();
 
-        // Mailen.
+        // Mail head.
         $sHeader = 'From: webmaster@example.com' . "\r\n";
         $sHeader .= 'Reply-To: webmaster@example.com' . "\r\n";
         $sHeader .= 'Content-Type: text/plain; char-set=UTF-8' . "\r\n";
         $sHeader .= 'X-Mailer: PHP/' . phpversion();
 
-        mail('alex@aimmermann.com', 'SVN Commit', $sMailBody, $sHeader);
+        mail('alex@aimmermann.com', 'Git Commit', $sMailBody, $sHeader);
 
         return $sMailBody;
     }
 
     /**
-     * Aufbereiten Commit Info.
+     * Prepare commit info.
      * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     private function getInfoMailHead()
     {
-        $sHead = 'Date Time : ' . $this->oInfo->getDateTime() . "\n\n";
+        $sHead  = 'Date Time : ' . $this->oInfo->getDateTime() . "\n";
         $sHead .= 'User      : ' . $this->oInfo->getUser() . "\n";
-        $sHead .= "\n";
-        $sHead .= 'Comment   : ' . $this->oInfo->getMessage() . "\n\n";
+        $sHead .= 'Comment   : ' . $this->oInfo->getMessage() . "\n";
 
         $sHead .= str_repeat('=', 80) . "\n";
 
@@ -95,80 +102,62 @@ class Mailing extends AbstractInfo
     }
 
     /**
+     * Prepare file list for mail.
+     * @param array $aObjects List of file objects from commit.
+     * @return stdClass
+     */
+    protected function prepareFileList(array $aObjects)
+    {
+        $oResult = new stdClass;
+        $oResult->aFileSummary = array();
+
+        foreach ($this->aActions as $sAction) {
+            $oResult->aFileSummary[$sAction] = array();
+        }
+
+        $oResult->sFileList = '';
+        $iMax               = count($aObjects);
+
+        for ($iFor = 0; $iFor < $iMax; $iFor++) {
+
+            /** @var Object $oObject */
+            $oObject    = $aObjects[$iFor];
+            $sObject    = $oObject->getObjectPath();
+            $oResult->sFileList .= $sObject;
+
+            foreach ($this->aActions as $sAction) {
+                if (ucfirst($sAction[0]) === $oObject->getAction()) {
+                    $oResult->aFileSummary[$sAction][] = $sObject;
+                    $oResult->sFileList .= ' (' . $sAction . ')';
+                }
+            }
+
+            $oResult->sFileList .= "\n";
+        }
+
+        return $oResult;
+    }
+
+    /**
      * Prepare file information for mail body.
      * @return string
-     * @author Alexander Zimmermann <alex@azimmermann.com>
      */
     private function getObjectsMailBody()
     {
-        $aAdded   = array();
-        $aUpdated = array();
-        $aDeleted = array();
+        $oResult = $this->prepareFileList($this->oInfo->getObjects());
 
-        $aObjects = $this->oInfo->getObjects();
-        $iMax     = count($aObjects);
-
-        $sFileList = '';
-        for ($iFor = 0; $iFor < $iMax; $iFor++) {
-            $sFileList .= $aObjects[$iFor]->getObjectPath();
-
-            if ($aObjects[$iFor]->getAction() === 'A') {
-                $aAdded[] = $aObjects[$iFor]->getObjectPath();
-                $sFileList .= ' (new)';
-            }
-
-            if ($aObjects[$iFor]->getAction() === 'C') {
-                $aUpdated[] = $aObjects[$iFor]->getObjectPath();
-                $sFileList .= ' (copied in to new)';
-            }
-
-            if ($aObjects[$iFor]->getAction() === 'D') {
-                $aDeleted[] = $aObjects[$iFor]->getObjectPath();
-                $sFileList .= ' (deleted)';
-            }
-
-            if ($aObjects[$iFor]->getAction() === 'M') {
-                $aUpdated[] = $aObjects[$iFor]->getObjectPath();
-                $sFileList .= ' (modified)';
-            }
-
-            if ($aObjects[$iFor]->getAction() === 'R') {
-                $aUpdated[] = $aObjects[$iFor]->getObjectPath();
-                $sFileList .= ' (renamed)';
-            }
-
-            if ($aObjects[$iFor]->getAction() === 'T') {
-                $aUpdated[] = $aObjects[$iFor]->getObjectPath();
-                $sFileList .= ' (type changed)';
-            }
-
-            if ($aObjects[$iFor]->getAction() === 'U') {
-                $aUpdated[] = $aObjects[$iFor]->getObjectPath();
-                $sFileList .= ' (unmerged)';
-            }
-
-            $sFileList .= "\n";
-        }
-
-        $sMailBody = 'Directories, Fileinformations:' . "\n";
+        $sMailBody  = 'File Information\'s:' . "\n";
         $sMailBody .= str_repeat('-', 40) . "\n";
 
-        if (empty($aAdded) === false) {
-            $sMailBody .= 'Added   : ' . count($aAdded) . "\n";
-            $sMailBody .= implode("\n", $aAdded) . "\n";
+        foreach ($this->aActions as $sAction) {
+            if (false === empty($oResult->aFileSummary[$sAction])) {
+                $sMailText  = ucfirst($sAction) . str_repeat(' ', (8 - strlen($sAction)));
+                $sMailBody .= $sMailText . ': ' . count($oResult->aFileSummary[$sAction]) . "\n";
+                $sMailBody .= implode("\n", $oResult->aFileSummary[$sAction]) . "\n\n";
+            }
         }
 
-        if (empty($aUpdated) === false) {
-            $sMailBody .= 'Updated : ' . count($aUpdated) . "\n";
-            $sMailBody .= implode("\n", $aUpdated) . "\n";
-        }
-
-        if (empty($aDeleted) === false) {
-            $sMailBody .= 'Deleted : ' . count($aDeleted) . "\n";
-            $sMailBody .= implode("\n", $aDeleted) . "\n";
-        }
-
-        $sMailBody .= "\n" . $sFileList;
+        $sMailBody .= "\n" . $oResult->sFileList;
 
         return $sMailBody;
     }

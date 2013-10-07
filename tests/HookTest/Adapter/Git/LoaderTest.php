@@ -44,12 +44,16 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
         $oArguments = $this->getMock('Hook\Adapter\Git\Arguments', array(), array(), '', false);
 
         $oArguments->expects($this->any())
+                   ->method('getRepository')
+                   ->will($this->returnValue(HF_TEST_FILES_DIR . 'Repositories/'));
+
+        $oArguments->expects($this->any())
                    ->method('getRepositoryName')
-                   ->will($this->returnValue('HookTest\\Listener'));
+                   ->will($this->returnValue('HookTest\\Listener\\Mixed'));
 
         $oArguments->expects($this->any())
                    ->method('getMainType')
-                   ->will($this->returnValue('Failures'));
+                   ->will($this->returnValue('All'));
 
         $oArguments->expects($this->any())
                    ->method('getSubActions')
@@ -58,7 +62,7 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
         // Just the instance.
         $oConfig = new Config;
 
-        $sTestDir = HF_TEST_DIR . 'HookTest/Listener/';
+        $sTestDir = HF_TEST_FILES_DIR . 'Repositories/Mixed/';
 
         $oLoader = new Loader();
         $oLoader->setArguments($oArguments);
