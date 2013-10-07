@@ -61,9 +61,18 @@ class Command extends CommandAbstract
         $this->sCommand    = $this->sBinPath . 'git';
         $this->sAgainst    = $oArguments->getTransaction();
 
+        // On the post commit hook, be sure, that we get the only this commit
+        // and not another commit.
         if ('post' === substr($oArguments->getSubType(), 0, 4)) {
             $this->sSubCommand = ' show ';
             $this->sAgainst    = $this->getLastSha1();
+        }
+
+        // On a pre* or the commit-msg hook, be sure,
+        // that we only get what we are about to commit and not all changed files.
+        if (('pre' === substr($oArguments->getSubType(), 0, 3)) ||
+            ('com' === substr($oArguments->getSubType(), 0, 3))) {
+            $this->sSubCommand .= ' --cached ';
         }
     }
 
